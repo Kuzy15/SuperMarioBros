@@ -1806,7 +1806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c698528839ba5a4784e98cbc2e86cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 5
+  jumpTime: 0
 --- !u!65 &708276480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4137,7 +4137,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013927817}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -4498,6 +4498,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Barrier
       objectReference: {fileID: 0}
+    - target: {fileID: 7427259526859979031, guid: 4e5992c861857894ebac1b87919a5da9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 7427259526859979031, guid: 4e5992c861857894ebac1b87919a5da9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Solid
+      objectReference: {fileID: 0}
     - target: {fileID: 6203906883290968981, guid: 4e5992c861857894ebac1b87919a5da9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4582,16 +4592,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Barrier
-      objectReference: {fileID: 0}
-    - target: {fileID: 7427259526859979031, guid: 4e5992c861857894ebac1b87919a5da9,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 7427259526859979031, guid: 4e5992c861857894ebac1b87919a5da9,
-        type: 3}
-      propertyPath: m_TagString
-      value: Solid
       objectReference: {fileID: 0}
     - target: {fileID: 4092560496852155161, guid: 4e5992c861857894ebac1b87919a5da9,
         type: 3}

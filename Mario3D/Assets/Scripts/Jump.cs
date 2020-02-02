@@ -8,9 +8,11 @@ public class Jump : MonoBehaviour
     private bool _maxJump = false;
     private Rigidbody _rigidBody;
     private bool _directionY = false;
+    private bool stoppedJumping = false;
 
 
-    public float jumpForce = 0;
+    public float jumpTime;
+
 
     // Start is called before the first frame update
     void Start()
@@ -18,49 +20,43 @@ public class Jump : MonoBehaviour
         _rigidBody = this.transform.parent.GetComponentInParent<Rigidbody>();
     }
 
-    private void Update()
-    {
-        _directionY = Input.GetButton("Vertical");
-    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(jumpForce);
+        //Debug.Log(_directionY);
         JumpMove();
-
-        /*RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 1.0f))
-        {
-            if (hit.collider.CompareTag("Solid"))
-            {
-                Debug.Log("CHSNGE");
-                _onGround = true;
-            }
-            // Apply the force to the rigidbody.
-            //_dir *= -1;
-        }*/
-        //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down));
     }
 
     private void JumpMove()
     {
-        if (_directionY)
-        {
-            jumpForce++;
-            if (jumpForce >= 15.0f)
-            {
-                _directionY = false;
-                //_maxJump = true;
-                jumpForce = 5.0f;
-            }
-        }
+        Debug.Log(jumpTime);
 
-        if (_directionY /*&& !_maxJump*/ && _onGround)
+        if(Input.GetButton("Vertical") && !stoppedJumping)
         {
-            _rigidBody.AddForce(new Vector2(_rigidBody.velocity.x, jumpForce), ForceMode.Impulse);
+            if(jumpTime <= 0.5f)
+            {
+                jumpTime += Time.deltaTime;
+                //jumpTime = 1;
+            }
+            else
+            {
+                jumpTime = 0.5f;
+                _maxJump = true;
+            }
+            if (!_maxJump)
+            {
+                _rigidBody.AddForce(new Vector2(_rigidBody.velocity.x, jumpTime*3.5f), ForceMode.Impulse);
+            }
             _onGround = false;
         }
+
+        if (Input.GetButtonUp("Vertical"))
+        {
+            stoppedJumping = true; 
+            jumpTime = 0;
+        }
+        
     }
 
     void OnTriggerEnter(Collider col)
@@ -68,7 +64,8 @@ public class Jump : MonoBehaviour
         if (col.gameObject.tag == "Solid" && !_onGround)
         {
             _onGround = true;
-            //_maxJump = false;
+            stoppedJumping = false;
+            _maxJump = false;
         }
     }
 }
