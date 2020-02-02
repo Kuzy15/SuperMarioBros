@@ -56,7 +56,6 @@ public class Block : MonoBehaviour
     {
         if (!_dropped)
         {
-            InstantiateEntity();
             _dropped = true;
             _active = true;
         }
@@ -71,6 +70,7 @@ public class Block : MonoBehaviour
             if ((Vector2)transform.position == _startPosition + new Vector2(0, 0.3f) && !_goDown)
             {
                 _goDown = true;
+                InstantiateEntity();
             }
 
             if (!_goDown)
@@ -91,6 +91,6 @@ public class Block : MonoBehaviour
 
     private void InstantiateEntity()
     {
-        Instantiate(entity, (Vector2)transform.position + new Vector2(0, 1.0f), Quaternion.identity);
+        Instantiate(entity, _startPosition + new Vector2(0,2),Quaternion.identity);
     }
 }

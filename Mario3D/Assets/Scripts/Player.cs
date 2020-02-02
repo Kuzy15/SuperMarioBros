@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         SetAnim(0, true);
         _currentAnim = bigIdle;
         _rigidBody = GetComponent<Rigidbody>();
-        Physics.gravity = new Vector3(0, -4.0f * _rigidBody.mass, 0);
+        Physics.gravity = new Vector3(0, gravity * _rigidBody.mass, 0);
     }
 
     // Update is called once per frame

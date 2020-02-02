@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class Jump : MonoBehaviour
 {
-    private bool _onGround = false;
-    private bool _maxJump = false;
+    private bool _onGround = true;// false;
     private Rigidbody _rigidBody;
     private bool _directionY = false;
     private bool stoppedJumping = false;
 
+    public float timeeee = 0;
+    public float jumpTime = 0;
 
-    public float jumpTime;
+    public float force = 0;
 
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidBody = this.transform.parent.GetComponentInParent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        _directionY = Input.GetButtonDown("Vertical");
     }
 
 
@@ -29,6 +35,94 @@ public class Jump : MonoBehaviour
     }
 
     private void JumpMove()
+    {
+        if (Input.GetButtonDown("Vertical"))
+        {
+            //and you are on the ground...
+            if (_onGround)
+            {
+                //jump!
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
+                stoppedJumping = false;
+            }
+        }
+
+        //if you keep holding down the mouse button...
+        if ((Input.GetButton("Vertical")) && !stoppedJumping)
+        {
+            //and your counter hasn't reached zero...
+            if (jumpTime > 0)
+            {
+                //keep jumping!
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
+                jumpTime -= Time.deltaTime;
+            }
+        }
+
+
+        //if you stop holding down the mouse button...
+        if (Input.GetButtonUp("Vertical"))
+        {
+            //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
+            jumpTime = 0;
+            stoppedJumping = true;
+        }
+    }
+
+    /*private void JumpMove()
+    {
+        Debug.Log(jumpTime);
+
+            Debug.Log(_onGround);
+
+        if (Input.GetButton("Vertical") && _onGround && _canJump)
+        {
+            if (jumpTime <= 0.3f)
+            {
+                jumpTime += Time.deltaTime;
+                //jumpTime = 1;
+                _rigidBody.AddForce(new Vector2(_rigidBody.velocity.x, jumpTime * force), ForceMode.Impulse);
+            }
+        }
+        if (Input.GetButtonUp("Vertical"))
+        {
+            Debug.Log("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            _onGround = true;
+        }
+
+    }*/
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Solid")
+        {
+            _onGround = true;
+            jumpTime = timeeee;
+            //stoppedJumping = false;
+        }
+    }
+    void OnTriggerStay(Collider col)
+    {
+        if (!_onGround && col.gameObject.tag == "Solid")
+        {
+            _onGround = true;
+            jumpTime = timeeee;
+            //stoppedJumping = false;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /*private void JumpMove()
     {
         Debug.Log(jumpTime);
 
@@ -67,5 +161,5 @@ public class Jump : MonoBehaviour
             stoppedJumping = false;
             _maxJump = false;
         }
-    }
+    }*/
 }

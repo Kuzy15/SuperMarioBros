@@ -4,64 +4,51 @@ using UnityEngine;
 
 public class Mushroom : MonoBehaviour
 {
-    private float _time;
     private int _currentAnim;
     private SpriteRenderer _renderer;
-    private Vector2 _startPosition;
+    private Vector3 _startPosition;
     private int _dir = 1;
     private Rigidbody _rigidbody;
-
-    public float speed = 0;
+    private bool _spawning = true;
+    private float speed = 3;
 
     // Start is called before the first frame update
     void Start()
     {
         _renderer = this.GetComponent<SpriteRenderer>();
         _rigidbody = this.GetComponent<Rigidbody>();
+        _startPosition = transform.position;
+        Physics.gravity = new Vector3(0, -9 * _rigidbody.mass, 0);
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        MoveMushroom();
-        //RaycastHit2D hit = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), 0.1f);
-        //Ray2D ray = new Ray2D(transform.position, mouseDirection);
-        /*Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.right), Color.white);
-        // If it hits something...
-        //Debug.DrawRay(this.transform.position, hit.transform.position);*/
+        /* if (_spawning)
+         {
+             //transform.position = Vector3.MoveTowards(transform.position, transform.position + new Vector3(0, 1), 2 * Time.deltaTime);
+             if (transform.position.y >= _startPosition.y + 1)
+             {
+                 _spawning = false;
+             }
+             else
+             {
+                 _rigidbody.velocity = new Vector3(0, 1, 0);
+             }
+         }
+         else
+         {*/
+        _rigidbody.velocity = new Vector3(2, 0, 0);
+
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 0.6f))
         {
-             // Apply the force to the rigidbody.
-             _dir *= -1;
+            // Apply the force to the rigidbody.
+            _dir *= -1;
         }
+        // }
     }
-
-    private void MoveMushroom()
-    {
-        transform.Translate(_dir * Time.deltaTime * speed, 0, 0);
-        //_rigidbody.velocity = new Vector2 (_dir * speed, 0);
-    }
-
-    /*private void AnimMushroom()
-    {
-        _time += Time.deltaTime * animSpeed;
-        if (_time >= 1.0f)
-        {
-            _currentAnim++;
-            _time = 0;
-        }
-
-        if (_currentAnim < anim.Length)
-        {
-            _renderer.sprite = anim[_currentAnim];
-        }
-        else
-        {
-            _currentAnim = 0;
-        }
-    }*/
-
 
     private void OnCollisionEnter(Collision collision)
     {

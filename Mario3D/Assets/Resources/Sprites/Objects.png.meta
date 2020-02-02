@@ -5,6 +5,18 @@ TextureImporter:
   - first:
       213: 4315506946141470425
     second: Mushroom_0
+  - first:
+      213: 7958683927536999042
+    second: CoinFlip_0
+  - first:
+      213: -4080114192895528127
+    second: CoinFlip_1
+  - first:
+      213: -3789951099581812512
+    second: CoinFlip_2
+  - first:
+      213: -4895939845043267702
+    second: CoinFlip_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -109,7 +121,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -117,6 +129,90 @@ TextureImporter:
       bones: []
       spriteID: b6048dbafdabe63408722bf35f1d14b5
       internalID: 4315506946141470425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CoinFlip_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 208
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf45b66f64b5dbc4d935d717d5ed43ea
+      internalID: 7958683927536999042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CoinFlip_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 208
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25311a3489a6c424389e3d4b7e1f13ee
+      internalID: -4080114192895528127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CoinFlip_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 208
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d99cf80d8ff4ffe48a3a56c391554d85
+      internalID: -3789951099581812512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CoinFlip_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 208
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 676a333487be4f64c8700959fa3eb2f8
+      internalID: -4895939845043267702
       vertices: []
       indices: 
       edges: []
