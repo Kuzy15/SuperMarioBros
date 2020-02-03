@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7283382162546221797}
   - component: {fileID: 6151898692820799595}
   - component: {fileID: -6822315325337079943}
+  - component: {fileID: -7084424551895716904}
   m_Layer: 0
   m_Name: MagicBlock_0
   m_TagString: Solid
@@ -70,7 +71,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 8583795624767844145, guid: ec8f6c59ea4365449a90737de5b38878,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -116,3 +117,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-7084424551895716904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999737656058296300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19184a064365d974196d887d9eed3fe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

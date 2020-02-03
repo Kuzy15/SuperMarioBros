@@ -64,33 +64,21 @@ public class Block : MonoBehaviour
 
     private void MoveBlock()
     {
-        if (_active)
+        if (_active )
         {
             _disable = true;
-            if ((Vector2)transform.position == _startPosition + new Vector2(0, 0.3f) && !_goDown)
-            {
-                _goDown = true;
-                InstantiateEntity();
-            }
+            
+                if(entity)
+                    InstantiateEntity();
 
-            if (!_goDown)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, _startPosition + new Vector2(0, 0.3f), 3 * Time.deltaTime);
-                _renderer.sprite = disableBlock;
-            }
-            else
-            {
-                transform.position = Vector2.MoveTowards(transform.position, _startPosition, 3 * Time.deltaTime);
-                if ((Vector2)transform.position == _startPosition)
-                {
-                    _active = false;
-                }
-            }
+            _renderer.sprite = disableBlock;
+            _active = false;
+            
         }
     }
 
     private void InstantiateEntity()
     {
-        Instantiate(entity, _startPosition + new Vector2(0,2),Quaternion.identity);
+        Instantiate(entity, _startPosition,Quaternion.identity);
     }
 }

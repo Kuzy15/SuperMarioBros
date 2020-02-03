@@ -15,7 +15,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Mushroom
   - 
   - 
   - 
@@ -42,4 +42,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Mushroom
+    uniqueID: 1078347641
     locked: 0

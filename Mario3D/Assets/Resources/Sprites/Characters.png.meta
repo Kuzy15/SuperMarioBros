@@ -26,6 +26,12 @@ TextureImporter:
   - first:
       213: -2847618083517462848
     second: Mario_3Small
+  - first:
+      213: -3423883245091955000
+    second: smallJump
+  - first:
+      213: -4408220413870201595
+    second: bigJump
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -285,6 +291,48 @@ TextureImporter:
       bones: []
       spriteID: 4d1f2367f3f4a9349ab8d2961826a07d
       internalID: -2847618083517462848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: smallJump
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 480
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63744ef5e13ec364894c35ca325d68e6
+      internalID: -3423883245091955000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bigJump
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 496
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b53b17a5a8c98644680ff79f3d6b81ee
+      internalID: -4408220413870201595
       vertices: []
       indices: 
       edges: []

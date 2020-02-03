@@ -14,22 +14,31 @@ public class Player : MonoBehaviour
     public Sprite[] smallIdle;
     public Sprite[] bigWalk;
     public Sprite[] bigIdle;
+    public Sprite[] jump;
+    public Sprite[] smallJump;
 
     private SpriteRenderer _marioSprite;
     private Sprite[] _currentAnim;
     private float _directionX = 0;
+    private float _directionY = 0;
     private bool _isBig = true;
     private int _animState = 0;
     private float _animTime = 0;
     private int _currentSprite = 0;
     private Rigidbody _rigidBody;
+    private BoxCollider _collider;
+    private bool _mario;
     
     // Start is called before the first frame update
     void Start()
     {
+        _mario = true;
+        _collider = this.GetComponentInChildren<BoxCollider>();
         _marioSprite = this.GetComponentInChildren<SpriteRenderer>();
-        SetAnim(0, true);
+        SetAnim(0, _mario);
         _currentAnim = bigIdle;
+        //_collider.size = _currentAnim[0].bounds.size;
+        //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, gravity * _rigidBody.mass, 0);
     }
@@ -38,20 +47,26 @@ public class Player : MonoBehaviour
     void Update()
     {
         _directionX = Input.GetAxis("Horizontal");
+        _directionY = Input.GetAxis("Vertical");
 
         if (_directionX < 0)
         {
             _marioSprite.flipX = true;
-            SetAnim(1, true);
+            SetAnim(1, _mario);
         }
         else if(_directionX > 0)
         {
             _marioSprite.flipX = false;
-            SetAnim(1, true);
+            SetAnim(1, _mario);
         }
         else
         {
-            SetAnim(0, true);
+            SetAnim(0, _mario);
+        }
+        if(_directionY > 0)
+        {
+            //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 0.05f, this.transform.position.z);
+            SetAnim(2, _mario);
         }
         velocity = Mathf.Lerp(velocity, _directionX, shift * Time.deltaTime);
 
@@ -71,13 +86,14 @@ public class Player : MonoBehaviour
             _animTime = 0;
             _currentSprite++;
         }
-
-        if(_currentSprite >= _currentAnim.Length)
+        if (_currentAnim!=null)
         {
-            _currentSprite = 0;
+            if (_currentSprite >= _currentAnim.Length)
+            {
+                _currentSprite = 0;
+            }
+            _marioSprite.sprite = _currentAnim[_currentSprite];
         }
-        _marioSprite.sprite = _currentAnim[_currentSprite];
-      
     }
 
     private void FixedUpdate()
@@ -87,7 +103,7 @@ public class Player : MonoBehaviour
 
    
 
-    private void SetAnim(int state, bool big)
+    public void SetAnim(int state, bool big)
     {
         if (_animState != state)
         {
@@ -105,8 +121,15 @@ public class Player : MonoBehaviour
                     else
                         _currentAnim = smallWalk;
                     break;
+                case 2:
+                    if (big)
+                        _currentAnim = jump;
+                    else
+                        _currentAnim = smallJump;
+                    break;
             }
             _animState = state;
+            //_collider.center = _currentAnim[0].bounds.center;
         }
     }
 
@@ -116,5 +139,14 @@ public class Player : MonoBehaviour
         {
             collision.collider.GetComponent<Block>().ActivateBlock();
         }
+        if (collision.collider.GetComponent<BouncingBlock>())
+        {
+            collision.collider.GetComponent<BouncingBlock>().ActivateBounce();
+        }
+    }
+
+    public Vector3 GetMarioPosition()
+    {
+        return this.transform.position;
     }
 }

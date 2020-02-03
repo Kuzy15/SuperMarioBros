@@ -14,11 +14,14 @@ public class Jump : MonoBehaviour
 
     public float force = 0;
 
+    private Player _player;
+
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidBody = this.transform.parent.GetComponentInParent<Rigidbody>();
+        _player = this.transform.parent.GetComponentInParent<Player>();
     }
 
     private void Update()
@@ -38,6 +41,7 @@ public class Jump : MonoBehaviour
     {
         if (Input.GetButtonDown("Vertical"))
         {
+            _player.SetAnim(2, true);
             //and you are on the ground...
             if (_onGround)
             {

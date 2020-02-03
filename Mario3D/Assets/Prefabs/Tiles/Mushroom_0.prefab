@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -4467396859034059244}
   - component: {fileID: -5498618475797040514}
   - component: {fileID: -9037318415240278496}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mushroom_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,14 +105,14 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622488509635333222}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &-9037318415240278496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,3 +125,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7d775e6a287e145a50f975460a701e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 7027009037439751191, guid: 6b49e488b8135034ba40f3c34c3f9afd, type: 3}
