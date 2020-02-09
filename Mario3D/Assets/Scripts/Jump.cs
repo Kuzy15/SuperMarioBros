@@ -9,9 +9,8 @@ public class Jump : MonoBehaviour
     private bool _directionY = false;
     private bool stoppedJumping = false;
 
-    public float timeeee = 0;
+    public float time = 0;
     public float jumpTime = 0;
-
     public float force = 0;
 
     private Player _player;
@@ -41,14 +40,15 @@ public class Jump : MonoBehaviour
     {
         if (Input.GetButtonDown("Vertical"))
         {
-            _player.SetAnim(2, true);
             //and you are on the ground...
             if (_onGround)
             {
+                _player.SetAnim(2, _player.IsBigMario());
                 //jump!
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
                 stoppedJumping = false;
             }
+
         }
 
         //if you keep holding down the mouse button...
@@ -60,6 +60,10 @@ public class Jump : MonoBehaviour
                 //keep jumping!
                 _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
                 jumpTime -= Time.deltaTime;
+            }
+            else
+            {
+                stoppedJumping = true;
             }
         }
 
@@ -73,36 +77,13 @@ public class Jump : MonoBehaviour
         }
     }
 
-    /*private void JumpMove()
-    {
-        Debug.Log(jumpTime);
-
-            Debug.Log(_onGround);
-
-        if (Input.GetButton("Vertical") && _onGround && _canJump)
-        {
-            if (jumpTime <= 0.3f)
-            {
-                jumpTime += Time.deltaTime;
-                //jumpTime = 1;
-                _rigidBody.AddForce(new Vector2(_rigidBody.velocity.x, jumpTime * force), ForceMode.Impulse);
-            }
-        }
-        if (Input.GetButtonUp("Vertical"))
-        {
-            Debug.Log("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            _onGround = true;
-        }
-
-    }*/
 
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "Solid")
         {
             _onGround = true;
-            jumpTime = timeeee;
-            //stoppedJumping = false;
+            jumpTime = time;
         }
     }
     void OnTriggerStay(Collider col)
@@ -110,8 +91,7 @@ public class Jump : MonoBehaviour
         if (!_onGround && col.gameObject.tag == "Solid")
         {
             _onGround = true;
-            jumpTime = timeeee;
-            //stoppedJumping = false;
+            jumpTime = time;
         }
     }
 

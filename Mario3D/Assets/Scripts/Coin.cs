@@ -24,8 +24,31 @@ public class Coin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CoinAnim();
         CoinMove();
-        Debug.Log(startPosition + "    " + transform.position);
+    }
+
+    private void CoinAnim()
+    {
+        _time += Time.deltaTime * animSpeed;
+        if (_time >= 1f)
+        {
+            _currentAnim++;
+            _time = 0;
+        }
+
+        if (_currentAnim < anim.Length)
+        {
+            _renderer.sprite = anim[_currentAnim];
+        }
+        else
+        {
+            _currentAnim = 0;
+        }
+    }
+
+    private void CoinMove()
+    {
         float step = 12f * Time.deltaTime; // calculate distance to move
         if (!down)
         {
@@ -45,25 +68,6 @@ public class Coin : MonoBehaviour
                 AddPoint();
                 Destroy(this.gameObject);
             }
-        }
-    }
-
-    private void CoinMove()
-    {
-        _time += Time.deltaTime * animSpeed;
-        if (_time >= 1f)
-        {
-            _currentAnim++;
-            _time = 0;
-        }
-
-        if (_currentAnim < anim.Length)
-        {
-            _renderer.sprite = anim[_currentAnim];
-        }
-        else
-        {
-            _currentAnim = 0;
         }
     }
 

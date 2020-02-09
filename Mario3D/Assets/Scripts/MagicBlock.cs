@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class MagicBlock : MonoBehaviour
 {
 
     private float _time;
@@ -19,8 +19,6 @@ public class Block : MonoBehaviour
     public float animSpeed = 0;
     public GameObject entity;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +28,42 @@ public class Block : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        BounceMove();
+
+        MagicBlockAnim();
+
+        MoveBlock();
+    }
+
+
+    private void BounceMove()
+    {
+        if (_active)
+        {
+            if ((Vector2)transform.position == _startPosition + new Vector2(0, 0.3f) && !_goDown)
+            {
+                _goDown = true;
+            }
+
+            if (!_goDown)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, _startPosition + new Vector2(0, 0.3f), 3 * Time.deltaTime);
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(transform.position, _startPosition, 3 * Time.deltaTime);
+                if (Vector2.Distance(transform.position, _startPosition) < 0.001f)
+                {
+                    _active = false;
+                    _goDown = false;
+                }
+            }
+        }
+    }
+
+
+    private void MagicBlockAnim()
     {
         if (!_disable)
         {
@@ -48,9 +82,34 @@ public class Block : MonoBehaviour
             {
                 _currentAnim = 0;
             }
-        }        
-        MoveBlock();
+        }
     }
+
+
+    private void MoveBlock()
+    {
+        if (_active )
+        {
+
+            if (entity && !_disable)
+            {
+                _disable = true;
+                InstantiateEntity();
+            }
+
+            _renderer.sprite = disableBlock;
+            
+        }
+    }
+
+
+    private void InstantiateEntity()
+    {
+        Instantiate(entity, _startPosition,Quaternion.identity);
+    }
+
+    
+
 
     public void ActivateBlock()
     {
@@ -61,24 +120,4 @@ public class Block : MonoBehaviour
         }
     }
 
-
-    private void MoveBlock()
-    {
-        if (_active )
-        {
-            _disable = true;
-            
-                if(entity)
-                    InstantiateEntity();
-
-            _renderer.sprite = disableBlock;
-            _active = false;
-            
-        }
-    }
-
-    private void InstantiateEntity()
-    {
-        Instantiate(entity, _startPosition,Quaternion.identity);
-    }
 }

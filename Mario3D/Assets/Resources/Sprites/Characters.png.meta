@@ -32,6 +32,9 @@ TextureImporter:
   - first:
       213: -4408220413870201595
     second: bigJump
+  - first:
+      213: -5115795548720348820
+    second: Mario_Middle
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -303,8 +306,8 @@ TextureImporter:
         y: 480
         width: 16
         height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -324,8 +327,8 @@ TextureImporter:
         y: 496
         width: 16
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -333,6 +336,27 @@ TextureImporter:
       bones: []
       spriteID: b53b17a5a8c98644680ff79f3d6b81ee
       internalID: -4408220413870201595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mario_Middle
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 496
+        width: 16
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af76efca161a6c640a58703214483c7a
+      internalID: -5115795548720348820
       vertices: []
       indices: 
       edges: []

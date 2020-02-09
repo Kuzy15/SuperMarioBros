@@ -51,7 +51,7 @@ public class Mushroom : MonoBehaviour
         else {
             this.transform.Translate(new Vector3(2f * _dir * Time.deltaTime, _rigidbody.velocity.y * Time.deltaTime, 0));
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 0.6f))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 0.5f) || Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hit, 0.5f))
             {
                 // Apply the force to the rigidbody.
                 this.transform.position = new Vector3(this.transform.position.x - 0.2f * _dir, this.transform.position.y, this.transform.position.z);
