@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+
+
+
     public float speed = 1;
     public float shift = 2;
-    public float jumpSpeed = 2;
+    //public float jumpSpeed = 2;
     public float velocity = 0;
-    public float gravity = 1;
+    //public float gravity = 1;
+    public float time = 0;
+    public float jumpTime = 0;
+    public float force = 0;
 
     public Sprite[] smallWalk;
     public Sprite[] smallIdle;
@@ -31,6 +38,9 @@ public class Player : MonoBehaviour
     private Rigidbody _rigidBody;
     private BoxCollider _collider;
 
+    private bool _onGround = true;// false;
+    private bool stoppedJumping = false;
+
     private bool _isGrowing = false;
     
     // Start is called before the first frame update
@@ -45,7 +55,7 @@ public class Player : MonoBehaviour
         //_collider.size = _currentAnim[0].bounds.size;
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
-        Physics.gravity = new Vector3(0, gravity * _rigidBody.mass, 0);
+        //Physics.gravity = new Vector3(0, gravity * _rigidBody.mass, 0);
     }
 
     // Update is called once per frame
@@ -89,7 +99,23 @@ public class Player : MonoBehaviour
 
         Vector2 pos = this.transform.position;
         pos.x += (speed * velocity * Time.deltaTime);
+
+
+
+
+
+        CheckCollisons(Vector3.up);
+        CheckCollisons(Vector3.down);
+
+
+
+
+
+
         transform.position = pos;
+
+
+
 
         if (!_isGrowing)
         {
@@ -124,6 +150,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        JumpMove();
+
         if (Input.GetKeyDown(KeyCode.O))
         {
             _isGrowing = true;
@@ -176,6 +205,90 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    private void CheckCollisons(Vector3 dir)
+    {
+        RaycastHit hit;
+        if (dir == Vector3.down)
+        {
+            if (Physics.Raycast(transform.position + new Vector3(-_collider.size.x / 2 + 0.2f, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f) ||
+                Physics.Raycast(transform.position + new Vector3(_collider.size.x / 2 - 0.2f, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f))
+            {
+                Debug.DrawRay(transform.position + new Vector3(-_collider.size.x / 2 + 0.2f, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                Debug.DrawRay(transform.position + new Vector3(_collider.size.x / 2 - 0.2f, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+
+                if (hit.transform.tag == "Solid")
+                {
+                    Debug.Log("SUELO");
+                    _onGround = true;
+                    jumpTime = time;
+                }
+
+            }
+            else
+            {
+            }
+        }
+        else
+        {
+            if (Physics.Raycast(transform.position + new Vector3(0, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f))
+            {
+                Debug.DrawRay(transform.position + new Vector3(0, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                
+                  
+               
+
+            }
+            else
+            {
+            }
+        }
+
+    }
+
+
+    private void JumpMove()
+    {
+        if (Input.GetButtonDown("Vertical"))
+        {
+            //and you are on the ground...
+            if (_onGround)
+            {
+                SetAnim(2, IsBigMario());
+                //jump!
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
+                stoppedJumping = false;
+            }
+
+        }
+
+        //if you keep holding down the mouse button...
+        if ((Input.GetButton("Vertical")) && !stoppedJumping)
+        {
+            //and your counter hasn't reached zero...
+            if (jumpTime > 0)
+            {
+                //keep jumping!
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
+                jumpTime -= Time.deltaTime;
+            }
+            else
+            {
+                stoppedJumping = true;
+            }
+        }
+
+
+        //if you stop holding down the mouse button...
+        if (Input.GetButtonUp("Vertical"))
+        {
+            //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
+            jumpTime = 0;
+            stoppedJumping = true;
+        }
+    }
+
+
     private void ChangeCollider()
     {
         if (_isBig)
@@ -202,11 +315,17 @@ public class Player : MonoBehaviour
         {
             collision.collider.GetComponent<Brick>().ActivateBounce();
         }
+
+        if (collision.collider.GetComponent<Mushroom>())
+        {
+            _isGrowing = true;
+            GrowUp();
+        }
     }
 
     public Vector3 GetMarioPosition()
     {
-        return this.transform.position;
+        return transform.position;
     }
 
     public bool IsBigMario()

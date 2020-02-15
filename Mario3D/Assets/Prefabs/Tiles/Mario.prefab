@@ -47,9 +47,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 8
   shift: 8
-  jumpSpeed: 0
   velocity: 0
-  gravity: -9
+  time: 0
+  jumpTime: 0
+  force: 0
   smallWalk:
   - {fileID: -2200207537198994993, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
   - {fileID: -4521560559969242310, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
@@ -68,6 +69,8 @@ MonoBehaviour:
   smallJump:
   - {fileID: -3423883245091955000, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
   - {fileID: -3423883245091955000, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  toBigMario: []
+  toSmallMario: []
 --- !u!54 &7027009037439751189
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -112,8 +115,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 7027009038750793056}
+  m_Children: []
   m_Father: {fileID: 7027009037439751186}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -180,63 +182,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
---- !u!1 &7027009038750793059
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7027009038750793056}
-  - component: {fileID: 7027009038750793057}
-  - component: {fileID: 7027009038750792862}
-  m_Layer: 0
-  m_Name: JumpCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7027009038750793056
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7027009038750793059}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7027009037887319580}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7027009038750793057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7027009038750793059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c698528839ba5a4784e98cbc2e86cf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeeee: 0.5
-  jumpTime: 0.5
-  force: 6.5
---- !u!65 &7027009038750792862
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7027009038750793059}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.2, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
