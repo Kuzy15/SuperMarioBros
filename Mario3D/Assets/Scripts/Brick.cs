@@ -25,8 +25,19 @@ public class Brick : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if
         MoveBrick();
+    }
+
+    public void StartMoveBrick()
+    {
+        ActivateBounce();
+        StartCoroutine("MoveBrickCouroutine");
+    }
+
+    IEnumerator MoveBrickCouroutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+        MoveBrick();   
     }
 
 
@@ -70,8 +81,9 @@ public class Brick : MonoBehaviour
         }
     }*/
 
-    public void ActivateBounce()
+    private void ActivateBounce()
     {
-        active = true;
+        if(!active)
+            active = true;
     }
 }

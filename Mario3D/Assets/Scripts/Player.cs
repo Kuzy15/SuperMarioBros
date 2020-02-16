@@ -5,18 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-
-
-
     public float speed = 1;
     public float shift = 2;
-    //public float jumpSpeed = 2;
-    public float velocity = 0;
-    //public float gravity = 1;
-    public float time = 0;
-    public float jumpTime = 0;
-    public float force = 0;
-
     public Sprite[] smallWalk;
     public Sprite[] smallIdle;
     public Sprite[] bigWalk;
@@ -37,12 +27,14 @@ public class Player : MonoBehaviour
     private int _currentSprite = 0;
     private Rigidbody _rigidBody;
     private BoxCollider _collider;
-
+    private float _time = 0.5f;
+    private float _jumpTime = 0.5f;
+    private float _force = 3.5f; // 3.5f for the little Mario, 6.5f for the big one
     private bool _onGround = true;// false;
-    private bool stoppedJumping = false;
-
+    private bool _stoppedJumping = false;
     private bool _isGrowing = false;
-    
+    private float velocity = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +47,7 @@ public class Player : MonoBehaviour
         //_collider.size = _currentAnim[0].bounds.size;
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
-        //Physics.gravity = new Vector3(0, gravity * _rigidBody.mass, 0);
+        Physics.gravity = new Vector3(0, -7.5f * _rigidBody.mass, 0);
     }
 
     // Update is called once per frame
@@ -221,7 +213,7 @@ public class Player : MonoBehaviour
                 {
                     Debug.Log("SUELO");
                     _onGround = true;
-                    jumpTime = time;
+                    _jumpTime = _time;
                 }
 
             }
@@ -234,13 +226,29 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(transform.position + new Vector3(0, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f))
             {
                 Debug.DrawRay(transform.position + new Vector3(0, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
-                
-                  
-               
 
+                if (hit.transform.gameObject.GetComponent<MagicBlock>())
+                {
+                    hit.transform.gameObject.GetComponent<MagicBlock>().ActivateBlock();
+                }
+
+                //Solo cuando es pequeño
+                if(hit.transform.gameObject.GetComponent<Brick>())
+                {
+                    if (_isBig)
+                    {
+                        // Anim destroy block
+                        Destroy(hit.transform.gameObject);
+                    }
+                    else
+                    {
+                        hit.transform.gameObject.GetComponent<Brick>().StartMoveBrick();                   
+                    }
+                }
             }
             else
             {
+
             }
         }
 
@@ -254,27 +262,28 @@ public class Player : MonoBehaviour
             //and you are on the ground...
             if (_onGround)
             {
+                _onGround = false;
                 SetAnim(2, IsBigMario());
                 //jump!
-                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
-                stoppedJumping = false;
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
+                _stoppedJumping = false;
             }
 
         }
 
         //if you keep holding down the mouse button...
-        if ((Input.GetButton("Vertical")) && !stoppedJumping)
+        if ((Input.GetButton("Vertical")) && !_stoppedJumping)
         {
             //and your counter hasn't reached zero...
-            if (jumpTime > 0)
+            if (_jumpTime > 0)
             {
                 //keep jumping!
-                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, force);
-                jumpTime -= Time.deltaTime;
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
+                _jumpTime -= Time.deltaTime;
             }
             else
             {
-                stoppedJumping = true;
+                _stoppedJumping = true;
             }
         }
 
@@ -283,8 +292,8 @@ public class Player : MonoBehaviour
         if (Input.GetButtonUp("Vertical"))
         {
             //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
-            jumpTime = 0;
-            stoppedJumping = true;
+            _jumpTime = 0;
+            _stoppedJumping = true;
         }
     }
 
@@ -295,31 +304,25 @@ public class Player : MonoBehaviour
         {
             _collider.size = new Vector3(1, 2, 1);
             _collider.center = new Vector3(0, 1, 0);
+            _force = 6.5f;
         }
         else
         {
             _collider.size = new Vector3(1, 1, 1);
             _collider.center = new Vector3(0, 0.5f, 0);
+            _force = 3.5f;
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.GetComponent<MagicBlock>())
-        {
-            collision.collider.GetComponent<MagicBlock>().ActivateBlock();
-        }
-
-        //Solo cuando es pequeño
-        if (collision.collider.GetComponent<Brick>())
-        {
-            collision.collider.GetComponent<Brick>().ActivateBounce();
-        }
-
         if (collision.collider.GetComponent<Mushroom>())
         {
-            _isGrowing = true;
-            GrowUp();
+            if (!_isBig)
+            {
+                _isGrowing = true;
+                GrowUp();
+            }
         }
     }
 

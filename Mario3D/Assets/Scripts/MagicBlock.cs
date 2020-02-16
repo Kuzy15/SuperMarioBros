@@ -88,7 +88,7 @@ public class MagicBlock : MonoBehaviour
 
     private void MoveBlock()
     {
-        if (_active )
+        if (_active)
         {
 
             if (entity && !_disable)

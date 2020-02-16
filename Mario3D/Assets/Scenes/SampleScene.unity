@@ -3454,12 +3454,12 @@ PrefabInstance:
     - target: {fileID: 1768083314387249196, guid: 0a911bae0bf42f049b9e5ed654721ded,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.71
+      value: -6.86
       objectReference: {fileID: 0}
     - target: {fileID: 1768083314387249196, guid: 0a911bae0bf42f049b9e5ed654721ded,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 1768083314387249196, guid: 0a911bae0bf42f049b9e5ed654721ded,
         type: 3}
@@ -4421,6 +4421,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Pipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 6930062688350004660, guid: 4e5992c861857894ebac1b87919a5da9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Solid
       objectReference: {fileID: 0}
     - target: {fileID: 2570244639815788934, guid: 4e5992c861857894ebac1b87919a5da9,
         type: 3}
