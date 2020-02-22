@@ -26,10 +26,10 @@ public class Player : MonoBehaviour
     private float _animTime = 0;
     private int _currentSprite = 0;
     private Rigidbody _rigidBody;
-    private BoxCollider _collider;
+    private CapsuleCollider _collider;
     private float _time = 0.5f;
     private float _jumpTime = 0.5f;
-    private float _force = 3.5f; // 3.5f for the little Mario, 6.5f for the big one
+    private float _force = 6f; // 3.5f for the little Mario, 6.5f for the big one
     private bool _onGround = true;// false;
     private bool _stoppedJumping = false;
     private bool _isGrowing = false;
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _collider = this.GetComponentInChildren<BoxCollider>();
+        _collider = this.GetComponentInChildren<CapsuleCollider>();
         _marioSprite = this.GetComponentInChildren<SpriteRenderer>();
         _isBig = false;
         ChangeCollider();
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
         //_collider.size = _currentAnim[0].bounds.size;
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
-        Physics.gravity = new Vector3(0, -7.5f * _rigidBody.mass, 0);
+        Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
     }
 
     // Update is called once per frame
@@ -203,11 +203,11 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if (dir == Vector3.down)
         {
-            if (Physics.Raycast(transform.position + new Vector3(-_collider.size.x / 2 + 0.2f, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f) ||
-                Physics.Raycast(transform.position + new Vector3(_collider.size.x / 2 - 0.2f, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f))
+            if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f) ||
+                Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
-                Debug.DrawRay(transform.position + new Vector3(-_collider.size.x / 2 + 0.2f, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
-                Debug.DrawRay(transform.position + new Vector3(_collider.size.x / 2 - 0.2f, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                Debug.DrawRay(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                Debug.DrawRay(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
 
                 if (hit.transform.tag == "Solid")
                 {
@@ -223,9 +223,9 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Physics.Raycast(transform.position + new Vector3(0, _collider.size.y / 2, 0), dir, out hit, (_collider.size.y / 2) + 0.1f))
+            if (Physics.Raycast(transform.position + new Vector3(0, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
-                Debug.DrawRay(transform.position + new Vector3(0, _collider.size.y / 2, 0), dir * (_collider.size.y / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                Debug.DrawRay(transform.position + new Vector3(0, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
 
                 if (hit.transform.gameObject.GetComponent<MagicBlock>())
                 {
@@ -302,15 +302,15 @@ public class Player : MonoBehaviour
     {
         if (_isBig)
         {
-            _collider.size = new Vector3(1, 2, 1);
+            _collider.height = 2;
             _collider.center = new Vector3(0, 1, 0);
-            _force = 6.5f;
+            _force = 7.5f;
         }
         else
         {
-            _collider.size = new Vector3(1, 1, 1);
+            _collider.height = 1;
             _collider.center = new Vector3(0, 0.5f, 0);
-            _force = 3.5f;
+            _force = 6f;
         }
     }
 
@@ -318,11 +318,14 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.GetComponent<Mushroom>())
         {
+            
+            Debug.Log("SETAAA");
             if (!_isBig)
             {
                 _isGrowing = true;
                 GrowUp();
             }
+            Destroy(collision.collider.gameObject);
         }
     }
 

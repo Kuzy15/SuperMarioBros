@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 570431604799078525}
   - component: {fileID: 3310750845301998519}
-  - component: {fileID: 6465196172518044763}
+  - component: {fileID: -2559343310412298395}
   m_Layer: 0
   m_Name: MagicBlock_3
   m_TagString: Solid
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &6465196172518044763
+--- !u!65 &-2559343310412298395
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

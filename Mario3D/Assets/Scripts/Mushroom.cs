@@ -72,7 +72,7 @@ public class Mushroom : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void OnCollisionEnter(Collision collision)
+   /* private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
@@ -90,7 +90,7 @@ public class Mushroom : MonoBehaviour
             _canMove = true;
             _rigidbody.AddForce(new Vector3(4f, 0f)*Time.deltaTime, ForceMode.Impulse);
         }*/
-    }
+    //}*/
 
 
 }
