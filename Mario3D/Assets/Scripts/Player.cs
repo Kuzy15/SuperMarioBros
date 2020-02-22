@@ -28,12 +28,13 @@ public class Player : MonoBehaviour
     private Rigidbody _rigidBody;
     private CapsuleCollider _collider;
     private float _time = 0.5f;
-    private float _jumpTime = 0.5f;
+    public float _jumpTime = 0.5f;
     private float _force = 6f; // 3.5f for the little Mario, 6.5f for the big one
     private bool _onGround = true;// false;
     private bool _stoppedJumping = false;
     private bool _isGrowing = false;
     private float velocity = 0;
+    private bool isJumping = false;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +59,7 @@ public class Player : MonoBehaviour
 
         if (!_isGrowing)
         {
+
             if (_directionX < 0)
             {
                 _marioSprite.flipX = true;
@@ -206,15 +208,32 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f) ||
                 Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
+                // Pintar rayo
                 Debug.DrawRay(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
                 Debug.DrawRay(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                //----------------------------------
+
 
                 if (hit.transform.tag == "Solid")
                 {
-                    Debug.Log("SUELO");
+                    //Debug.Log("SUELO");
                     _onGround = true;
-                    _jumpTime = _time;
+                    //_jumpTime = _time;
+
+                    if (isJumping)
+                    {
+                        Debug.Log("change anim to idle");
+                        SetAnim(0, IsBigMario());
+                        isJumping = false;
+                    }
                 }
+                else if (hit.transform.tag == "Enemy")
+                {
+                    Debug.Log("enemy hit");
+                    hit.transform.gameObject.GetComponent<Enemy>().Die();
+
+                }
+
 
             }
             else
@@ -259,9 +278,12 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Vertical"))
         {
+            
             //and you are on the ground...
-            if (_onGround)
+            if (_onGround && _jumpTime > 0)
             {
+                Debug.Log("to jump");
+                isJumping = true;
                 _onGround = false;
                 SetAnim(2, IsBigMario());
                 //jump!
@@ -292,7 +314,7 @@ public class Player : MonoBehaviour
         if (Input.GetButtonUp("Vertical"))
         {
             //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
-            _jumpTime = 0;
+            _jumpTime = _time;
             _stoppedJumping = true;
         }
     }
@@ -319,7 +341,7 @@ public class Player : MonoBehaviour
         if (collision.collider.GetComponent<Mushroom>())
         {
             
-            Debug.Log("SETAAA");
+            //Debug.Log("SETAAA");
             if (!_isBig)
             {
                 _isGrowing = true;

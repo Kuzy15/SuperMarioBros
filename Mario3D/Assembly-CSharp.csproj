@@ -64,11 +64,14 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Brick.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Entity.cs" />
     <Compile Include="Assets\Scripts\GameCamera.cs" />
+    <Compile Include="Assets\Scripts\GreenKoopaTroopa.cs" />
     <Compile Include="Assets\Scripts\MagicBlock.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/UNIVERSIDAD/2019-2020/TFG/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
