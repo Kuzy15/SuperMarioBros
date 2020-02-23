@@ -23,6 +23,18 @@ TextureImporter:
   - first:
       213: 4646170101847363481
     second: greenKoopaTroopaDead_1
+  - first:
+      213: 7698021580004394246
+    second: redKoopaTroopa_0
+  - first:
+      213: -4625126830506211728
+    second: redKoopaTroopa_1
+  - first:
+      213: -1631195124187680748
+    second: redKoopaTroopaDead_0
+  - first:
+      213: -2486362451869397146
+    second: redKoopaTroopaDead_1
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -230,7 +242,7 @@ TextureImporter:
         x: 160
         y: 96
         width: 16
-        height: 24
+        height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -249,9 +261,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 176
-        y: 97
+        y: 96
         width: 16
-        height: 24
+        height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -261,6 +273,90 @@ TextureImporter:
       bones: []
       spriteID: c4647e6e00f5c884f94c51194876cc74
       internalID: 4646170101847363481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: redKoopaTroopa_0
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 16
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7484e2728c7ca44c83a522bff8f2eb4
+      internalID: 7698021580004394246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: redKoopaTroopa_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 32
+        width: 16
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5104d7c54d520ca41838c6645a782d40
+      internalID: -4625126830506211728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: redKoopaTroopaDead_0
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6570923db5506964996ac7275d31286e
+      internalID: -1631195124187680748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: redKoopaTroopaDead_1
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 32
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: faa64fce1695223499b869695f083bf6
+      internalID: -2486362451869397146
       vertices: []
       indices: 
       edges: []

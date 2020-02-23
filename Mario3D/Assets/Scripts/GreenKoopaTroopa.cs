@@ -5,35 +5,51 @@ using UnityEngine;
 public class GreenKoopaTroopa : Enemy
 {
     public Sprite[] reviveAnim;
-    private Sprite[] aux;
-    protected bool asd = false;
-    protected bool fgh = false;
+
+    protected bool _reviving = false;
+
+    private Sprite[] _aux;
+    private bool _stopCoroutine = false;
 
     public override void Die()
     {
-        aux = anim;
-        _dead = true;
-        _renderer.sprite = animDead;
-        StartCoroutine(Revive());     
+        if (!_reviving)
+        {
+            _reviving = true;
+            _aux = anim;
+            _dead = true;
+            _canMove = false;
+            _collider.size = new Vector3(1.0f, 1.0f, 0.2f);
+            _collider.center = new Vector3(0, 0.5f, 0);
+            _renderer.sprite = animDead;
+            StartCoroutine(Revive());
+        }
+        else
+        {
+            _dead = true;
+            _canMove = true;
+            _renderer.sprite = animDead;
+            _velocity = 3.0f;
+            _stopCoroutine = true;
+            _dir *= -1;
+        }
     }
 
     IEnumerator Revive()
     {
-
-        if (!asd)
+        yield return new WaitForSeconds(4.0f);
+        if (!_stopCoroutine)
         {
+            anim = reviveAnim;
             _dead = false;
-            Debug.Log("1");
-            System.Array.Copy(reviveAnim, anim, 2);
-            asd = true;
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.0f);
+       
+            _canMove = true;
+            _collider.size = new Vector3(1.0f, 1.5f, 0.2f);
+            _collider.center = new Vector3(0, 0.75f, 0);
+            _reviving = false;
+            anim = _aux;
         }
-        //else
-        //{
-        //    Debug.Log("2");
-        //    anim = aux;
-        //    yield return null;
-        //}
-
+        yield return null;
     }
 }

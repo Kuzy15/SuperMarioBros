@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class RedKoopaTroopa : GreenKoopaTroopa
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float range = 0;
 
-    // Update is called once per frame
-    void Update()
+
+    public override void EnemyMove()
     {
-        
+
+        transform.Translate(new Vector3(1.0f * _dir, 0) * Time.deltaTime);
+
+        RaycastHit hit;
+
+        Debug.DrawRay(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.left * _dir), Color.yellow);
+
+        if (Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.right), out hit, 0.5f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.left), out hit, 0.5f))
+        {
+            if (hit.transform.gameObject.tag != "Player")
+                _dir *= -1;
+        }
+
+        if(_startPosition.x - range >= transform.position.x || _startPosition.x <= transform.position.x)
+        {
+            _renderer.flipX = !_renderer.flipX;
+            _dir *= -1;
+        }
     }
 }

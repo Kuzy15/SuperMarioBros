@@ -231,7 +231,7 @@ public class Player : MonoBehaviour
                 {
                     Debug.Log("enemy hit");
                     hit.transform.gameObject.GetComponent<Enemy>().Die();
-
+                    _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
                 }
 
 
