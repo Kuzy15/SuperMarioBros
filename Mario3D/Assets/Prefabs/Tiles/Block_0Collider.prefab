@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1768083314387249196}
   - component: {fileID: 3745761655325980707}
   - component: {fileID: -471110943347824499}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Block_0Collider
   m_TagString: Solid
   m_Icon: {fileID: 0}

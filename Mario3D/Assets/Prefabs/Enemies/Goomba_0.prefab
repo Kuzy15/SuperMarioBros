@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1912510781644494190}
   - component: {fileID: 1912510781644494161}
   - component: {fileID: 1912510781644494189}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Goomba_0
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -115,7 +115,6 @@ MonoBehaviour:
   animDead: {fileID: -2646936077272662393, guid: bd4700f19cee4af40bb9288a80c5d9d4,
     type: 3}
   animSpeed: 6
-  down: 0
 --- !u!54 &1912510781644494189
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7645244719690595454}
   - component: {fileID: 7645244719690595449}
   - component: {fileID: 7645244719690595448}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: RedKoopaTroopa_0
   m_TagString: Enemy
   m_Icon: {fileID: 0}

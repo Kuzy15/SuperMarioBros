@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
 
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
     private bool _isGrowing = false;
     private float velocity = 0;
     private bool isJumping = false;
+    private bool invulnerable = false;
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +102,8 @@ public class Player : MonoBehaviour
 
         CheckCollisons(Vector3.up);
         CheckCollisons(Vector3.down);
+        CheckCollisons(Vector3.right);
+        CheckCollisons(Vector3.left);
 
 
 
@@ -240,7 +244,7 @@ public class Player : MonoBehaviour
             {
             }
         }
-        else
+        else if(dir == Vector3.up)
         {
             if (Physics.Raycast(transform.position + new Vector3(0, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
@@ -252,7 +256,7 @@ public class Player : MonoBehaviour
                 }
 
                 //Solo cuando es pequeño
-                if(hit.transform.gameObject.GetComponent<Brick>())
+                if (hit.transform.gameObject.GetComponent<Brick>())
                 {
                     if (_isBig)
                     {
@@ -261,16 +265,45 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
-                        hit.transform.gameObject.GetComponent<Brick>().StartMoveBrick();                   
+                        hit.transform.gameObject.GetComponent<Brick>().StartMoveBrick();
                     }
                 }
             }
-            else
-            {
+        }
+        else
+        {
 
+            if (Physics.Raycast(transform.position + new Vector3(0, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) - 0.2f))
+            {
+                Debug.DrawRay(transform.position + new Vector3(0, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+
+                if (hit.transform.gameObject.GetComponent<MagicBlock>())
+                {
+                    hit.transform.gameObject.GetComponent<MagicBlock>().ActivateBlock();
+                }
+                if (hit.transform.gameObject.GetComponent<Enemy>())
+                {
+                    if (_isBig)
+                    {
+                        invulnerable = true;
+                        ChangeCollider();
+                        Invoke("SetInvulnerable", 1.5f);
+                        _isBig = false;
+                    }
+                    else
+                    {
+                        if(!invulnerable)
+                            Destroy(this.gameObject);
+                    }
+                }
             }
         }
 
+    }
+
+    private void SetInvulnerable()
+    {
+        invulnerable = false;
     }
 
 
@@ -278,11 +311,11 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Vertical"))
         {
-            
+
             //and you are on the ground...
             if (_onGround && _jumpTime > 0)
             {
-                Debug.Log("to jump");
+                //Debug.Log("to jump");
                 isJumping = true;
                 _onGround = false;
                 SetAnim(2, IsBigMario());
@@ -336,18 +369,61 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void Invulnerable()
+    {
+        _collider.enabled = true;
+        _rigidBody.useGravity = true;
+        Debug.Log("MARIO COLLIDER --------------- ");
+    }
+
+    private void CheckDead()
+    {
+
+        Debug.Log("MARIO ENEMY --------------- ");
+
+
+        // If Mario is big and collisions with an enemy
+        if (_isBig)
+        {
+            /* _collider.enabled = false;
+             _rigidBody.useGravity = false;
+             Invoke("Invulnerable", 1.0f);*/
+            Debug.Log("MARIO LITTLE --------------- ");
+            // Make Mario little
+            ChangeCollider();
+            _isBig = false;
+        }
+        else
+        {
+            // Mario dies
+            Debug.Log("MARIO DEAD --------------- ");
+            Destroy(gameObject);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.GetComponent<Mushroom>())
         {
-            
-            //Debug.Log("SETAAA");
+
             if (!_isBig)
             {
                 _isGrowing = true;
                 GrowUp();
             }
             Destroy(collision.collider.gameObject);
+        }
+        /*if (collision.collider.GetComponent<Enemy>())
+        {
+            CheckDead();
+        }*/
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.collider.GetComponent<Enemy>())
+        {
+            CheckDead();
         }
     }
 

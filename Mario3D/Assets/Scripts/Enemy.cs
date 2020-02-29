@@ -9,8 +9,10 @@ public class Enemy : MonoBehaviour
     private int _currentAnim = 0; 
 
     protected Vector3 _startPosition;
+    protected Vector3 positionShell;
     protected SpriteRenderer _renderer;
     protected BoxCollider _collider;
+    protected Rigidbody _rigidbody;
     protected int _dir = -1;
     protected float _velocity = 1.0f;
     protected bool _dead = false;
@@ -25,7 +27,9 @@ public class Enemy : MonoBehaviour
     {
         _renderer = this.GetComponent<SpriteRenderer>();
         _collider = this.GetComponent<BoxCollider>();
+        _rigidbody = this.GetComponent<Rigidbody>();
         _startPosition = this.transform.position;
+        positionShell = _startPosition;
     }
 
     // Update is called once per frame
@@ -82,6 +86,13 @@ public class Enemy : MonoBehaviour
             if (hit.transform.gameObject.tag != "Player")
                 _dir *= -1;
         }
+        if (_dir > 0)
+        {
+            _renderer.flipX = true;
+        }
+        else {
+            _renderer.flipX = false;
+        }
     }
 
     public void AddPoint()
@@ -94,6 +105,30 @@ public class Enemy : MonoBehaviour
         _dead = true;
         _renderer.sprite = animDead;
         Destroy(gameObject, 1.0f);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Debug.Log("COLLISION ENTER");
+            _collider.isTrigger = true;
+            _rigidbody.useGravity = false;
+
+            // AVISAR A MARIO DE QUE A CHOCADO UN ENEMIGO
+        }
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+
+        if (other.gameObject.tag == "Player")
+        {
+            Debug.Log("COLLISION EXIT");
+            _collider.isTrigger = false;
+            _rigidbody.useGravity = true;
+        }
     }
 
 }
