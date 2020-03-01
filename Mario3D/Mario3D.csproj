@@ -655,6 +655,7 @@
     <Compile Include="Assets\Scripts\GameCamera.cs" />
     <Compile Include="Assets\Scripts\GreenKoopaTroopa.cs" />
     <Compile Include="Assets\Scripts\MagicBlock.cs" />
+    <Compile Include="Assets\Scripts\MapReader.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
