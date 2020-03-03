@@ -56,110 +56,122 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _directionX = Input.GetAxis("Horizontal");
-        _directionY = Input.GetAxis("Vertical");
-
-        if (!_isGrowing)
+        if (!GameCamera.Instance.GetLooking())
         {
-
-            if (_directionX < 0)
+            _directionX = Input.GetAxis("Horizontal");
+            _directionY = Input.GetAxis("Vertical");
+            if(_directionX == 0 && _directionY == 0)
             {
-                _marioSprite.flipX = true;
-                SetAnim(1, _isBig);
-            }
-            else if (_directionX > 0)
-            {
-                _marioSprite.flipX = false;
-                SetAnim(1, _isBig);
+                GameCamera.Instance.SetCanReset();
             }
             else
             {
-                SetAnim(0, _isBig);
+                GameCamera.Instance.InactiveCanReset();
             }
-            if (_directionY > 0)
+
+            if (!_isGrowing)
             {
-                //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 0.05f, this.transform.position.z);
-                SetAnim(2, _isBig);
-            }
-        }
-        else
-        {
-            SetAnim(3, !_isBig);
-        }
-        velocity = Mathf.Lerp(velocity, _directionX, shift * Time.deltaTime);
 
-        if (velocity < 0.000003f && velocity > -0.000003f)
-        {
-            velocity = 0;
-        }
-
-        Vector2 pos = this.transform.position;
-        pos.x += (speed * velocity * Time.deltaTime);
-
-
-
-
-
-        CheckCollisons(Vector3.up);
-        CheckCollisons(Vector3.down);
-        CheckCollisons(Vector3.right);
-        CheckCollisons(Vector3.left);
-
-
-
-
-
-
-        transform.position = pos;
-
-
-
-
-        if (!_isGrowing)
-        {
-            _animTime += Time.deltaTime * (Mathf.Abs(velocity)) * (speed * 2);
-        }
-        else
-        {
-            _animTime += Time.deltaTime * 15;
-        }
-
-        if ((int)_animTime >= 1)
-        {
-            _animTime = 0;
-            _currentSprite++;
-        }
-        if (_currentAnim != null)
-        {
-            if (_currentSprite >= _currentAnim.Length)
-            {
-                _currentSprite = 0;
-                if (_isGrowing)
+                if (_directionX < 0)
                 {
-                    _isGrowing = false;
-                    _currentSprite = _currentAnim.Length - 1;
+                    _marioSprite.flipX = true;
+                    SetAnim(1, _isBig);
+                }
+                else if (_directionX > 0)
+                {
+                    _marioSprite.flipX = false;
+                    SetAnim(1, _isBig);
+                }
+                else
+                {
+                    SetAnim(0, _isBig);
+                }
+                if (_directionY > 0)
+                {
+                    //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 0.05f, this.transform.position.z);
+                    SetAnim(2, _isBig);
                 }
             }
-            _marioSprite.sprite = _currentAnim[_currentSprite];
-        }
+            else
+            {
+                SetAnim(3, !_isBig);
+            }
+            velocity = Mathf.Lerp(velocity, _directionX, shift * Time.deltaTime);
 
+            if (velocity < 0.000003f && velocity > -0.000003f)
+            {
+                velocity = 0;
+            }
+
+            Vector2 pos = this.transform.position;
+            pos.x += (speed * velocity * Time.deltaTime);
+
+
+
+
+
+            CheckCollisons(Vector3.up);
+            CheckCollisons(Vector3.down);
+            CheckCollisons(Vector3.right);
+            CheckCollisons(Vector3.left);
+
+
+
+
+
+
+            transform.position = pos;
+
+
+
+
+            if (!_isGrowing)
+            {
+                _animTime += Time.deltaTime * (Mathf.Abs(velocity)) * (speed * 2);
+            }
+            else
+            {
+                _animTime += Time.deltaTime * 15;
+            }
+
+            if ((int)_animTime >= 1)
+            {
+                _animTime = 0;
+                _currentSprite++;
+            }
+            if (_currentAnim != null)
+            {
+                if (_currentSprite >= _currentAnim.Length)
+                {
+                    _currentSprite = 0;
+                    if (_isGrowing)
+                    {
+                        _isGrowing = false;
+                        _currentSprite = _currentAnim.Length - 1;
+                    }
+                }
+                _marioSprite.sprite = _currentAnim[_currentSprite];
+            }
+        }
 
     }
 
     private void FixedUpdate()
     {
-
-        JumpMove();
-
-        if (Input.GetKeyDown(KeyCode.O))
+        if (!GameCamera.Instance.GetLooking())
         {
-            _isGrowing = true;
-            GrowUp();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            _isGrowing = true;
-            GrowDown();
+            JumpMove();
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                _isGrowing = true;
+                GrowUp();
+            }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                _isGrowing = true;
+                GrowDown();
+            }
         }
 
     }
@@ -226,7 +238,7 @@ public class Player : MonoBehaviour
 
                     if (isJumping)
                     {
-                        Debug.Log("change anim to idle");
+                        //Debug.Log("change anim to idle");
                         SetAnim(0, IsBigMario());
                         isJumping = false;
                     }
