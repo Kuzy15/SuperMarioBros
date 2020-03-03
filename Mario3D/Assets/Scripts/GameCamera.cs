@@ -45,11 +45,11 @@ public class GameCamera : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
+            refPosition = Camera.main.transform.position;
             SetLookingMode();
         }
         if (looking)
         {
-            refPosition = Camera.main.transform.position;
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (scroll != 0.0f)
             {
@@ -59,15 +59,12 @@ public class GameCamera : MonoBehaviour
             sett = false;
 
             Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed2 * Time.deltaTime);
-            /*float dir = Input.GetAxis("Horizontal");
+            float dir = Input.GetAxis("Horizontal");
             transform.Translate(new Vector3(dir * 4 * Time.deltaTime, 0, transform.position.z));
-            if(Input.GetKeyDown(KeyCode.L)){
-                if (!sett)
-                {
-                    Camera.main.transform.position = refPosition;
-                    sett = true;
-                }
-            }*/
+            if(Input.GetKeyDown(KeyCode.R)){
+                Camera.main.transform.position = refPosition;
+                StartCoroutine("coroutine");
+            }
 
         }
         else
@@ -82,9 +79,15 @@ public class GameCamera : MonoBehaviour
         }
     }
 
+    IEnumerator coroutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        looking = false;
+    }
+
     private void SetLookingMode()
     {
-        looking = !looking;
+        looking = true;
     }
 
     public bool GetLooking()
