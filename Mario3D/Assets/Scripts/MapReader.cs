@@ -12,6 +12,8 @@ public class MapReader : MonoBehaviour
     private GameObject[] _prefabs;
     private Dictionary<string, GameObject> _tiles;
 
+    public int mapLevel = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,7 @@ public class MapReader : MonoBehaviour
 
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
 
-        ReadTextFile("Assets/Resources/Maps/1-1.csv");
+        ReadTextFile("Assets/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
         LoadTiles();
 
         CreateMap();
@@ -76,14 +78,20 @@ public class MapReader : MonoBehaviour
             {
                 if (_parsedList[i][j] != "-1")
                 {
+                    Debug.Log(_parsedList[i][j]);
                     GameObject tile = Instantiate(_tiles[_parsedList[i][j]], new Vector3(this.gameObject.transform.position.x + j, this.gameObject.transform.position.y - i, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
 
                     if(_parsedList[i][j] == "0" || _parsedList[i][j] == "1" || _parsedList[i][j] == "2" || _parsedList[i][j] == "3" ||
-                       _parsedList[i][j] == "24" || _parsedList[i][j] == "33" || _parsedList[i][j] == "66" || _parsedList[i][j] == "68" ||
-                       _parsedList[i][j] == "264" || _parsedList[i][j] == "265" || _parsedList[i][j] == "266" || _parsedList[i][j] == "267" ||
-                       _parsedList[i][j] == "268" || _parsedList[i][j] == "280" || _parsedList[i][j] == "297" || _parsedList[i][j] == "298" ||
-                       _parsedList[i][j] == "299" || _parsedList[i][j] == "300" || _parsedList[i][j] == "301" || _parsedList[i][j] == "313")
+                       _parsedList[i][j] == "24" || _parsedList[i][j] == "30" || _parsedList[i][j] == "33" || _parsedList[i][j] == "66" || _parsedList[i][j] == "67" ||
+                       _parsedList[i][j] == "68" || _parsedList[i][j] == "69" || _parsedList[i][j] == "90" || _parsedList[i][j] == "99" ||
+                       _parsedList[i][j] == "167" || _parsedList[i][j] == "264" || _parsedList[i][j] == "265" || _parsedList[i][j] == "266" ||
+                       _parsedList[i][j] == "267" || _parsedList[i][j] == "268" || _parsedList[i][j] == "269" || _parsedList[i][j] == "270" ||
+                       _parsedList[i][j] == "271" || _parsedList[i][j] == "280" || _parsedList[i][j] == "297" || _parsedList[i][j] == "298" ||
+                       _parsedList[i][j] == "299" || _parsedList[i][j] == "300" || _parsedList[i][j] == "301" || _parsedList[i][j] == "313" ||
+                       _parsedList[i][j] == "795" || _parsedList[i][j] == "796" || _parsedList[i][j] == "797" ||
+
+                       _parsedList[i][j] == "292" /*es del spritesheet de objetos*/)
                     {
                         tile.gameObject.tag = "Solid";
                     }
