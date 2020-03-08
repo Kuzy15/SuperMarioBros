@@ -2104,9 +2104,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2013927820}
   followPlayer: 1
-  offset: {x: 0, y: 0, z: 0}
-  smoothSpeed: 10
-  zoomSpeed: 0
+  offset: {x: 0, y: 0, z: 2}
+  smoothSpeed: 2
+  zoomSpeed: 6
   targetOrtho: 0
   orthoSize: 0
   smoothSpeed2: 2
@@ -2137,10 +2137,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0
-  far clip plane: 2
+  far clip plane: 8
   field of view: 60
   orthographic: 1
-  orthographic size: 5.5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2164,7 +2164,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2181,8 +2181,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.07359314, y: 13.93224, z: 1}
+  m_Center: {x: -9.396797, y: 0, z: 0}
 --- !u!1 &524944939
 GameObject:
   m_ObjectHideFlags: 0
@@ -8172,6 +8172,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3008593004299363308, guid: 2192ddc7f27f6da498a1880de056ead4,
         type: 3}
+    - target: {fileID: 7027009037887319581, guid: 6b49e488b8135034ba40f3c34c3f9afd,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7027009038750793057, guid: 6b49e488b8135034ba40f3c34c3f9afd,
         type: 3}
       propertyPath: force

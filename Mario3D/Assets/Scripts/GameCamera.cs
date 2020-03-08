@@ -45,39 +45,44 @@ public class GameCamera : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (target != null)
         {
-            refPosition = Camera.main.transform.position;
-            SetLookingMode();
-        }
-        if (looking)
-        {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-            if (scroll != 0.0f)
+            if (Input.GetKeyDown(KeyCode.L))
             {
-                targetOrtho -= scroll * zoomSpeed;
-                targetOrtho = Mathf.Clamp(targetOrtho, minOrtho, maxOrtho);
+                refPosition = Camera.main.transform.position;
+                SetLookingMode();
             }
-            sett = false;
-
-            Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed2 * Time.deltaTime);
-            float dir = Input.GetAxis("Horizontal");
-            transform.Translate(new Vector3(dir * scrollSpeed * Time.deltaTime, 0, transform.position.z));
-            if(Input.GetKeyDown(KeyCode.R)){
-                Camera.main.transform.position = refPosition;
-                StartCoroutine("coroutine");
-            }
-
-        }
-        else
-        {
-            targetOrtho = Camera.main.orthographicSize = orthoSize;
-            //sett = false;
-            /*if (canReset)
+            if (looking)
             {
-                Camera.main.transform.position = refPosition;
-                //canReset = false;
-            }*/
+                float scroll = Input.GetAxis("Mouse ScrollWheel");
+                if (scroll != 0.0f)
+                {
+                    targetOrtho -= scroll * zoomSpeed;
+                    targetOrtho = Mathf.Clamp(targetOrtho, minOrtho, maxOrtho);
+                }
+                sett = false;
+
+                Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed2 * Time.deltaTime);
+                float dir = Input.GetAxis("Horizontal");
+                float vDir = Input.GetAxis("Vertical");
+                transform.Translate(new Vector3(dir * scrollSpeed * Time.deltaTime, vDir * scrollSpeed * Time.deltaTime, transform.position.z));
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Camera.main.transform.position = refPosition;
+                    StartCoroutine("coroutine");
+                }
+
+            }
+            else
+            {
+                targetOrtho = Camera.main.orthographicSize = orthoSize;
+                //sett = false;
+                /*if (canReset)
+                {
+                    Camera.main.transform.position = refPosition;
+                    //canReset = false;
+                }*/
+            }
         }
     }
 
@@ -113,19 +118,22 @@ public class GameCamera : MonoBehaviour
     //Si tiene un target establecido, entonces la camara se encargará de seguirle, con un determinado offset.
     void LateUpdate()
     {
-        if (!looking)
+        if (target != null)
         {
-            if (followPlayer && (target.position - lastPos).x > 0)
+            if (!looking)
             {
-                Vector3 desiredPosition = target.position + offset;
-                Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-                transform.position = new Vector3(smoothedPosition.x, transform.position.y, transform.position.z);
-                lastPos = transform.position;
-            }
-            else
-            {
-                //Debug.Log("AHHAHAHA");
-                //canReset = true;
+                if (followPlayer && (target.position - lastPos).x > 0)
+                {
+                    Vector3 desiredPosition = target.position + offset;
+                    Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+                    transform.position = new Vector3(smoothedPosition.x, transform.position.y, transform.position.z);
+                    lastPos = transform.position;
+                }
+                else
+                {
+                    //Debug.Log("AHHAHAHA");
+                    //canReset = true;
+                }
             }
         }
        // clampPlayerMovement();
