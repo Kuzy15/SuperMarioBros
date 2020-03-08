@@ -53,9 +53,12 @@ public class Mushroom : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 0.5f) || Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hit, 0.5f))
             {
-                // Apply the force to the rigidbody.
-                this.transform.position = new Vector3(this.transform.position.x - 0.2f * _dir, this.transform.position.y, this.transform.position.z);
-                _dir *= -1;
+                if (!hit.transform.gameObject.GetComponent<Enemy>())
+                {
+                    // Apply the force to the rigidbody.
+                    this.transform.position = new Vector3(this.transform.position.x - 0.2f * _dir, this.transform.position.y, this.transform.position.z);
+                    _dir *= -1;
+                }
             }
         }
         

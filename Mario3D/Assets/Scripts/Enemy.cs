@@ -35,9 +35,23 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_dead)
+        if (!GameCamera.Instance.GetLooking())
         {
-            EnemyAnim();
+            bool vis = GameCamera.Instance.IsVisibleFrom(_renderer, Camera.main);
+            if (vis)
+            {
+                _canMove = true;
+            }
+            else
+            {
+                _canMove = false;
+            }
+
+
+            if (!_dead)
+            {
+                EnemyAnim();
+            }
         }
     }
 
@@ -45,7 +59,7 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         // si esta dentro del rango de camara
-        if (_canMove)
+        if (!GameCamera.Instance.GetLooking() && _canMove)
         {
             EnemyMove();
         }
@@ -56,7 +70,7 @@ public class Enemy : MonoBehaviour
         _time += Time.deltaTime * animSpeed;
         if (_time >= 1f)
         {
-            Debug.Log("anim");
+            //Debug.Log("anim");
             _currentAnim++;
             _time = 0;
         }
@@ -70,6 +84,7 @@ public class Enemy : MonoBehaviour
             _currentAnim = 0;
         }
     }
+
 
     public virtual void EnemyMove()
     {
