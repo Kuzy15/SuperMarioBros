@@ -14,16 +14,26 @@ public class MagicBlock : MonoBehaviour
     private bool _goDown = false;
     private bool _dropped = false;
 
-    public Sprite[] anim;
-    public Sprite disableBlock;
-    public float animSpeed = 0;
-    public GameObject entity;
+    private Sprite[] anim;
+    private Sprite disableBlock;
+    private float animSpeed = 0;
+    private GameObject entity;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        FillMagicBlock();
         _startPosition = this.transform.position;
         _renderer = this.GetComponent<SpriteRenderer>();
+    }
+
+    void FillMagicBlock()
+    {
+        anim = MagicBlockManager.GM.GetAnim();
+        disableBlock = MagicBlockManager.GM.GetDisableBlock();
+        animSpeed = MagicBlockManager.GM.GetAnimSpeed();
+        entity = MagicBlockManager.GM.SetEntity();
     }
 
     // Update is called once per frame
