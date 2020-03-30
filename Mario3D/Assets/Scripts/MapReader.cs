@@ -78,7 +78,7 @@ public class MapReader : MonoBehaviour
             {
                 if (_parsedList[i][j] != "-1")
                 {
-                    Debug.Log(_parsedList[i][j]);
+                    //Debug.Log(_parsedList[i][j]);
                     GameObject tile = Instantiate(_tiles[_parsedList[i][j]], new Vector3(this.gameObject.transform.position.x + j, this.gameObject.transform.position.y - i, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
 

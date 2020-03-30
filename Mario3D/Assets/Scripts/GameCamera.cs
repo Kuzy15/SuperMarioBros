@@ -111,7 +111,7 @@ public class GameCamera : MonoBehaviour
         }
 
         _camera = this;
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
         lastPos = transform.position;
     }
 
@@ -131,7 +131,7 @@ public class GameCamera : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log("AHHAHAHA");
+                    ////Debug.Log("AHHAHAHA");
                     //canReset = true;
                 }
             }

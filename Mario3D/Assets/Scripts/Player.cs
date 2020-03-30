@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class Player : MonoBehaviour
@@ -234,20 +235,20 @@ public class Player : MonoBehaviour
 
                 if (hit.transform.tag == "Solid")
                 {
-                    //Debug.Log("SUELO");
+                    ////Debug.Log("SUELO");
                     _onGround = true;
                     //_jumpTime = _time;
 
                     if (isJumping)
                     {
-                        Debug.Log("change anim to idle");
+                        //Debug.Log("change anim to idle");
                         SetAnim(0, IsBigMario());
                         isJumping = false;
                     }
                 }
                 else if (hit.transform.tag == "Enemy")
                 {
-                    Debug.Log("enemy hit");
+                    //Debug.Log("enemy hit");
                     hit.transform.gameObject.GetComponent<Enemy>().Die();
                     _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
                 }
@@ -306,8 +307,8 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
-                        if(!invulnerable)
-                            Destroy(this.gameObject);
+                        if (!invulnerable)
+                            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                     }
                 }
             }
@@ -329,7 +330,7 @@ public class Player : MonoBehaviour
             //and you are on the ground...
             if (_onGround && _jumpTime > 0)
             {
-                //Debug.Log("to jump");
+                ////Debug.Log("to jump");
                 isJumping = true;
                 _onGround = false;
                 SetAnim(2, IsBigMario());
@@ -387,13 +388,13 @@ public class Player : MonoBehaviour
     {
         _collider.enabled = true;
         _rigidBody.useGravity = true;
-        Debug.Log("MARIO COLLIDER --------------- ");
+        //Debug.Log("MARIO COLLIDER --------------- ");
     }
 
     private void CheckDead()
     {
 
-        Debug.Log("MARIO ENEMY --------------- ");
+        //Debug.Log("MARIO ENEMY --------------- ");
 
 
         // If Mario is big and collisions with an enemy
@@ -402,7 +403,7 @@ public class Player : MonoBehaviour
             /* _collider.enabled = false;
              _rigidBody.useGravity = false;
              Invoke("Invulnerable", 1.0f);*/
-            Debug.Log("MARIO LITTLE --------------- ");
+            //Debug.Log("MARIO LITTLE --------------- ");
             // Make Mario little
             ChangeCollider();
             _isBig = false;
@@ -410,8 +411,8 @@ public class Player : MonoBehaviour
         else
         {
             // Mario dies
-            Debug.Log("MARIO DEAD --------------- ");
-            Destroy(gameObject);
+            //Debug.Log("MARIO DEAD --------------- ");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 

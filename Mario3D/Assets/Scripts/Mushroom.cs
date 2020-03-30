@@ -71,7 +71,7 @@ public class Mushroom : MonoBehaviour
             this.transform.position = new Vector3(this.transform.position.x - 0.2f * _dir, this.transform.position.y, this.transform.position.z);
             _dir *= -1;
         }*/
-        //Debug.Log(_player.GetComponent<Player>().GetMarioPosition().x + "    " + this.transform.position.x);
+        ////Debug.Log(_player.GetComponent<Player>().GetMarioPosition().x + "    " + this.transform.position.x);
     }
 
     // Update is called once per frame
@@ -84,12 +84,12 @@ public class Mushroom : MonoBehaviour
         }
         /*else
         {
-            Debug.Log("Colliding");
+            //Debug.Log("Colliding");
             _rigidbody.velocity = new Vector3(2f * _dir, _rigidbody.velocity.y, 0);
         }*/
         /*else if (collision.gameObject.tag == "Solid" /*&& !_canMove)
         {
-            Debug.Log("SOLID");
+            //Debug.Log("SOLID");
             _canMove = true;
             _rigidbody.AddForce(new Vector3(4f, 0f)*Time.deltaTime, ForceMode.Impulse);
         }*/

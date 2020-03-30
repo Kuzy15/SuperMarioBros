@@ -11,7 +11,7 @@ public class RedKoopaTroopa : GreenKoopaTroopa
 
         transform.Translate(new Vector3(1.0f * _dir, 0) * Time.deltaTime);
 
-        Debug.Log("IS SHELL: " + isShell);
+        //Debug.Log("IS SHELL: " + isShell);
 
         if (!isShell)
         {

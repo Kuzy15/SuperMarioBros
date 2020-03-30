@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
         _time += Time.deltaTime * animSpeed;
         if (_time >= 1f)
         {
-            //Debug.Log("anim");
+            ////Debug.Log("anim");
             _currentAnim++;
             _time = 0;
         }
@@ -126,7 +126,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("COLLISION ENTER");
+            //Debug.Log("COLLISION ENTER");
             _collider.isTrigger = true;
             _rigidbody.useGravity = false;
 
@@ -140,7 +140,7 @@ public class Enemy : MonoBehaviour
 
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("COLLISION EXIT");
+            //Debug.Log("COLLISION EXIT");
             _collider.isTrigger = false;
             _rigidbody.useGravity = true;
         }

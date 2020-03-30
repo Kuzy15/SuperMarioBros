@@ -17,7 +17,7 @@ public class MagicBlockManager : MonoBehaviour
         else
             GM = this;
 
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
     public Sprite[] GetAnim()
