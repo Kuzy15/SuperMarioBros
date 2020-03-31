@@ -96,10 +96,14 @@ public class MapReader : MonoBehaviour
                         tile.gameObject.tag = "Solid";
                     }
 
-                    if(_parsedList[i][j] == "24")
+                    if (_parsedList[i][j] == "24")
                     {
                         tile.AddComponent<MagicBlock>();
                     }
+                    else if (_parsedList[i][j] == "313")
+                    {
+                        tile.GetComponent<BoxCollider>().isTrigger = true;
+                    }             
                 }
             }
         }

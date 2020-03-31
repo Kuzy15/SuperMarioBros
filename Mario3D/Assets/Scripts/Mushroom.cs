@@ -48,12 +48,13 @@ public class Mushroom : MonoBehaviour
                 _rigidbody.detectCollisions = true;
             }
         }
-        else {
+        else
+        {
             this.transform.Translate(new Vector3(2f * _dir * Time.deltaTime, _rigidbody.velocity.y * Time.deltaTime, 0));
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 0.5f) || Physics.Raycast(transform.position, transform.TransformDirection(Vector3.left), out hit, 0.5f))
             {
-                if (!hit.transform.gameObject.GetComponent<Enemy>())
+                if (!hit.transform.gameObject.GetComponent<Enemy>() && !hit.transform.gameObject.GetComponent<Camera>())
                 {
                     // Apply the force to the rigidbody.
                     this.transform.position = new Vector3(this.transform.position.x - 0.2f * _dir, this.transform.position.y, this.transform.position.z);
@@ -61,7 +62,7 @@ public class Mushroom : MonoBehaviour
                 }
             }
         }
-        
+
         /*
         this.transform.Translate(new Vector3(2f * _dir * Time.deltaTime, _rigidbody.velocity.y*Time.deltaTime, 0));
         RaycastHit hit;
@@ -75,24 +76,24 @@ public class Mushroom : MonoBehaviour
     }
 
     // Update is called once per frame
-   /* private void OnCollisionEnter(Collision collision)
+    /* private void OnCollisionEnter(Collision collision)
+     {
+         if (collision.gameObject.tag == "Player")
+         {
+             //Growup
+             Destroy(this.gameObject);
+         }
+         /*else
+         {
+             //Debug.Log("Colliding");
+             _rigidbody.velocity = new Vector3(2f * _dir, _rigidbody.velocity.y, 0);
+         }*/
+    /*else if (collision.gameObject.tag == "Solid" /*&& !_canMove)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            //Growup
-            Destroy(this.gameObject);
-        }
-        /*else
-        {
-            //Debug.Log("Colliding");
-            _rigidbody.velocity = new Vector3(2f * _dir, _rigidbody.velocity.y, 0);
-        }*/
-        /*else if (collision.gameObject.tag == "Solid" /*&& !_canMove)
-        {
-            //Debug.Log("SOLID");
-            _canMove = true;
-            _rigidbody.AddForce(new Vector3(4f, 0f)*Time.deltaTime, ForceMode.Impulse);
-        }*/
+        //Debug.Log("SOLID");
+        _canMove = true;
+        _rigidbody.AddForce(new Vector3(4f, 0f)*Time.deltaTime, ForceMode.Impulse);
+    }*/
     //}*/
 
 

@@ -19,12 +19,12 @@ public class GameCamera : MonoBehaviour
     public int scrollSpeed = 8;
     
     private Vector3 refPosition;
-    bool sett = false;
+    //bool sett = false;
 
     private static GameCamera _camera = null;
 
     private bool looking = false;
-    private bool canReset = false;
+    //private bool canReset = false;
 
     public static GameCamera Instance
     {
@@ -60,7 +60,7 @@ public class GameCamera : MonoBehaviour
                     targetOrtho -= scroll * zoomSpeed;
                     targetOrtho = Mathf.Clamp(targetOrtho, minOrtho, maxOrtho);
                 }
-                sett = false;
+                //sett = false;
 
                 Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed2 * Time.deltaTime);
                 float dir = Input.GetAxis("Horizontal");
@@ -154,12 +154,12 @@ public class GameCamera : MonoBehaviour
 
     public void SetCanReset()
     {
-        canReset = true;
+        //canReset = true;
     }
 
     public void InactiveCanReset()
     {
-        canReset = false;
+        //canReset = false;
         //sett = false;
     }
 

@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     private bool isJumping = false;
     private bool invulnerable = false;
 
+    private bool isGroundedJ;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,7 +59,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        isGroundedJ = (_rigidBody.velocity.y == 0);
+        Debug.Log("IS GROUNDED: " + isJumping);
         if (!GameCamera.Instance.GetLooking())
         {
 
@@ -94,7 +97,8 @@ public class Player : MonoBehaviour
                 if (_directionY > 0)
                 {
                     //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 0.05f, this.transform.position.z);
-                    SetAnim(2, _isBig);
+                    //SetAnim(
+                       // 2, _isBig);
                 }
             }
             else
@@ -363,7 +367,7 @@ public class Player : MonoBehaviour
         {
             //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
             _jumpTime = _time;
-            _stoppedJumping = true;
+            //_stoppedJumping = true;
         }
     }
 
