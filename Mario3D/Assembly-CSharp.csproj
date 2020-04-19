@@ -79,8 +79,8 @@
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerInCastle.cs" />
+    <Compile Include="Assets\Scripts\PythonThread.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
-    <Compile Include="Assets\Scripts\test.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -14,7 +14,7 @@ public class InputFieldManager : MonoBehaviour
     public GameObject lengthField;
     public GameObject nFilesField;
     public GameObject filesToConcatenateField;
-    public test testObject;
+    public PythonThread testObject;
     string nGramsInput;
     string lengthInput;
     string nFilesInput;
@@ -38,6 +38,7 @@ public class InputFieldManager : MonoBehaviour
         nFilesField.SetActive(false);
         filesToConcatenateField.SetActive(false);
         n = 0;
+        GetFileNames();
     }
 
     // Update is called once per frame
@@ -87,7 +88,7 @@ public class InputFieldManager : MonoBehaviour
         n++;
         if(n >= int.Parse(nFilesInput))
         {
-            test.ExecuteCommand();
+            PythonThread.ExecuteCommand();
             MapReader.GM.InitMap(14);
             SceneManager.LoadScene(1);
         }
@@ -111,12 +112,17 @@ public class InputFieldManager : MonoBehaviour
         }
 
         arrFiles = new string[int.Parse(nFilesInput)];
+    }
 
-        /*SoundButton nusb = nu.GetComponent<SoundButton>();
-
-        nusb.Info = s;
-        nusb.theStar.enabled = false;
-        nusb.topColor = daBoss.TopColorFor(s);
-        nusb.bottomColor = daBoss.BottomColorFor(s);*/
+    public void GetFileNames()
+    {
+        string path = Application.dataPath + "/Maps";
+        string[] files = System.IO.Directory.GetFiles(path, "*.csv");
+        string[] fileNames = new string[files.Length];
+        for (int i = 0; i < files.Length; i++)
+        {
+            string file = System.IO.Path.GetFileNameWithoutExtension(files[i]);
+            fileNames[i] = file;
+        }
     }
 }

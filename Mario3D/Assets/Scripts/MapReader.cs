@@ -35,7 +35,7 @@ public class MapReader : MonoBehaviour
         _tiles = new Dictionary<string, GameObject>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNFilesInput() + "   Files: " + InputFieldManager.GM.GetFilesToConcatInput().Length);
-        ReadTextFile("D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Scripts/1-" + mapLevel.ToString() + ".csv");
+        ReadTextFile(Application.dataPath + "/Maps/1-" + mapLevel.ToString() + ".csv");
         LoadTiles();
     }
 

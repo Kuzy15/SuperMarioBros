@@ -5,11 +5,14 @@ using System.Threading;
 using System.Diagnostics;
 
 
-public class test : MonoBehaviour
+public class PythonThread : MonoBehaviour
 {
     // Start is called before the first frame update
-   
-
+    static string path;
+    private void Start()
+    {
+        path = Application.dataPath;
+    }
 
     public static void ExecuteCommand()
     {
@@ -35,7 +38,7 @@ public class test : MonoBehaviour
         processInfo.CreateNoWindow = false;
         processInfo.UseShellExecute = false;
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNGramsInput() + "   Files: " + InputFieldManager.GM.GetNGramsInput());
-        processInfo.WorkingDirectory = "D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Scripts";
+        processInfo.WorkingDirectory = path + "/Maps";
 
         var process = Process.Start(processInfo);
 
