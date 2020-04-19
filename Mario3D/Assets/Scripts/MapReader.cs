@@ -3,35 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using UnityEngine.SceneManagement;
+
+using System.Threading.Tasks;
+using IronPython;
 
 public class MapReader : MonoBehaviour
 {
-
+    public static MapReader GM;
     private List<string> _stringList;
     private List<string[]> _parsedList;
     private GameObject[] _prefabs;
     private Dictionary<string, GameObject> _tiles;
 
-    public int mapLevel = 1;
+    //public int mapLevel/* = 1*/;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
+    {
+        if (GM != null)
+            GameObject.Destroy(GM);
+        else
+            GM = this;
+
+        DontDestroyOnLoad(this);
+    }
+
+    public void InitMap(int mapLevel)
     {
         _stringList = new List<string>();
         _parsedList = new List<string[]>();
         _tiles = new Dictionary<string, GameObject>();
-
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
-
-        ReadTextFile("Assets/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
+        //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNFilesInput() + "   Files: " + InputFieldManager.GM.GetFilesToConcatInput().Length);
+        ReadTextFile("D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Scripts/1-" + mapLevel.ToString() + ".csv");
         LoadTiles();
+    }
+
+    public void GenerateMap() {
 
         CreateMap();
     }
 
 
-    private void ReadTextFile(string path)
+
+
+    private void ReadTextFile(string path, bool parse = true)
     {
+        if(_stringList.Count > 0)
+        {
+            _stringList.Clear();
+        }
         StreamReader map = new StreamReader(path);
 
         while (!map.EndOfStream)
@@ -42,8 +63,8 @@ public class MapReader : MonoBehaviour
         }
 
         map.Close();
-
-        ParseList();
+        if(parse)
+            ParseList();
     }
 
 
@@ -72,6 +93,7 @@ public class MapReader : MonoBehaviour
 
     void CreateMap()
     {
+        DestroyMap();
         for (int i = 0; i < _parsedList.Count; i++)
         {
             for (int j = 0; j < _parsedList[i].Length; j++)
@@ -106,6 +128,14 @@ public class MapReader : MonoBehaviour
                     }             
                 }
             }
+        }
+    }
+
+    public void DestroyMap()
+    {
+        if (this.gameObject != null)
+        {
+            Destroy(this.gameObject.transform);
         }
     }
 }

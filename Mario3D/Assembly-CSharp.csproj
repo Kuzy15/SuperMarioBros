@@ -71,13 +71,16 @@
     <Compile Include="Assets\Scripts\Entity.cs" />
     <Compile Include="Assets\Scripts\GameCamera.cs" />
     <Compile Include="Assets\Scripts\GreenKoopaTroopa.cs" />
+    <Compile Include="Assets\Scripts\InputFieldManager.cs" />
     <Compile Include="Assets\Scripts\MagicBlock.cs" />
     <Compile Include="Assets\Scripts\MagicBlockManager.cs" />
+    <Compile Include="Assets\Scripts\MapLoader.cs" />
     <Compile Include="Assets\Scripts\MapReader.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerInCastle.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
+    <Compile Include="Assets\Scripts\test.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
@@ -284,6 +287,27 @@
     </Reference>
     <Reference Include="UnityEngine.XRModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.15f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Reflection">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/IKVM.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.SQLite">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/IronPython.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata">
+      <HintPath>D:/Curso19-20/TFG/SM-Master/SuperMarioBros/Mario3D/Assets/Plugins/Python/IronPython-2.7.9/Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.15f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -639,6 +663,12 @@
     <Reference Include="Boo.Lang">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.15f1/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{26A14349-0366-E463-CF24-4331399C550A}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

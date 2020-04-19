@@ -48,8 +48,15 @@ public class MagicBlockManager : MonoBehaviour
 
     public GameObject SetEntity()
     {
-        int a = Random.Range(0, entityArr.Length);
-        entity = entityArr[a];
+        int p = Random.Range(0, 10);
+        if(p > 7)
+        {
+            entity = entityArr[entityArr.Length - 1];
+        }
+        else
+        {
+            entity = entityArr[0];
+        }
         return entity;
     }
 }

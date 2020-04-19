@@ -17,7 +17,7 @@ public class MagicBlock : MonoBehaviour
     private Sprite[] anim;
     private Sprite disableBlock;
     private float animSpeed = 0;
-    private GameObject entity;
+    public GameObject entity;
 
     // Start is called before the first frame update
     void Start()
@@ -108,17 +108,17 @@ public class MagicBlock : MonoBehaviour
             }
 
             _renderer.sprite = disableBlock;
-            
+
         }
     }
 
 
     private void InstantiateEntity()
     {
-        Instantiate(entity, _startPosition,Quaternion.identity);
+        Instantiate(entity, _startPosition, Quaternion.identity);
     }
 
-    
+
 
 
     public void ActivateBlock()
