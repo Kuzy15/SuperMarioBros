@@ -26,17 +26,6 @@ import random
 import os
 import csv
 
-#parser = argparse.ArgumentParser()
-#parser.add_argument("-v", "--verbose", help="Mostrar información de depuración", action="store_true")
-#parser.add_argument("-v", "--verbose", help="Mostrar información de depuración", action="store_true")
-#parser.add_argument("-v", "--verbose", help="Mostrar información de depuración", action="store_true")
-#parser.add_argument("-v", "--verbose", help="Mostrar información de depuración", action="store_true")
-#args = parser.parse_args()
- 
-
-# Aquí procesamos lo que se tiene que hacer con cada argumento
-#if args.verbose:
-#    print "depuración activada!!!"
 
 NFILES = int(sys.argv[1])
 FILE = []
@@ -46,6 +35,11 @@ for f in range(NFILES):
 N = int(sys.argv[NFILES + 2])
 WIDTH = int(sys.argv[NFILES + 3])
 OUTPUT = str(sys.argv[NFILES + 4])
+
+DEPURATION = False
+if(len(sys.argv) > NFILES + 5):
+    if str(sys.argv[NFILES + 5]) == "-d" or str(sys.argv[NFILES + 5]) == "--debug":
+        DEPURATION = True
 
 
 
@@ -96,16 +90,16 @@ def ReadFile(file):
     text = np.genfromtxt(file, delimiter=',',dtype=None)
     text = text.transpose()
     
-    #print(text)
-    #print()
+    if DEPURATION:
+        print("File name: " + str(file))
+        print(text)
+        print()
     
     return text
 
 # Generate N size sets of words, in our case game slices
 def GenerateNgrams(text, N):
     
-    #print("Text: ")
-    #print(text)
     
     # Store words (slices)
     words = []
@@ -128,8 +122,7 @@ def GenerateNgrams(text, N):
         word = word[:-1]
         # Save all the words
         words.append(word)
-        
-    #print("Words: " + str(words))
+    
 
     # Create all the ngrams sets
     for i in range(len(words) - N):
@@ -140,6 +133,11 @@ def GenerateNgrams(text, N):
             
         ngrams[sequence].append(words[i + N])
         
+    #if DEPURATION: 
+    #    print("Words: " + str(words) + "\n")
+    #    print("Ngrmas: " + str(ngrams) + "\n")
+    #    print()
+
     return ngrams, words
         
         
@@ -153,6 +151,9 @@ def GenerateText(ngrams, words, N, width):
     currentSequence = ' '.join(words[0:N])
     # This variable is used for continuing the generation of the text when we aren't able to generate the next word
     firstSequence = currentSequence
+    if DEPURATION:
+        print("First sequence: " + str(firstSequence))
+
     # Append the first sequence to the output text
     output = currentSequence
     
@@ -164,21 +165,34 @@ def GenerateText(ngrams, words, N, width):
             possibleWords = ngrams[currentSequence]
             nextWord = possibleWords[random.randrange(len(possibleWords))]
             output += ' ' + currentSequence + ' ' + nextWord
-            #print("output reset:" + str(output))
+
+            if DEPURATION:
+                print("Output reset:" + str(output))
+                print()
+
             i += N
             
         else:
             possibleWords = ngrams[currentSequence]
-            #print("Possible words: " + str(possibleWords))
+
             nextWord = possibleWords[random.randrange(len(possibleWords))]
-            #print("Next words: " + str(nextWord))
+            
+            if DEPURATION:
+                print("Possible words: " + str(possibleWords))
+                print("Next word: " + str(nextWord))
+                print()
+
             output += ' ' + nextWord
             
         wordsSequence = output
         auxSequence = list(wordsSequence.split(' '))
         currentSequence = auxSequence[len(auxSequence) - N:len(auxSequence)]
         currentSequence = ' '.join(currentSequence)
-        #print("currentSequencent seq: " + str(currentSequence))
+
+        if DEPURATION:
+            print("Next step sequence: " + str(currentSequence))
+            print()
+
         i += 1
  
     output = list(output.split(' '))
@@ -206,6 +220,9 @@ def SaveFile(fileName, text, width, height):
     del result
     csvoutput.close()
 
+    if DEPURATION:
+        print("Generated a " + str(N) + "gram file " + str(fileName) + " with a length of " + str(width + N))
+
 
 
 if NFILES == 1:
@@ -216,9 +233,18 @@ if NFILES == 1:
     # Retrieve the ngram sets and the possible words
     ngrams, words = GenerateNgrams(text, N)
 
+    if DEPURATION:
+        print("Generating " + str(N) + "grams: " + str(ngrams))
+        print()
+
 else:
-    print("multiple")
+    if DEPURATION:
+        print("Multiple input files")
     ngrams, words = Multiple()
+
+    if DEPURATION:
+        print("Generating " + str(N) + "grams: " + str(ngrams))
+        print()
 
 #The sum of N size gram and the length must be equal to the output matrix
 #(e.g N = 3 and total width of map = 224, length must be 221)
