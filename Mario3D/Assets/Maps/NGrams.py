@@ -25,7 +25,7 @@ import argparse
 import random
 import os
 import csv
-
+import time
 
 NFILES = int(sys.argv[1])
 FILE = []
@@ -40,6 +40,15 @@ DEPURATION = False
 if(len(sys.argv) > NFILES + 5):
     if str(sys.argv[NFILES + 5]) == "-d" or str(sys.argv[NFILES + 5]) == "--debug":
         DEPURATION = True
+        try: 
+            path = "../Logs/"
+            if not os.path.exists(path):
+                os.makedirs(path)
+            logFileName = time.strftime("%Y%m%d-%H%M%S") 
+            sys.stdout = open(path + logFileName +"_NGRAMS.txt", "w")
+        except OSError:
+            if not os.path.isdir(path):
+                raise
 
 
 
@@ -252,5 +261,8 @@ output = GenerateText(ngrams, words, N, WIDTH - N)
 #print(len(output))
 
 SaveFile(OUTPUT, output, WIDTH, 15)
+
+if DEPURATION:
+    sys.stdout.close()
 
 

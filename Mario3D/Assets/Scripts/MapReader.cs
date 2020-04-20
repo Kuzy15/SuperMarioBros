@@ -98,7 +98,7 @@ public class MapReader : MonoBehaviour
         {
             for (int j = 0; j < _parsedList[i].Length; j++)
             {
-                if (_parsedList[i][j] != "-1")
+                if (_parsedList[i][j] != "-1" && _parsedList[i][j] != null)
                 {
                     //Debug.Log(_parsedList[i][j]);
                     GameObject tile = Instantiate(_tiles[_parsedList[i][j]], new Vector3(this.gameObject.transform.position.x + j, this.gameObject.transform.position.y - i, this.gameObject.transform.position.z),
@@ -133,9 +133,6 @@ public class MapReader : MonoBehaviour
 
     public void DestroyMap()
     {
-        if (this.gameObject != null)
-        {
-            Destroy(this.gameObject.transform);
-        }
+      
     }
 }

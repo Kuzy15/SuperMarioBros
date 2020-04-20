@@ -23,25 +23,29 @@ public class PythonThread : MonoBehaviour
 
     static void Command()
     {
-        string nFiles = InputFieldManager.GM.GetNFilesInput();
+        int nFiles = InputFieldManager.GM.GetFilesSelectedLength();
         string concat = "";
-        for(int i = 0; i < int.Parse(nFiles); i++)
+        for(int i = 0; i < nFiles; i++)
         {
-            string prefix = "1-";
             string file = InputFieldManager.GM.GetFilesToConcatInput()[i];
             string sufix = ".csv";
-            string concatS = prefix + file + sufix;
+            string concatS = file + sufix;
             concat = concat + " " + concatS;
         }
-        string command = "/C python NGrams.py " + nFiles + concat + " " + InputFieldManager.GM.GetNGramsInput() + " " + InputFieldManager.GM.GetLengthInput() + " " + "1-14.csv";
+        string debug = "";
+        bool debugMode = InputFieldManager.GM.GetCheckBoxActive();
+        if (debugMode)
+        {
+            debug = " -d";
+        }
+        string command = "/C python NGrams.py " + nFiles.ToString() + concat + " " + InputFieldManager.GM.GetNGramsInput() + " " + InputFieldManager.GM.GetLengthInput() + " " + "1-14.csv" + debug;
         var processInfo = new ProcessStartInfo("cmd.exe", command);
         processInfo.CreateNoWindow = false;
-        processInfo.UseShellExecute = false;
+        processInfo.UseShellExecute = true;
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNGramsInput() + "   Files: " + InputFieldManager.GM.GetNGramsInput());
         processInfo.WorkingDirectory = path + "/Maps";
 
         var process = Process.Start(processInfo);
-
         process.WaitForExit();
         process.Close();
     }
