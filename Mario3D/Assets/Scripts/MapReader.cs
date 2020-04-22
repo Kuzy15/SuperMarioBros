@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 
 using System.Threading.Tasks;
-using IronPython;
+
 
 public class MapReader : MonoBehaviour
 {
@@ -35,7 +35,7 @@ public class MapReader : MonoBehaviour
         _tiles = new Dictionary<string, GameObject>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNFilesInput() + "   Files: " + InputFieldManager.GM.GetFilesToConcatInput().Length);
-        ReadTextFile(Application.dataPath + "/Maps/1-" + mapLevel.ToString() + ".csv");
+        ReadTextFile(Application.dataPath + "/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
         LoadTiles();
     }
 

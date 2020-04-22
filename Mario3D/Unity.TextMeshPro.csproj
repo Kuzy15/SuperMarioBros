@@ -689,6 +689,10 @@
     <Compile Include="Packages\com.unity.textmeshpro\Scripts\Runtime\TMPro_UGUI_Private.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\Logs\20200422-204721_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200422-204746_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200422-205141_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200422-205207_NGRAMS.txt" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\PolygonChangeShapeWindow.uxml" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteEditor.uss" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteFrameModuleInspector.uxml" />

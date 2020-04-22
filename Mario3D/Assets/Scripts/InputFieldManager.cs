@@ -124,24 +124,10 @@ public class InputFieldManager : MonoBehaviour
         return arrFiles;
     }
 
-    /*private void NewOnRight(int n)
-    {
-        for (int i = 0; i < int.Parse(nFilesInput); i++)
-        {
-            GameObject nu = Instantiate(filesToConcatenateField.gameObject);
-            nu.transform.SetParent(filesHolder.transform, true);
-            float d = filesToConcatenateField.GetComponentInChildren<InputField>().GetComponent<RectTransform>().rect.height;
-            nu.transform.position = new Vector3(filesToConcatenateField.transform.position.x, filesToConcatenateField.transform.position.y - (i * d * 2), filesToConcatenateField.transform.localPosition.z);
-            nu.SetActive(true);
-            nu.GetComponentInChildren<Text>().text = "FILE " + i + "/" + n + ":";
-        }
-
-        arrFiles = new string[int.Parse(nFilesInput)];
-    }*/
 
     public void GetFileNames()
     {
-        path = Application.dataPath + "/Maps";
+        path = Application.dataPath + "/Resources/Maps";
         files = System.IO.Directory.GetFiles(path, "*.csv");
         fileNames = new string[files.Length];
         for (int i = 0; i < files.Length; i++)

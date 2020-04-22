@@ -649,18 +649,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Brick.cs" />
+    <Compile Include="Assets\Scripts\ButtonLevel.cs" />
+    <Compile Include="Assets\Scripts\CastleChecker.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\DeadZone.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Entity.cs" />
     <Compile Include="Assets\Scripts\GameCamera.cs" />
     <Compile Include="Assets\Scripts\GreenKoopaTroopa.cs" />
+    <Compile Include="Assets\Scripts\InputFieldManager.cs" />
     <Compile Include="Assets\Scripts\MagicBlock.cs" />
+    <Compile Include="Assets\Scripts\MagicBlockManager.cs" />
+    <Compile Include="Assets\Scripts\MapLoader.cs" />
     <Compile Include="Assets\Scripts\MapReader.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\PlayerInCastle.cs" />
+    <Compile Include="Assets\Scripts\PopulateGrid.cs" />
+    <Compile Include="Assets\Scripts\PythonThread.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\Logs\20200422-204721_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200422-204746_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200422-205141_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200422-205207_NGRAMS.txt" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\PolygonChangeShapeWindow.uxml" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteEditor.uss" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteFrameModuleInspector.uxml" />

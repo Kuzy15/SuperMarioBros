@@ -43,7 +43,7 @@ public class PythonThread : MonoBehaviour
         processInfo.CreateNoWindow = false;
         processInfo.UseShellExecute = true;
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNGramsInput() + "   Files: " + InputFieldManager.GM.GetNGramsInput());
-        processInfo.WorkingDirectory = path + "/Maps";
+        processInfo.WorkingDirectory = path + "/Resources/Maps";
 
         var process = Process.Start(processInfo);
         process.WaitForExit();
