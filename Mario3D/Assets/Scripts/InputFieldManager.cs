@@ -113,8 +113,8 @@ public class InputFieldManager : MonoBehaviour
         n++;
         if (n >= int.Parse(nFilesInput))
         {
-            PythonThread.ExecuteCommand();
-            MapReader.GM.InitMap(14);
+            //PythonThread.ExecuteCommand();
+            MapReader.GM.InitMap(2);
             SceneManager.LoadScene(1);
         }
     }
@@ -185,7 +185,7 @@ public class InputFieldManager : MonoBehaviour
         if (arrFiles.Count > 0)
         {
             PythonThread.ExecuteCommand();
-            MapReader.GM.InitMap(14);
+            MapReader.GM.InitMap(2);
             SceneManager.LoadScene(1);
         }
     }

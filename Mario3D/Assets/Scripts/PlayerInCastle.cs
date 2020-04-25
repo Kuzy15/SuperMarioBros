@@ -17,7 +17,7 @@ public class PlayerInCastle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("CASTLE: " + this.transform.localPosition.x + "       " + castleDoor.transform.localPosition.x);
+        //Debug.Log("CASTLE: " + this.transform.localPosition.x + "       " + castleDoor.transform.localPosition.x);
         if(this.transform.localPosition.x >= castleDoor.transform.localPosition.x)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 5;

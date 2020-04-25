@@ -260,7 +260,7 @@ else:
 output = GenerateText(ngrams, words, N, WIDTH - N)
 #print(len(output))
 
-SaveFile(OUTPUT, output, WIDTH, 15)
+SaveFile(OUTPUT, output, WIDTH, 60)
 
 if DEPURATION:
     sys.stdout.close()
