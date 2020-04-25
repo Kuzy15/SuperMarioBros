@@ -5,6 +5,8 @@ using UnityEngine;
 public class MagicBlock : MonoBehaviour
 {
 
+    public GameObject entity;
+
     private float _time;
     private int _currentAnim;
     private SpriteRenderer _renderer;
@@ -13,11 +15,11 @@ public class MagicBlock : MonoBehaviour
     private bool _disable = false;
     private bool _goDown = false;
     private bool _dropped = false;
+    private Sprite[] _anim;
+    private Sprite _disableBlock;
+    private float _animSpeed = 0;
 
-    private Sprite[] anim;
-    private Sprite disableBlock;
-    private float animSpeed = 0;
-    public GameObject entity;
+
 
     // Start is called before the first frame update
     void Start()
@@ -30,9 +32,9 @@ public class MagicBlock : MonoBehaviour
 
     void FillMagicBlock()
     {
-        anim = MagicBlockManager.GM.GetAnim();
-        disableBlock = MagicBlockManager.GM.GetDisableBlock();
-        animSpeed = MagicBlockManager.GM.GetAnimSpeed();
+        _anim = MagicBlockManager.GM.GetAnim();
+        _disableBlock = MagicBlockManager.GM.GetDisableBlock();
+        _animSpeed = MagicBlockManager.GM.GetAnimSpeed();
         entity = MagicBlockManager.GM.SetEntity();
     }
 
@@ -77,16 +79,16 @@ public class MagicBlock : MonoBehaviour
     {
         if (!_disable)
         {
-            _time += Time.deltaTime * animSpeed;
+            _time += Time.deltaTime * _animSpeed;
             if (_time >= 1.0f)
             {
                 _currentAnim++;
                 _time = 0;
             }
 
-            if (_currentAnim < anim.Length)
+            if (_currentAnim < _anim.Length)
             {
-                _renderer.sprite = anim[_currentAnim];
+                _renderer.sprite = _anim[_currentAnim];
             }
             else
             {
@@ -107,19 +109,15 @@ public class MagicBlock : MonoBehaviour
                 InstantiateEntity();
             }
 
-            _renderer.sprite = disableBlock;
+            _renderer.sprite = _disableBlock;
 
         }
     }
-
 
     private void InstantiateEntity()
     {
         Instantiate(entity, _startPosition, Quaternion.identity);
     }
-
-
-
 
     public void ActivateBlock()
     {
@@ -129,5 +127,4 @@ public class MagicBlock : MonoBehaviour
             _active = true;
         }
     }
-
 }

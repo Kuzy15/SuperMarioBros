@@ -4,19 +4,23 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
-
 using System.Threading.Tasks;
 
 
 public class MapReader : MonoBehaviour
 {
     public static MapReader GM;
+
     private List<string> _stringList;
     private List<string[]> _parsedList;
     private GameObject[] _prefabs;
     private Dictionary<string, GameObject> _tiles;
+    private List<PipeCoords> _pipes;
 
-    //public int mapLevel/* = 1*/;
+    private struct PipeCoords {
+
+        public int x, y;
+    }
 
     void Awake()
     {
@@ -33,23 +37,21 @@ public class MapReader : MonoBehaviour
         _stringList = new List<string>();
         _parsedList = new List<string[]>();
         _tiles = new Dictionary<string, GameObject>();
+        _pipes = new List<PipeCoords>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
-        //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNFilesInput() + "   Files: " + InputFieldManager.GM.GetFilesToConcatInput().Length);
+
         ReadTextFile(Application.dataPath + "/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
         LoadTiles();
     }
 
-    public void GenerateMap() {
-
+    public void GenerateMap()
+    {
         CreateMap();
     }
 
-
-
-
     private void ReadTextFile(string path, bool parse = true)
     {
-        if(_stringList.Count > 0)
+        if (_stringList.Count > 0)
         {
             _stringList.Clear();
         }
@@ -63,7 +65,7 @@ public class MapReader : MonoBehaviour
         }
 
         map.Close();
-        if(parse)
+        if (parse)
             ParseList();
     }
 
@@ -81,7 +83,6 @@ public class MapReader : MonoBehaviour
         }
     }
 
-
     private void LoadTiles()
     {
         for (int i = 0; i < _prefabs.Length; i++)
@@ -89,7 +90,6 @@ public class MapReader : MonoBehaviour
             _tiles.Add(_prefabs[i].name, _prefabs[i]);
         }
     }
-
 
     void CreateMap()
     {
@@ -103,20 +103,7 @@ public class MapReader : MonoBehaviour
                     //Debug.Log(_parsedList[i][j]);
                     GameObject tile = Instantiate(_tiles[_parsedList[i][j]], new Vector3(this.gameObject.transform.position.x + j, this.gameObject.transform.position.y - i, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
-
-                    if(_parsedList[i][j] == "0" || _parsedList[i][j] == "1" || _parsedList[i][j] == "2" || _parsedList[i][j] == "3" ||
-                       _parsedList[i][j] == "24" || _parsedList[i][j] == "30" || _parsedList[i][j] == "33" || _parsedList[i][j] == "66" || _parsedList[i][j] == "67" ||
-                       _parsedList[i][j] == "68" || _parsedList[i][j] == "69" || _parsedList[i][j] == "90" || _parsedList[i][j] == "99" ||
-                       _parsedList[i][j] == "167" || _parsedList[i][j] == "264" || _parsedList[i][j] == "265" || _parsedList[i][j] == "266" ||
-                       _parsedList[i][j] == "267" || _parsedList[i][j] == "268" || _parsedList[i][j] == "269" || _parsedList[i][j] == "270" ||
-                       _parsedList[i][j] == "271" || _parsedList[i][j] == "280" || _parsedList[i][j] == "297" || _parsedList[i][j] == "298" ||
-                       _parsedList[i][j] == "299" || _parsedList[i][j] == "300" || _parsedList[i][j] == "301" || _parsedList[i][j] == "313" ||
-                       _parsedList[i][j] == "795" || _parsedList[i][j] == "796" || _parsedList[i][j] == "797" ||
-
-                       _parsedList[i][j] == "292" /*es del spritesheet de objetos*/)
-                    {
-                        tile.gameObject.tag = "Solid";
-                    }
+                  
 
                     if (_parsedList[i][j] == "24")
                     {
@@ -125,14 +112,57 @@ public class MapReader : MonoBehaviour
                     else if (_parsedList[i][j] == "313")
                     {
                         tile.GetComponent<BoxCollider>().isTrigger = true;
-                    }             
+                    }
+                    else if (_parsedList[i][j] == "264")
+                    {
+                        PipeCoords coords;
+                        coords.x = i;
+                        coords.y = j;
+                        _pipes.Add(coords);
+                    }
                 }
             }
         }
+        //Debug.Log("FINISH");
+        CheckPipes();
     }
 
     public void DestroyMap()
     {
-      
+
+            Transform[] tilesToDelete = gameObject.GetComponentsInChildren<Transform>();
+            for (int i = 1; i < tilesToDelete.Length; i++)
+            {
+                Destroy(tilesToDelete[i].gameObject);
+            }
+    }
+
+    public void CheckPipes()
+    {
+        Debug.Log("CHECK PIPES");
+        for (int i = 0; i < _pipes.Count; i++)
+        {
+            int j = _pipes[i].x;
+            while (_parsedList[j][_pipes[i].y] != "0")
+            {
+                j++;
+            }
+
+            if (_parsedList[j][_pipes[i].y] == "0")
+            {
+                j += 13;
+                if (_parsedList[j][_pipes[i].y - 2] == "266")
+                {
+                    if(i > 0)
+                    {
+                        Debug.Log("1: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y] + "   2: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y + 1]);
+                        //_parsedList[_pipes[i-1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
+                        //_parsedList[_pipes[i - 1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
+                    }
+                    // _parsedList[j ][_pipes[i].y - 2]. addcomponent(salida zona secreta)
+                   // Debug.Log("PIPE FOUND!");
+                }
+            }
+        }
     }
 }

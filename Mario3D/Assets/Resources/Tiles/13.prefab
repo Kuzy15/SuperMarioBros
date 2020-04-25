@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8808872675129801270}
   - component: {fileID: 1030422039019363246}
-  - component: {fileID: -6032213969196120356}
   m_Layer: 0
   m_Name: 13
   m_TagString: Untagged
@@ -82,18 +81,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6032213969196120356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9084913786360308841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf87c1a9cc5f19c499a6f7276fee5906, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: {fileID: 7027009037439751191, guid: 6b49e488b8135034ba40f3c34c3f9afd, type: 3}
-  castleDoor: {fileID: 6689167222927294121, guid: 94f3e3a694707bd4ba06632e76518342,
-    type: 3}

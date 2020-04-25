@@ -7,12 +7,10 @@ public class GreenKoopaTroopa : Enemy
     public Sprite[] reviveAnim;
 
     protected bool _reviving = false;
+    protected bool _isShell = false;
 
     private Sprite[] _aux;
     private bool _stopCoroutine = false;
-
-    protected bool isShell = false;
-
 
     public override void Die()
     {
@@ -26,7 +24,7 @@ public class GreenKoopaTroopa : Enemy
             _collider.size = new Vector3(1.0f, 1.0f, 0.2f);
             _collider.center = new Vector3(0, 0.5f, 0);
             _renderer.sprite = animDead;
-            isShell = false;
+            _isShell = false;
             _velocity = 1.0f;
             positionShell = this.transform.position;
             StartCoroutine(Revive());
@@ -40,7 +38,7 @@ public class GreenKoopaTroopa : Enemy
             _stopCoroutine = true;
             _dir *= -1;
             _reviving = false;
-            isShell = true;
+            _isShell = true;
            
         }
     }
@@ -57,7 +55,6 @@ public class GreenKoopaTroopa : Enemy
             _canMove = true;
             _collider.size = new Vector3(1.0f, 1.5f, 0.2f);
             _collider.center = new Vector3(0, 0.75f, 0);
-           // _reviving = false;
             anim = _aux;
         }
         yield return null;

@@ -3,7 +3,6 @@
 public class MagicBlockManager : MonoBehaviour
 {
     public static MagicBlockManager GM;
-
     public Sprite[] anim;
     public Sprite disableBlock;
     public float animSpeed = 0;
@@ -13,7 +12,7 @@ public class MagicBlockManager : MonoBehaviour
     void Awake()
     {
         if (GM != null)
-            GameObject.Destroy(GM);
+           Destroy(GM);
         else
             GM = this;
 

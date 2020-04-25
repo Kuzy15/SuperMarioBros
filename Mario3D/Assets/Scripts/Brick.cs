@@ -4,21 +4,15 @@ using UnityEngine;
 
 public class Brick : MonoBehaviour
 {
-    /*private float _time;
-    private int _currentAnim;
-    private SpriteRenderer _renderer;*/
 
     private Vector2 _startPosition;
     private bool _goDown = false;
-    private bool active = false;
+    private bool _active = false;
 
-    /*public Sprite[] anim;
-    public float animSpeed = 0;*/
 
     // Start is called before the first frame update
     void Start()
     {
-        //_renderer = this.GetComponent<SpriteRenderer>();
         _startPosition = this.transform.position;
     }
 
@@ -43,7 +37,7 @@ public class Brick : MonoBehaviour
 
     private void MoveBrick()
     {
-        if (active)
+        if (_active)
         {
             if ((Vector2)transform.position == _startPosition + new Vector2(0, 0.3f) && !_goDown)
             {
@@ -59,31 +53,16 @@ public class Brick : MonoBehaviour
                 transform.position = Vector2.MoveTowards(transform.position, _startPosition, 3 * Time.deltaTime);
                 if (Vector2.Distance(transform.position, _startPosition) < 0.001f)
                 {
-                    active = false;
+                    _active = false;
                     _goDown = false;
                 }
             }
         }
     }
 
-    /*private void DestroyBrick()
-    {
-        _time += Time.deltaTime * animSpeed;
-        if (_time >= 1f)
-        {
-            _currentAnim++;
-            _time = 0;
-        }
-
-        if (_currentAnim == anim.Length)
-        {
-            Destroy(this.gameObject);
-        }
-    }*/
-
     private void ActivateBounce()
     {
-        if(!active)
-            active = true;
+        if(!_active)
+            _active = true;
     }
 }

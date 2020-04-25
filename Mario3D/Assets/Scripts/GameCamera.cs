@@ -7,9 +7,6 @@ public class GameCamera : MonoBehaviour
     public bool followPlayer = true;
     public Vector3 offset;
     public float smoothSpeed = 10f;
-    private Vector3 lastPos = Vector3.zero;
-    private float halfPlayerSizeX;
-
     public float zoomSpeed;
     public float targetOrtho;
     public float orthoSize;
@@ -18,29 +15,27 @@ public class GameCamera : MonoBehaviour
     public float maxOrtho = 20.0f;
     public int scrollSpeed = 8;
     
-    private Vector3 refPosition;
-    //bool sett = false;
+    private Vector3 _refPosition;
+    private bool _looking = false;
+    private Vector3 _lastPos = Vector3.zero;
+    private float _halfPlayerSizeX;
 
     private static GameCamera _camera = null;
-
-    private bool looking = false;
-    //private bool canReset = false;
 
     public static GameCamera Instance
     {
         get
         {
-
             return _camera;
         }
     }
 
     void Start()
     {
-        halfPlayerSizeX = target.GetComponentInChildren<SpriteRenderer>().bounds.size.x / 2;
+        _halfPlayerSizeX = target.GetComponentInChildren<SpriteRenderer>().bounds.size.x / 2;
         targetOrtho = Camera.main.orthographicSize;
         orthoSize = targetOrtho;
-        refPosition = this.transform.position;
+        _refPosition = this.transform.position;
     }
 
     private void Update()
@@ -49,10 +44,10 @@ public class GameCamera : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.L))
             {
-                refPosition = Camera.main.transform.position;
+                _refPosition = Camera.main.transform.position;
                 SetLookingMode();
             }
-            if (looking)
+            if (_looking)
             {
                 float scroll = Input.GetAxis("Mouse ScrollWheel");
                 if (scroll != 0.0f)
@@ -60,47 +55,41 @@ public class GameCamera : MonoBehaviour
                     targetOrtho -= scroll * zoomSpeed;
                     targetOrtho = Mathf.Clamp(targetOrtho, minOrtho, maxOrtho);
                 }
-                //sett = false;
 
                 Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetOrtho, smoothSpeed2 * Time.deltaTime);
                 float dir = Input.GetAxis("Horizontal");
                 float vDir = Input.GetAxis("Vertical");
                 transform.Translate(new Vector3(dir * scrollSpeed * Time.deltaTime, vDir * scrollSpeed * Time.deltaTime, transform.position.z));
+
                 if (Input.GetKeyDown(KeyCode.R))
                 {
-                    Camera.main.transform.position = refPosition;
-                    StartCoroutine("coroutine");
+                    Camera.main.transform.position = _refPosition;
+                    StartCoroutine("Coroutine");
                 }
 
             }
             else
             {
-                targetOrtho = Camera.main.orthographicSize = orthoSize;
-                //sett = false;
-                /*if (canReset)
-                {
-                    Camera.main.transform.position = refPosition;
-                    //canReset = false;
-                }*/
+                targetOrtho = Camera.main.orthographicSize = orthoSize;            
             }
         }
     }
 
-    IEnumerator coroutine()
+    IEnumerator Coroutine()
     {
         yield return new WaitForSeconds(0.3f);
-        looking = false;
+        _looking = false;
         targetOrtho = Camera.main.orthographicSize = orthoSize;
     }
 
     private void SetLookingMode()
     {
-        looking = true;
+        _looking = true;
     }
 
     public bool GetLooking()
     {
-        return looking;
+        return _looking;
     }
 
     private void Awake()
@@ -112,7 +101,7 @@ public class GameCamera : MonoBehaviour
 
         _camera = this;
         //DontDestroyOnLoad(this.gameObject);
-        lastPos = transform.position;
+        _lastPos = transform.position;
     }
 
     //Si tiene un target establecido, entonces la camara se encargará de seguirle, con un determinado offset.
@@ -120,47 +109,18 @@ public class GameCamera : MonoBehaviour
     {
         if (target != null)
         {
-            if (!looking)
+            if (!_looking)
             {
-                if (followPlayer && (target.position - lastPos).x > 0)
+                if (followPlayer && (target.position - _lastPos).x > 0)
                 {
                     Vector3 desiredPosition = target.position + offset;
                     Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
                     transform.position = new Vector3(smoothedPosition.x, transform.position.y, transform.position.z);
-                    lastPos = transform.position;
-                }
-                else
-                {
-                    ////Debug.Log("AHHAHAHA");
-                    //canReset = true;
-                }
+                    _lastPos = transform.position;
+                }             
             }
         }
-       // clampPlayerMovement();
-    }
 
-    void clampPlayerMovement()
-    {
-        Vector3 position = transform.position;
-
-        float distance = transform.position.z - Camera.main.transform.position.z;
-
-        float leftBorder = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).x + halfPlayerSizeX;
-        float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - halfPlayerSizeX;
-
-        position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);
-        transform.position = position;
-    }
-
-    public void SetCanReset()
-    {
-        //canReset = true;
-    }
-
-    public void InactiveCanReset()
-    {
-        //canReset = false;
-        //sett = false;
     }
 
     public bool IsVisibleFrom(Renderer renderer, Camera camera)

@@ -5,20 +5,21 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    public Sprite[] anim;
+    public float animSpeed = 0;
+   
+
     private float _time;
     private int _currentAnim;
     private SpriteRenderer _renderer;
-    private Vector3 startPosition;
-
-    public Sprite[] anim;
-    public float animSpeed = 0;
-    bool down = false;
+    private Vector3 _startPosition;
+    private bool _down = false;
 
     // Start is called before the first frame update
     void Start()
     {
         _renderer = this.GetComponent<SpriteRenderer>();
-        startPosition = this.transform.position;
+        _startPosition = this.transform.position;
     }
 
     // Update is called once per frame
@@ -50,29 +51,23 @@ public class Coin : MonoBehaviour
     private void CoinMove()
     {
         float step = 12f * Time.deltaTime; // calculate distance to move
-        if (!down)
+        if (!_down)
         {
-            transform.position = Vector3.MoveTowards(transform.position, startPosition + new Vector3(0, 2.5f), step);
-            if (Vector3.Distance(transform.position, startPosition + new Vector3(0, 2.5f)) < 0.001f)
+            transform.position = Vector3.MoveTowards(transform.position, _startPosition + new Vector3(0, 2.5f), step);
+            if (Vector3.Distance(transform.position, _startPosition + new Vector3(0, 2.5f)) < 0.001f)
             {
                 // Swap the position of the cylinder.
-                down = true;
+                _down = true;
             }
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position, startPosition, step);
-            if (Vector3.Distance(transform.position, startPosition) < 0.001f)
+            transform.position = Vector3.MoveTowards(transform.position, _startPosition, step);
+            if (Vector3.Distance(transform.position, _startPosition) < 0.001f)
             {
-                // Swap the position of the cylinder.
-                AddPoint();
                 Destroy(this.gameObject);
             }
         }
     }
 
-    public void AddPoint()
-    {
-
-    }
 }

@@ -9,20 +9,21 @@ using UnityEngine.UI;
 /// </summary>
 public class ButtonLevel : MonoBehaviour
 {
-    //bool for button (locked or not locked sprite)
-    private bool _locked;
-
-    //index of button
-    private int _index;
 
     //Sprite to render depending on button's state
     public Sprite unlockedSprite;
     public Sprite unlockedPressedSprite;
-    /// <summary>
-    /// Set button to locked
-    /// </summary>
+
+
+    //bool for button (locked or not locked sprite)
+    private bool _locked;
+    //index of button
+    private int _index;
+
+
     void Start()
     {
+        // Set button to locked
         _locked = false;
     }
 

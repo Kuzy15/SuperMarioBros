@@ -8,8 +8,6 @@ public class InputFieldManager : MonoBehaviour
 {
 
     public static InputFieldManager GM;
-
-    // Start is called before the first frame update
     public GameObject nGramsField;
     public GameObject lengthField;
     public GameObject nFilesField;
@@ -19,21 +17,18 @@ public class InputFieldManager : MonoBehaviour
     public GameObject filesHolder;
     public GameObject continueButton;
     public GameObject checkBox;
+    public List<string> arrFiles = new List<string>();
 
-    string nGramsInput;
-    string lengthInput;
-    string nFilesInput;
-    string filesToConcatenateInput;
+    private string _nGramsInput;
+    private string _lengthInput;
+    private string _nFilesInput;
+    private string _filesToConcatenateInput;
+    private bool _checkBoxActive;
+    private string _path;
+    private string[] _files;
+    private string[] _fileNames;
+    private int n = 0;
 
-    bool checkBoxActive;
-
-
-    string path;
-    string[] files;
-    string[] fileNames;
-
-    int n = 0;
-    public System.Collections.Generic.List<string> arrFiles = new System.Collections.Generic.List<string>();
     void Awake()
     {
         if (GM != null)
@@ -44,6 +39,7 @@ public class InputFieldManager : MonoBehaviour
         //DontDestroyOnLoad(this);
     }
 
+    // Start is called before the first frame update
     void Start()
     {
         lengthField.SetActive(false);
@@ -51,44 +47,35 @@ public class InputFieldManager : MonoBehaviour
         filesToConcatenateField.SetActive(false);
         filesScrollView.SetActive(false);
         continueButton.SetActive(false);
-        checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
+        _checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
         checkBox.SetActive(false);
         n = 0;
         GetFileNames();
     }
 
-    // Update is called once per frame
 
     public void SetNGramsInput()
     {
-        nGramsInput = nGramsField.GetComponentInChildren<InputField>().text;
+        _nGramsInput = nGramsField.GetComponentInChildren<InputField>().text;
         nGramsField.SetActive(false);
         lengthField.SetActive(true);
     }
 
     public string GetNGramsInput()
     {
-        return nGramsInput;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log(arrFiles.Count);
-        }
+        return _nGramsInput;
     }
 
     public void SetLengthInput()
     {
-        lengthInput = lengthField.GetComponentInChildren<InputField>().text;
+        _lengthInput = lengthField.GetComponentInChildren<InputField>().text;
         lengthField.SetActive(false);
         SetNFilesInput();
     }
 
     public string GetLengthInput()
     {
-        return lengthInput;
+        return _lengthInput;
     }
 
     public void SetNFilesInput()
@@ -97,26 +84,11 @@ public class InputFieldManager : MonoBehaviour
         PopulateGrid.GM.Populate(GetFilesLength(), GetFilesNames());
         continueButton.SetActive(true);
         checkBox.SetActive(true);
-        //NewOnRight(int.Parse(nFilesInput));
     }
 
     public string GetNFilesInput()
     {
-        return nFilesInput;
-    }
-
-    public void SetFilesToConcat()
-    {
-        filesToConcatenateInput = filesHolder.GetComponentsInChildren<InputField>()[n].text;
-        filesToConcatenateField.SetActive(false);
-        // arrFiles[n] = filesToConcatenateInput;
-        n++;
-        if (n >= int.Parse(nFilesInput))
-        {
-            //PythonThread.ExecuteCommand();
-            MapReader.GM.InitMap(2);
-            SceneManager.LoadScene(1);
-        }
+        return _nFilesInput;
     }
 
     public List<string> GetFilesToConcatInput()
@@ -124,27 +96,26 @@ public class InputFieldManager : MonoBehaviour
         return arrFiles;
     }
 
-
     public void GetFileNames()
     {
-        path = Application.dataPath + "/Resources/Maps";
-        files = System.IO.Directory.GetFiles(path, "*.csv");
-        fileNames = new string[files.Length];
-        for (int i = 0; i < files.Length; i++)
+        _path = Application.dataPath + "/Resources/Maps";
+        _files = System.IO.Directory.GetFiles(_path, "*.csv");
+        _fileNames = new string[_files.Length];
+        for (int i = 0; i < _files.Length; i++)
         {
-            string file = System.IO.Path.GetFileNameWithoutExtension(files[i]);
-            fileNames[i] = file;
+            string file = System.IO.Path.GetFileNameWithoutExtension(_files[i]);
+            _fileNames[i] = file;
         }
     }
 
     public string[] GetFilesNames()
     {
-        return fileNames;
+        return _fileNames;
     }
 
     public int GetFilesLength()
     {
-        return files.Length;
+        return _files.Length;
     }
 
     public void AddFile(string item)
@@ -177,7 +148,7 @@ public class InputFieldManager : MonoBehaviour
 
     public bool GetCheckBoxActive()
     {
-        return checkBoxActive;
+        return _checkBoxActive;
     }
 
     public void OnClickContinue()
@@ -185,13 +156,13 @@ public class InputFieldManager : MonoBehaviour
         if (arrFiles.Count > 0)
         {
             PythonThread.ExecuteCommand();
-            MapReader.GM.InitMap(2);
+            MapReader.GM.InitMap(14);
             SceneManager.LoadScene(1);
         }
     }
 
     public void OnCheckBoxValueChanged()
     {
-        checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
+        _checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
     }
 }

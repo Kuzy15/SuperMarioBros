@@ -8,14 +8,10 @@ public class RedKoopaTroopa : GreenKoopaTroopa
 
     public override void EnemyMove()
     {
-
         transform.Translate(new Vector3(1.0f * _dir, 0) * Time.deltaTime);
 
-        //Debug.Log("IS SHELL: " + isShell);
-
-        if (!isShell)
+        if (!_isShell)
         {
-
             RaycastHit hit;
 
             Debug.DrawRay(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.left * _dir), Color.yellow);

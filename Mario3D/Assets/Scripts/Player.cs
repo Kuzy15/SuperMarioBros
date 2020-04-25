@@ -35,11 +35,10 @@ public class Player : MonoBehaviour
     private bool _onGround = true;// false;
     private bool _stoppedJumping = false;
     private bool _isGrowing = false;
-    private float velocity = 0;
-    private bool isJumping = false;
-    private bool invulnerable = false;
-
-    private bool isGroundedJ;
+    private float _velocity = 0;
+    private bool _isJumping = false;
+    private bool _invulnerable = false;
+    private bool _isGroundedJ;
 
     // Start is called before the first frame update
     void Start()
@@ -59,23 +58,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGroundedJ = (_rigidBody.velocity.y == 0);
-        Debug.Log("IS GROUNDED: " + isJumping);
+        _isGroundedJ = (_rigidBody.velocity.y == 0);
+       
         if (!GameCamera.Instance.GetLooking())
         {
-
             _directionX = Input.GetAxis("Horizontal");
             _directionY = Input.GetAxis("Vertical");
-
-            if (_directionX == 0 && _directionY == 0)
-            {
-                GameCamera.Instance.SetCanReset();
-            }
-            else
-            {
-                GameCamera.Instance.InactiveCanReset();
-            }
-
 
             if (!_isGrowing)
             {
@@ -93,50 +81,33 @@ public class Player : MonoBehaviour
                 else
                 {
                     SetAnim(0, _isBig);
-                }
-                if (_directionY > 0)
-                {
-                    //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 0.05f, this.transform.position.z);
-                    //SetAnim(
-                       // 2, _isBig);
-                }
+                }             
             }
             else
             {
                 SetAnim(3, !_isBig);
             }
-            velocity = Mathf.Lerp(velocity, _directionX, shift * Time.deltaTime);
 
-            if (velocity < 0.000003f && velocity > -0.000003f)
+            _velocity = Mathf.Lerp(_velocity, _directionX, shift * Time.deltaTime);
+
+            if (_velocity < 0.000003f && _velocity > -0.000003f)
             {
-                velocity = 0;
+                _velocity = 0;
             }
 
             Vector2 pos = this.transform.position;
-            pos.x += (speed * velocity * Time.deltaTime);
-
-
-
-
+            pos.x += (speed * _velocity * Time.deltaTime);
 
             CheckCollisons(Vector3.up);
             CheckCollisons(Vector3.down);
             CheckCollisons(Vector3.right);
             CheckCollisons(Vector3.left);
 
-
-
-
-
-
             transform.position = pos;
-
-
-
 
             if (!_isGrowing)
             {
-                _animTime += Time.deltaTime * (Mathf.Abs(velocity)) * (speed * 2);
+                _animTime += Time.deltaTime * (Mathf.Abs(_velocity)) * (speed * 2);
             }
             else
             {
@@ -218,7 +189,6 @@ public class Player : MonoBehaviour
                     break;
             }
             _animState = state;
-            //_collider.center = _currentAnim[0].bounds.center;
         }
     }
 
@@ -231,36 +201,28 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f) ||
                 Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
+
                 // Pintar rayo
-                Debug.DrawRay(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
-                Debug.DrawRay(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                // Debug.DrawRay(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
+                // Debug.DrawRay(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir * (_collider.height / 2) - new Vector3(0, (-dir.y) * 0.1f, 0), Color.yellow);
                 //----------------------------------
 
 
                 if (hit.transform.tag == "Solid")
                 {
-                    ////Debug.Log("SUELO");
                     _onGround = true;
-                    //_jumpTime = _time;
 
-                    if (isJumping)
+                    if (_isJumping)
                     {
-                        //Debug.Log("change anim to idle");
                         SetAnim(0, IsBigMario());
-                        isJumping = false;
+                        _isJumping = false;
                     }
                 }
                 else if (hit.transform.tag == "Enemy")
                 {
-                    //Debug.Log("enemy hit");
                     hit.transform.gameObject.GetComponent<Enemy>().Die();
                     _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
                 }
-
-
-            }
-            else
-            {
             }
         }
         else if(dir == Vector3.up)
@@ -304,14 +266,14 @@ public class Player : MonoBehaviour
                 {
                     if (_isBig)
                     {
-                        invulnerable = true;
+                        _invulnerable = true;
                         _isBig = false;
                         ChangeCollider();
                         Invoke("SetInvulnerable", 1.5f);                      
                     }
                     else
                     {
-                        if (!invulnerable)
+                        if (!_invulnerable)
                             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                     }
                 }
@@ -322,7 +284,7 @@ public class Player : MonoBehaviour
 
     private void SetInvulnerable()
     {
-        invulnerable = false;
+        _invulnerable = false;
     }
 
 
@@ -335,7 +297,7 @@ public class Player : MonoBehaviour
             if (_onGround && _jumpTime > 0)
             {
                 ////Debug.Log("to jump");
-                isJumping = true;
+                _isJumping = true;
                 _onGround = false;
                 SetAnim(2, IsBigMario());
                 //jump!
@@ -392,30 +354,18 @@ public class Player : MonoBehaviour
     {
         _collider.enabled = true;
         _rigidBody.useGravity = true;
-        //Debug.Log("MARIO COLLIDER --------------- ");
     }
 
     private void CheckDead()
     {
-
-        //Debug.Log("MARIO ENEMY --------------- ");
-
-
         // If Mario is big and collisions with an enemy
         if (_isBig)
         {
-            /* _collider.enabled = false;
-             _rigidBody.useGravity = false;
-             Invoke("Invulnerable", 1.0f);*/
-            //Debug.Log("MARIO LITTLE --------------- ");
-            // Make Mario little
             ChangeCollider();
             _isBig = false;
         }
         else
-        {
-            // Mario dies
-            //Debug.Log("MARIO DEAD --------------- ");
+        {       
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
@@ -424,7 +374,6 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.GetComponent<Mushroom>())
         {
-
             if (!_isBig)
             {
                 _isGrowing = true;
@@ -432,10 +381,6 @@ public class Player : MonoBehaviour
             }
             Destroy(collision.collider.gameObject);
         }
-        /*if (collision.collider.GetComponent<Enemy>())
-        {
-            CheckDead();
-        }*/
     }
 
     private void OnCollisionStay(Collision collision)

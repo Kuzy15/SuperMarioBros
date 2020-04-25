@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private float _time;
-    private int _currentAnim = 0; 
+
+    public Sprite[] anim;
+    public Sprite animDead;
+    public float animSpeed = 4;
 
     protected Vector3 _startPosition;
     protected Vector3 positionShell;
@@ -18,9 +20,10 @@ public class Enemy : MonoBehaviour
     protected bool _dead = false;
     protected bool _canMove = true;
 
-    public Sprite[] anim;
-    public Sprite animDead;
-    public float animSpeed = 4;
+    private float _time;
+    private int _currentAnim = 0;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -110,6 +113,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    // TODO: mirar si se usa luego
     public void AddPoint()
     {
 
@@ -125,12 +129,9 @@ public class Enemy : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
-        {
-            //Debug.Log("COLLISION ENTER");
+        {           
             _collider.isTrigger = true;
             _rigidbody.useGravity = false;
-
-            // AVISAR A MARIO DE QUE A CHOCADO UN ENEMIGO
         }
 
     }
@@ -139,8 +140,7 @@ public class Enemy : MonoBehaviour
     {
 
         if (other.gameObject.tag == "Player")
-        {
-            //Debug.Log("COLLISION EXIT");
+        {         
             _collider.isTrigger = false;
             _rigidbody.useGravity = true;
         }
