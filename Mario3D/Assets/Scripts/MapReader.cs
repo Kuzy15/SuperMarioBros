@@ -20,6 +20,12 @@ public class MapReader : MonoBehaviour
     private struct PipeCoords {
 
         public int x, y;
+
+        public GameObject tileL, tileR;
+
+        public void SetTileL(GameObject tile) { tileL = tile; }
+        public void SetTileR(GameObject tile) { tileR = tile; }
+
     }
 
     void Awake()
@@ -93,33 +99,52 @@ public class MapReader : MonoBehaviour
 
     void CreateMap()
     {
-        DestroyMap();
-        for (int i = 0; i < _parsedList.Count; i++)
-        {
-            for (int j = 0; j < _parsedList[i].Length; j++)
-            {
-                if (_parsedList[i][j] != "-1" && _parsedList[i][j] != null)
-                {
-                    //Debug.Log(_parsedList[i][j]);
-                    GameObject tile = Instantiate(_tiles[_parsedList[i][j]], new Vector3(this.gameObject.transform.position.x + j, this.gameObject.transform.position.y - i, this.gameObject.transform.position.z),
-                        this.gameObject.transform.rotation, this.gameObject.transform);
-                  
+        int pipeIdx = 0;
 
-                    if (_parsedList[i][j] == "24")
+        DestroyMap();
+        int SIZEX = _parsedList.Count;
+        int SIZEY = _parsedList[0].Length;
+
+        for (int i = 0; i < SIZEY; i++)
+        {
+            for (int j = 0; j < SIZEX; j++)
+            {
+                if (_parsedList[j][i] != "-1" && _parsedList[j][i] != null)
+                {
+                    GameObject tile = null;
+                    if (_parsedList[j][i] != "265") { 
+                        //Debug.Log(_parsedList[i][j]);
+                         tile = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                        this.gameObject.transform.rotation, this.gameObject.transform);
+                     }
+
+                    if (_parsedList[j][i] == "24")
                     {
                         tile.AddComponent<MagicBlock>();
                     }
-                    else if (_parsedList[i][j] == "313")
+                    else if (_parsedList[j][i] == "313")
                     {
                         tile.GetComponent<BoxCollider>().isTrigger = true;
                     }
-                    else if (_parsedList[i][j] == "264")
+                    else if (_parsedList[j][i] == "264")
                     {
                         PipeCoords coords;
-                        coords.x = i;
-                        coords.y = j;
+                        coords.x = j;
+                        coords.y = i;
+                        coords.tileL = tile;
+                        coords.tileR = new GameObject();
+                        
+                        GameObject tileR = Instantiate(_tiles[_parsedList[j][i + 1]], new Vector3(this.gameObject.transform.position.x + i+1, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                        this.gameObject.transform.rotation, this.gameObject.transform);
+
+                        coords.tileR = tileR;
                         _pipes.Add(coords);
                     }
+                   /* else if (_parsedList[j][i] == "265")
+                    {
+                        _pipes[pipeIdx].SetTileR(tile.gameObject);
+                        pipeIdx++;
+                    }*/
                 }
             }
         }
@@ -139,28 +164,47 @@ public class MapReader : MonoBehaviour
 
     public void CheckPipes()
     {
-        Debug.Log("CHECK PIPES");
+        //Debug.Log("CHECK PIPES");
         for (int i = 0; i < _pipes.Count; i++)
         {
             int j = _pipes[i].x;
+            //Debug.Log("INICIAL: " + j);
             while (_parsedList[j][_pipes[i].y] != "0")
             {
+                Debug.Log("WHILE: " + _parsedList[j][_pipes[i].y]);
                 j++;
-            }
+               
 
+            }
+            //Debug.Log("ALTURA: " + j);
             if (_parsedList[j][_pipes[i].y] == "0")
             {
                 j += 13;
+                
                 if (_parsedList[j][_pipes[i].y - 2] == "266")
                 {
-                    if(i > 0)
+
+                    //Debug.Log("SECRET: " + i + "      " + _parsedList[j][_pipes[i].y - 2]);
+                    if (i > 0)
                     {
-                        Debug.Log("1: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y] + "   2: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y + 1]);
+
+                        _pipes[i-1].tileL.AddComponent<AudioSource>();
+                        _pipes[i-1].tileR.AddComponent<AudioSource>();
+                        Debug.Log("TUBERIA Nº: " + (i-1) );
+                        //Debug.Log("1: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y] + "   2: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y + 1]);
                         //_parsedList[_pipes[i-1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
                         //_parsedList[_pipes[i - 1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
+                        /*_pipes[i - 1].tileL.AddComponent<AudioSource>();
+                        _pipes[i - 1].tileR.AddComponent<AudioSource>();*/
                     }
+                   /* else
+                    {
+                        _pipes[i].tileL.AddComponent<AudioSource>();
+                        _pipes[i].tileR.AddComponent<AudioSource>();
+                    }*/
                     // _parsedList[j ][_pipes[i].y - 2]. addcomponent(salida zona secreta)
-                   // Debug.Log("PIPE FOUND!");
+                     //Debug.Log("PIPE FOUND!");
+                    
                 }
             }
         }
