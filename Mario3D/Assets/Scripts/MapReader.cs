@@ -134,7 +134,7 @@ public class MapReader : MonoBehaviour
                     {
                         tile.GetComponent<BoxCollider>().isTrigger = true;
                     }
-                    else if(_parsedList[j][i] == "123")
+                    else if(_parsedList[j][i] == "123" || _parsedList[j][i] == "57")
                     {
                         tile.GetComponent<Coin>().SetMove(false);
                     }

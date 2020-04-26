@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3768378054103049036}
   - component: {fileID: 3624098443171102216}
+  - component: {fileID: -108199246578911090}
   m_Layer: 0
   m_Name: 57
   m_TagString: Untagged
@@ -81,3 +82,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-108199246578911090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657145522936818069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a60aea48bd685e4eb1af48b1ea4a529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim:
+  - {fileID: 7958683927536999042, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4895939845043267702, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  animSpeed: 20

@@ -82,31 +82,6 @@
     <Compile Include="Assets\Scripts\PopulateGrid.cs" />
     <Compile Include="Assets\Scripts\PythonThread.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
-    <None Include="Assets\Resources\Logs\20200426-180904_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-182317_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-175101_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-181121_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-181532_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180505_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-175808_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-181836_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-182547_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-181708_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-182015_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180246_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180143_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180447_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180653_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-175146_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-182616_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180207_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-182046_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180559_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-175440_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180015_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-180938_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-182724_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200426-175131_NGRAMS.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
