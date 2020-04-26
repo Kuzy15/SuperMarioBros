@@ -14,6 +14,7 @@ public class Coin : MonoBehaviour
     private SpriteRenderer _renderer;
     private Vector3 _startPosition;
     private bool _down = false;
+    private bool _canMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,10 @@ public class Coin : MonoBehaviour
     void Update()
     {
         CoinAnim();
-        CoinMove();
+        if (_canMove)
+        {
+            CoinMove();
+        }
     }
 
     private void CoinAnim()
@@ -67,6 +71,19 @@ public class Coin : MonoBehaviour
             {
                 Destroy(this.gameObject);
             }
+        }
+    }
+
+    public void SetMove(bool canMove)
+    {
+        _canMove = canMove;
+    }
+
+    public void OnTriggerEnter(Collider collision)
+    {
+        if (!_canMove)
+        {
+            Destroy(this.gameObject);
         }
     }
 

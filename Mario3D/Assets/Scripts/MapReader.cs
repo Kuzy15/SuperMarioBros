@@ -134,13 +134,17 @@ public class MapReader : MonoBehaviour
                     {
                         tile.GetComponent<BoxCollider>().isTrigger = true;
                     }
+                    else if(_parsedList[j][i] == "123")
+                    {
+                        tile.GetComponent<Coin>().SetMove(false);
+                    }
                     else if (_parsedList[j][i] == "264")
                     {
                         PipeCoords coords;
                         coords.x = j;
                         coords.y = i;
                         coords.tileL = tile;
-                        coords.tileR = new GameObject();
+                        coords.tileR = null;
 
                         GameObject tileR = Instantiate(_tiles[_parsedList[j][i + 1]], new Vector3(this.gameObject.transform.position.x + i + 1, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
@@ -201,12 +205,19 @@ public class MapReader : MonoBehaviour
             {
                 continue;
             }
+
             Debug.Log("ALTURA: " + j);
             if (_parsedList[j][_pipes[i].y] == "0")
             {
-                j += 28;
+                int aux = j;
+                while (aux < j + 29 && _parsedList[aux][_pipes[i].y] != "266")
+                {
+                    aux++;
+                    Debug.Log("AUX: " + aux);
+                }
                 //j += 13;
                 //j += 25;
+                j = aux;
                 Debug.Log("SECRET: " + _parsedList[j][_pipes[i].y]);
                 if (_parsedList[j][_pipes[i].y] == "266")
                 {
@@ -223,8 +234,8 @@ public class MapReader : MonoBehaviour
                         /*_pipes[i - 1].tileL.AddComponent<AudioSource>();
                         _pipes[i - 1].tileR.AddComponent<AudioSource>();*/
                     }
-                   
-                        _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>().SetExitPipe(_pipes[i].tileL);
+
+                    _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>().SetExitPipe(_pipes[i].tileL);
                     _exitIndex++;
                     _enterIndex++;
                     /* else
@@ -246,7 +257,8 @@ public class MapReader : MonoBehaviour
         return _marioPosition;
     }
 
-    public Transform GetSecretZonePos(int i) {
+    public Transform GetSecretZonePos(int i)
+    {
         return _secretZonePos[i];
     }
 }
