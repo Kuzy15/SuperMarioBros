@@ -1168,6 +1168,11 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7027009037439751189, guid: 6b49e488b8135034ba40f3c34c3f9afd,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 7027009037887319581, guid: 6b49e488b8135034ba40f3c34c3f9afd,
         type: 3}
       propertyPath: m_Sprite

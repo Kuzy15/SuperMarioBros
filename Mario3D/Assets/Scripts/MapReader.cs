@@ -53,7 +53,7 @@ public class MapReader : MonoBehaviour
         _pipes = new List<PipeCoords>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
 
-        ReadTextFile(Application.dataPath + "/Resources/Maps/1-1"/* + mapLevel.ToString()*/ + ".csv");
+        ReadTextFile(Application.dataPath + "/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
         LoadTiles();
     }
 
@@ -216,7 +216,6 @@ public class MapReader : MonoBehaviour
 
                         _pipes[i - 1].tileL.AddComponent<EnterSecretZone>().SetEnterZoneIndex(_enterIndex);
                         _pipes[i - 1].tileR.AddComponent<EnterSecretZone>().SetEnterZoneIndex(_enterIndex);
-                        _enterIndex++;
                         Debug.Log("TUBERIA Nº: " + (i - 1));
                         //Debug.Log("1: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y] + "   2: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y + 1]);
                         //_parsedList[_pipes[i-1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
@@ -227,6 +226,7 @@ public class MapReader : MonoBehaviour
                    
                         _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>();
                     _exitIndex++;
+                    _enterIndex++;
                     /* else
                      {
                          _pipes[i].tileL.AddComponent<AudioSource>();

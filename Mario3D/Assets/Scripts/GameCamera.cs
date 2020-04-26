@@ -36,7 +36,7 @@ public class GameCamera : MonoBehaviour
         targetOrtho = Camera.main.orthographicSize;
         orthoSize = targetOrtho;
         _refPosition = this.transform.position;
-        this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 5, target.transform.position.z);
+        //this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 5, target.transform.position.z);
         //GoToBlackScreen();
     }
 

@@ -40,7 +40,8 @@ public class Player : MonoBehaviour
     private bool _isJumping = false;
     private bool _invulnerable = false;
     private bool _isGroundedJ;
-
+    private bool _goingDown = false;
+    private bool _downAnim = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -55,14 +56,15 @@ public class Player : MonoBehaviour
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
-        this.gameObject.transform.position = new Vector3(MapReader.GM.GetInitialPosition().x, MapReader.GM.GetInitialPosition().y, MapReader.GM.GetInitialPosition().z);
+        //this.gameObject.transform.position = new Vector3(MapReader.GM.GetInitialPosition().x, MapReader.GM.GetInitialPosition().y, MapReader.GM.GetInitialPosition().z);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKey(KeyCode.B))
         {
+            _downAnim = true;
             AnimatePlayer();
         }
         _isGroundedJ = (_rigidBody.velocity.y == 0);
@@ -106,7 +108,10 @@ public class Player : MonoBehaviour
             pos.x += (speed * _velocity * Time.deltaTime);
 
             CheckCollisons(Vector3.up);
-            CheckCollisons(Vector3.down);
+            if (!_goingDown)
+            {
+                CheckCollisons(Vector3.down);
+            }
             CheckCollisons(Vector3.right);
             CheckCollisons(Vector3.left);
 
@@ -216,18 +221,20 @@ public class Player : MonoBehaviour
             if (hit.transform.gameObject.GetComponent<EnterSecretZone>())
             {
                 Debug.Log("ENTERRRRRR");
-                hit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
-                StartCoroutine(SecretZoneCoroutine());
+                AnimatePlayer();
+                StartCoroutine(SecretZoneCoroutine(hit));
             }
         }
     }
 
-    public IEnumerator SecretZoneCoroutine()
+    public IEnumerator SecretZoneCoroutine(RaycastHit hit)
     {
-        AnimatePlayer();
         yield return new WaitForSeconds(1f);
+        _goingDown = true;
+        this.GetComponentInChildren<CapsuleCollider>().enabled = true;
         blackImage.gameObject.SetActive(true);
-        ResetZ();
+        hit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
+        this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
         yield return new WaitForSeconds(1.5f);
         GameCamera.Instance.SetCameraY(-31.5f);
         GameCamera.Instance.GoToBlackScreen();
@@ -236,7 +243,7 @@ public class Player : MonoBehaviour
 
     public void AnimatePlayer()
     {
-        MoveZ();
+        MoveMario();
         //this.GetComponentInChildren<Transform>().Translate(Vector3.down * Time.deltaTime);
     }
 
@@ -245,6 +252,7 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if (dir == Vector3.down)
         {
+            Debug.Log("COLLISION DOWN");
             if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f) ||
                 Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
@@ -340,7 +348,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-
+            Debug.Log("JUMPO");
             //and you are on the ground...
             if (_onGround && _jumpTime > 0)
             {
@@ -461,14 +469,17 @@ public class Player : MonoBehaviour
         ChangeCollider();
     }
 
-    public void MoveZ()
+    public void MoveMario()
     {
-        this.GetComponent<Transform>().localPosition = new Vector3(this.GetComponent<Transform>().localPosition.x, this.GetComponent<Transform>().localPosition.y,
-               this.GetComponent<Transform>().localPosition.z - 2);
-    }
-
-    public void ResetZ()
-    {
-        this.GetComponentInChildren<Transform>().position = new Vector3(this.GetComponentInChildren<Transform>().position.x, this.GetComponentInChildren<Transform>().position.y, 0);
+        this.GetComponentInChildren<CapsuleCollider>().enabled = false;
+        this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
+        _goingDown = true;
+        transform.Translate(Vector3.down * Time.deltaTime / 4f);
+        //this.tr
+        /*if (_downAnim)
+        {
+            this.GetComponent<Transform>().localPosition = new Vector3(this.GetComponent<Transform>().localPosition.x, this.GetComponent<Transform>().localPosition.y,
+                   this.GetComponent<Transform>().localPosition.z - 2);
+        }*/
     }
 }
