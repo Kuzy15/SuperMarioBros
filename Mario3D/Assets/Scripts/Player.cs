@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public Sprite[] smallJump;
     public Sprite[] toBigMario;
     public Sprite[] toSmallMario;
+    public UnityEngine.UI.Image blackImage;
 
 
     private SpriteRenderer _marioSprite;
@@ -48,18 +49,24 @@ public class Player : MonoBehaviour
         _isBig = false;
         ChangeCollider();
         SetAnim(0, _isBig);
+        blackImage.gameObject.SetActive(false);
 
         //_collider.size = _currentAnim[0].bounds.size;
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
+        this.gameObject.transform.position = new Vector3(MapReader.GM.GetInitialPosition().x, MapReader.GM.GetInitialPosition().y, MapReader.GM.GetInitialPosition().z);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            AnimatePlayer();
+        }
         _isGroundedJ = (_rigidBody.velocity.y == 0);
-       
+
         if (!GameCamera.Instance.GetLooking())
         {
             _directionX = Input.GetAxis("Horizontal");
@@ -73,7 +80,7 @@ public class Player : MonoBehaviour
                     _marioSprite.flipX = true;
                     SetAnim(1, _isBig);
                 }
-                else if (_directionX > 0)   
+                else if (_directionX > 0)
                 {
                     _marioSprite.flipX = false;
                     SetAnim(1, _isBig);
@@ -81,7 +88,7 @@ public class Player : MonoBehaviour
                 else
                 {
                     SetAnim(0, _isBig);
-                }             
+                }
             }
             else
             {
@@ -138,7 +145,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-
+        CheckSecretZone();
         JumpMove();
 
         if (Input.GetKeyDown(KeyCode.O))
@@ -152,6 +159,14 @@ public class Player : MonoBehaviour
             GrowDown();
         }
 
+    }
+
+    private void CheckSecretZone()
+    {
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            CheckEnterSecretZone();
+        }
     }
 
 
@@ -192,6 +207,38 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void CheckEnterSecretZone()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), Vector3.down, out hit, (_collider.height / 2) + 0.1f) ||
+                Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), Vector3.down, out hit, (_collider.height / 2) + 0.1f))
+        {
+            if (hit.transform.gameObject.GetComponent<EnterSecretZone>())
+            {
+                Debug.Log("ENTERRRRRR");
+                hit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
+                StartCoroutine(SecretZoneCoroutine());
+            }
+        }
+    }
+
+    public IEnumerator SecretZoneCoroutine()
+    {
+        AnimatePlayer();
+        yield return new WaitForSeconds(1f);
+        blackImage.gameObject.SetActive(true);
+        ResetZ();
+        yield return new WaitForSeconds(1.5f);
+        GameCamera.Instance.SetCameraY(-31.5f);
+        GameCamera.Instance.GoToBlackScreen();
+        blackImage.gameObject.SetActive(false);
+    }
+
+    public void AnimatePlayer()
+    {
+        MoveZ();
+        //this.GetComponentInChildren<Transform>().Translate(Vector3.down * Time.deltaTime);
+    }
 
     private void CheckCollisons(Vector3 dir)
     {
@@ -223,9 +270,10 @@ public class Player : MonoBehaviour
                     hit.transform.gameObject.GetComponent<Enemy>().Die();
                     _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
                 }
+
             }
         }
-        else if(dir == Vector3.up)
+        else if (dir == Vector3.up)
         {
             if (Physics.Raycast(transform.position + new Vector3(0, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
@@ -269,7 +317,7 @@ public class Player : MonoBehaviour
                         _invulnerable = true;
                         _isBig = false;
                         ChangeCollider();
-                        Invoke("SetInvulnerable", 1.5f);                      
+                        Invoke("SetInvulnerable", 1.5f);
                     }
                     else
                     {
@@ -290,7 +338,7 @@ public class Player : MonoBehaviour
 
     private void JumpMove()
     {
-        if (Input.GetButtonDown("Vertical"))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
 
             //and you are on the ground...
@@ -308,7 +356,7 @@ public class Player : MonoBehaviour
         }
 
         //if you keep holding down the mouse button...
-        if ((Input.GetButton("Vertical")) && !_stoppedJumping)
+        if ((Input.GetKey(KeyCode.UpArrow)) && !_stoppedJumping)
         {
             //and your counter hasn't reached zero...
             if (_jumpTime > 0)
@@ -325,7 +373,7 @@ public class Player : MonoBehaviour
 
 
         //if you stop holding down the mouse button...
-        if (Input.GetButtonUp("Vertical"))
+        if (Input.GetKeyUp(KeyCode.UpArrow))
         {
             //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
             _jumpTime = _time;
@@ -365,7 +413,7 @@ public class Player : MonoBehaviour
             _isBig = false;
         }
         else
-        {       
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
@@ -411,5 +459,16 @@ public class Player : MonoBehaviour
     {
         _isBig = false;
         ChangeCollider();
+    }
+
+    public void MoveZ()
+    {
+        this.GetComponent<Transform>().localPosition = new Vector3(this.GetComponent<Transform>().localPosition.x, this.GetComponent<Transform>().localPosition.y,
+               this.GetComponent<Transform>().localPosition.z - 2);
+    }
+
+    public void ResetZ()
+    {
+        this.GetComponentInChildren<Transform>().position = new Vector3(this.GetComponentInChildren<Transform>().position.x, this.GetComponentInChildren<Transform>().position.y, 0);
     }
 }

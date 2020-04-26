@@ -16,8 +16,13 @@ public class MapReader : MonoBehaviour
     private GameObject[] _prefabs;
     private Dictionary<string, GameObject> _tiles;
     private List<PipeCoords> _pipes;
+    private List<Transform> _secretZonePos;
+    private List<GameObject> _exitSecretZones;
+    private Vector3 _marioPosition;
+    private bool _notSet = false;
 
-    private struct PipeCoords {
+    private struct PipeCoords
+    {
 
         public int x, y;
 
@@ -42,11 +47,13 @@ public class MapReader : MonoBehaviour
     {
         _stringList = new List<string>();
         _parsedList = new List<string[]>();
+        _secretZonePos = new List<Transform>();
+        _exitSecretZones = new List<GameObject>();
         _tiles = new Dictionary<string, GameObject>();
         _pipes = new List<PipeCoords>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
 
-        ReadTextFile(Application.dataPath + "/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
+        ReadTextFile(Application.dataPath + "/Resources/Maps/1-1"/* + mapLevel.ToString()*/ + ".csv");
         LoadTiles();
     }
 
@@ -112,11 +119,12 @@ public class MapReader : MonoBehaviour
                 if (_parsedList[j][i] != "-1" && _parsedList[j][i] != null)
                 {
                     GameObject tile = null;
-                    if (_parsedList[j][i] != "265") { 
-                        //Debug.Log(_parsedList[i][j]);
-                         tile = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
-                        this.gameObject.transform.rotation, this.gameObject.transform);
-                     }
+                    if (_parsedList[j][i] != "265")
+                    {
+                        //Debug.Log(_parsedList[j][i]);
+                        tile = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                       this.gameObject.transform.rotation, this.gameObject.transform);
+                    }
 
                     if (_parsedList[j][i] == "24")
                     {
@@ -133,18 +141,25 @@ public class MapReader : MonoBehaviour
                         coords.y = i;
                         coords.tileL = tile;
                         coords.tileR = new GameObject();
-                        
-                        GameObject tileR = Instantiate(_tiles[_parsedList[j][i + 1]], new Vector3(this.gameObject.transform.position.x + i+1, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+
+                        GameObject tileR = Instantiate(_tiles[_parsedList[j][i + 1]], new Vector3(this.gameObject.transform.position.x + i + 1, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
 
                         coords.tileR = tileR;
                         _pipes.Add(coords);
                     }
-                   /* else if (_parsedList[j][i] == "265")
+                    else if (_parsedList[j][i] == "922")
                     {
-                        _pipes[pipeIdx].SetTileR(tile.gameObject);
-                        pipeIdx++;
-                    }*/
+                        _secretZonePos.Add(tile.transform);
+                    }
+                    else if (_parsedList[j][i] == "923")
+                    {
+                        _marioPosition = tile.transform.position;
+                    }
+                    else if (_parsedList[j][i] == "266" && j > 32)
+                    {
+                        _exitSecretZones.Add(tile);
+                    }
                 }
             }
         }
@@ -155,58 +170,83 @@ public class MapReader : MonoBehaviour
     public void DestroyMap()
     {
 
-            Transform[] tilesToDelete = gameObject.GetComponentsInChildren<Transform>();
-            for (int i = 1; i < tilesToDelete.Length; i++)
-            {
-                Destroy(tilesToDelete[i].gameObject);
-            }
+        Transform[] tilesToDelete = gameObject.GetComponentsInChildren<Transform>();
+        for (int i = 1; i < tilesToDelete.Length; i++)
+        {
+            Destroy(tilesToDelete[i].gameObject);
+        }
     }
 
     public void CheckPipes()
     {
-        //Debug.Log("CHECK PIPES");
+        int _exitIndex = 0;
+        int _enterIndex = 0;
+        Debug.Log("CHECK PIPES");
         for (int i = 0; i < _pipes.Count; i++)
         {
             int j = _pipes[i].x;
-            //Debug.Log("INICIAL: " + j);
+            Debug.Log("INICIAL: " + j);
             while (_parsedList[j][_pipes[i].y] != "0")
             {
                 Debug.Log("WHILE: " + _parsedList[j][_pipes[i].y]);
                 j++;
-               
-
+                if (_parsedList[j][_pipes[i].y] == "66")
+                {
+                    _pipes.RemoveAt(i);
+                    i--;
+                    break;
+                }
             }
-            //Debug.Log("ALTURA: " + j);
+            if (_parsedList[j][_pipes[i].y] != "0")
+            {
+                continue;
+            }
+            Debug.Log("ALTURA: " + j);
             if (_parsedList[j][_pipes[i].y] == "0")
             {
+                //j += 28;
                 j += 13;
-                
-                if (_parsedList[j][_pipes[i].y - 2] == "266")
+                //j += 25;
+                Debug.Log("SECRET: " + _parsedList[j][_pipes[i].y]);
+                if (_parsedList[j][_pipes[i].y] == "266")
                 {
-
                     //Debug.Log("SECRET: " + i + "      " + _parsedList[j][_pipes[i].y - 2]);
                     if (i > 0)
                     {
 
-                        _pipes[i-1].tileL.AddComponent<AudioSource>();
-                        _pipes[i-1].tileR.AddComponent<AudioSource>();
-                        Debug.Log("TUBERIA Nº: " + (i-1) );
+                        _pipes[i - 1].tileL.AddComponent<EnterSecretZone>().SetEnterZoneIndex(_enterIndex);
+                        _pipes[i - 1].tileR.AddComponent<EnterSecretZone>().SetEnterZoneIndex(_enterIndex);
+                        _enterIndex++;
+                        Debug.Log("TUBERIA Nº: " + (i - 1));
                         //Debug.Log("1: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y] + "   2: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y + 1]);
                         //_parsedList[_pipes[i-1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
                         //_parsedList[_pipes[i - 1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
                         /*_pipes[i - 1].tileL.AddComponent<AudioSource>();
                         _pipes[i - 1].tileR.AddComponent<AudioSource>();*/
                     }
-                   /* else
-                    {
-                        _pipes[i].tileL.AddComponent<AudioSource>();
-                        _pipes[i].tileR.AddComponent<AudioSource>();
-                    }*/
+                   
+                        _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>();
+                    _exitIndex++;
+                    /* else
+                     {
+                         _pipes[i].tileL.AddComponent<AudioSource>();
+                         _pipes[i].tileR.AddComponent<AudioSource>();
+                     }*/
                     // _parsedList[j ][_pipes[i].y - 2]. addcomponent(salida zona secreta)
-                     //Debug.Log("PIPE FOUND!");
-                    
+                    //Debug.Log("PIPE FOUND!");
+
                 }
             }
+            Debug.Log("PIPES: ");
         }
+    }
+
+    public Vector3 GetInitialPosition()
+    {
+        return _marioPosition;
+    }
+
+    public Transform GetSecretZonePos(int i) {
+        return _secretZonePos[i];
     }
 }

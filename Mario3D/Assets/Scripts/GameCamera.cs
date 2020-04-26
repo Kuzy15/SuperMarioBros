@@ -36,6 +36,8 @@ public class GameCamera : MonoBehaviour
         targetOrtho = Camera.main.orthographicSize;
         orthoSize = targetOrtho;
         _refPosition = this.transform.position;
+        this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 5, target.transform.position.z);
+        //GoToBlackScreen();
     }
 
     private void Update()
@@ -92,6 +94,11 @@ public class GameCamera : MonoBehaviour
         return _looking;
     }
 
+    public void SetCameraY(float y)
+    {
+        this.transform.position = new Vector3(this.transform.position.x, y, this.transform.position.z);
+    }
+
     private void Awake()
     {
         if (_camera != null && _camera != this)
@@ -127,5 +134,10 @@ public class GameCamera : MonoBehaviour
     {
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
         return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
+    }
+
+    public void GoToBlackScreen()
+    {
+        this.GetComponent<Camera>().backgroundColor = Color.black;
     }
 }
