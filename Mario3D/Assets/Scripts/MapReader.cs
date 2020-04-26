@@ -204,8 +204,8 @@ public class MapReader : MonoBehaviour
             Debug.Log("ALTURA: " + j);
             if (_parsedList[j][_pipes[i].y] == "0")
             {
-                //j += 28;
-                j += 13;
+                j += 28;
+                //j += 13;
                 //j += 25;
                 Debug.Log("SECRET: " + _parsedList[j][_pipes[i].y]);
                 if (_parsedList[j][_pipes[i].y] == "266")
@@ -224,7 +224,7 @@ public class MapReader : MonoBehaviour
                         _pipes[i - 1].tileR.AddComponent<AudioSource>();*/
                     }
                    
-                        _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>();
+                        _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>().SetExitPipe(_pipes[i].tileL);
                     _exitIndex++;
                     _enterIndex++;
                     /* else

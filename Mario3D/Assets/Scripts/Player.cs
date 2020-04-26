@@ -41,7 +41,13 @@ public class Player : MonoBehaviour
     private bool _invulnerable = false;
     private bool _isGroundedJ;
     private bool _goingDown = false;
+    private bool _goingUp = false;
+    private bool _goingRight = false;
     private bool _downAnim = false;
+
+    private Vector3 _startPosition;
+
+    private RaycastHit auxHit;
     // Start is called before the first frame update
     void Start()
     {
@@ -62,10 +68,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.B))
+        if (_goingDown)
         {
-            _downAnim = true;
-            AnimatePlayer();
+            EnterMove();
+        }
+        if (_goingUp)
+        {
+            ExitMove();
+        }
+        if (_goingRight)
+        {
+            ExitSecretZoneMove();
         }
         _isGroundedJ = (_rigidBody.velocity.y == 0);
 
@@ -168,9 +181,14 @@ public class Player : MonoBehaviour
 
     private void CheckSecretZone()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             CheckEnterSecretZone();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            CheckExitSecretZone();
         }
     }
 
@@ -220,25 +238,132 @@ public class Player : MonoBehaviour
         {
             if (hit.transform.gameObject.GetComponent<EnterSecretZone>())
             {
+                auxHit = hit;
                 Debug.Log("ENTERRRRRR");
-                AnimatePlayer();
-                StartCoroutine(SecretZoneCoroutine(hit));
+                this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
+                //EnterMove(hit);
+                _startPosition = this.transform.position;
+                _goingDown = true;
             }
         }
     }
 
-    public IEnumerator SecretZoneCoroutine(RaycastHit hit)
+    private void CheckExitSecretZone()
     {
-        yield return new WaitForSeconds(1f);
-        _goingDown = true;
-        this.GetComponentInChildren<CapsuleCollider>().enabled = true;
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height, 0), Vector3.right, out hit, (_collider.height) - 0.2f)) {
+            if (hit.transform.gameObject.GetComponent<ExitSecretZone>())
+            {
+                auxHit = hit;
+                Debug.Log("EXITTTTT");
+                //AnimatePlayer();
+                _startPosition = this.transform.position;
+                _goingRight = true;
+            }
+        }
+    }
+
+    public IEnumerator SecretZoneCoroutine()
+    {
+
+        //yield return new WaitForSeconds(1f);
         blackImage.gameObject.SetActive(true);
-        hit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
         this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
         yield return new WaitForSeconds(1.5f);
-        GameCamera.Instance.SetCameraY(-31.5f);
+        GameCamera.Instance.SetCameraY(-46.5f);
+        _rigidBody.useGravity = false;
+        auxHit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
+        //GameCamera.Instance.ResetCamera();
         GameCamera.Instance.GoToBlackScreen();
+
         blackImage.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        _rigidBody.useGravity = true;
+    }
+
+    private IEnumerator ExitSecretZone()
+    {
+        blackImage.gameObject.SetActive(true);
+        GameCamera.Instance.SetCameraY(-16.5f);
+        yield return new WaitForSeconds(1f);
+        //_goingDown = true;
+        //GrowUp();
+        blackImage.gameObject.SetActive(false);
+        GameCamera.Instance.GoToBlueScreen();
+        //ChangeCollider();
+        ExitSecretZone aux = auxHit.transform.gameObject.GetComponent<ExitSecretZone>();
+        aux.GoToSecretZone(this);
+        _startPosition = aux.GetSecretZonePosition();
+        _goingRight = false;
+        _goingUp = true;
+       // ExitMove(hit);
+        //this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+    }
+    public void ExitSecretZoneMove()
+    {
+        this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
+        _rigidBody.useGravity = false;
+        _rigidBody.detectCollisions = false;
+        _rigidBody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+        float step = 2f * Time.deltaTime; // calculate distance to move
+        transform.position = Vector3.MoveTowards(transform.position, _startPosition + new Vector3(2, 0f), step);
+        if (Vector3.Distance(transform.position, _startPosition + new Vector3(2, 0f)) < 0.001f)
+        {
+            // Swap the position of the cylinder.
+            _rigidBody.useGravity = true;
+            _rigidBody.detectCollisions = true;
+            _rigidBody.constraints = RigidbodyConstraints.None;
+            _rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+            _goingRight = false;
+            this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+            StartCoroutine(ExitSecretZone());
+            //StartCoroutine(ExitSecretZone());
+            //_downAnim = true;
+            //EnterMove();
+        }
+    }
+    public void ExitMove()
+    {
+        this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
+        _rigidBody.useGravity = false;
+        _rigidBody.detectCollisions = false;
+        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        float step = 2f * Time.deltaTime; // calculate distance to move
+        transform.position = Vector3.MoveTowards(transform.position, _startPosition + new Vector3(0, 0.5f), step);
+        if (Vector3.Distance(transform.position, _startPosition + new Vector3(0, 0.5f)) < 0.001f)
+        {
+            // Swap the position of the cylinder.
+            _rigidBody.useGravity = true;
+            _rigidBody.detectCollisions = true;
+            _rigidBody.constraints = RigidbodyConstraints.None;
+            _rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+            _goingUp = false;
+            this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+            //StartCoroutine(ExitSecretZone());
+            //_downAnim = true;
+            //EnterMove();
+        }
+    }
+
+    public void EnterMove()
+    {
+        _rigidBody.useGravity = false;
+        _rigidBody.detectCollisions = false;
+        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; 
+        float step = 2f * Time.deltaTime; // calculate distance to move
+        transform.position = Vector3.MoveTowards(transform.position, _startPosition - new Vector3(0, 2f), step);
+        if (Vector3.Distance(transform.position, _startPosition - new Vector3(0, 2f)) < 0.001f)
+        {
+            // Swap the position of the cylinder.
+            _rigidBody.useGravity = true;
+            _rigidBody.detectCollisions = true;
+            _rigidBody.constraints = RigidbodyConstraints.None;
+            _rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+            _goingDown = false;
+            StartCoroutine(SecretZoneCoroutine());
+            //_downAnim = true;
+            //EnterMove();
+        }
     }
 
     public void AnimatePlayer()
@@ -469,12 +594,18 @@ public class Player : MonoBehaviour
         ChangeCollider();
     }
 
-    public void MoveMario()
+    public void MoveMario(bool up = true)
     {
+        int value = 1;
+        if (!up)
+        {
+            value = -1;
+        }
         this.GetComponentInChildren<CapsuleCollider>().enabled = false;
         this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
         _goingDown = true;
-        transform.Translate(Vector3.down * Time.deltaTime / 4f);
+         transform.Translate(value * Vector3.down * Time.deltaTime / 4f);
+        //GetComponentInParent<Rigidbody>().AddForce(Vector3.up * 2f);
         //this.tr
         /*if (_downAnim)
         {

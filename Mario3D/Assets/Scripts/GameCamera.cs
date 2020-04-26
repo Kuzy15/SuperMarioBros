@@ -19,6 +19,7 @@ public class GameCamera : MonoBehaviour
     private bool _looking = false;
     private Vector3 _lastPos = Vector3.zero;
     private float _halfPlayerSizeX;
+    private Color _initialColor;
 
     private static GameCamera _camera = null;
 
@@ -36,7 +37,8 @@ public class GameCamera : MonoBehaviour
         targetOrtho = Camera.main.orthographicSize;
         orthoSize = targetOrtho;
         _refPosition = this.transform.position;
-        //this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 5, target.transform.position.z);
+        _initialColor = this.GetComponent<Camera>().backgroundColor;
+        this.transform.position = new Vector3(this.transform.position.x,-16.5f, this.transform.position.z);
         //GoToBlackScreen();
     }
 
@@ -75,6 +77,12 @@ public class GameCamera : MonoBehaviour
                 targetOrtho = Camera.main.orthographicSize = orthoSize;            
             }
         }
+    }
+
+    public void ResetCamera()
+    {
+        Camera.main.transform.position = _refPosition;
+        StartCoroutine("Coroutine");
     }
 
     IEnumerator Coroutine()
@@ -139,5 +147,10 @@ public class GameCamera : MonoBehaviour
     public void GoToBlackScreen()
     {
         this.GetComponent<Camera>().backgroundColor = Color.black;
+    }
+
+    public void GoToBlueScreen()
+    {
+        this.GetComponent<Camera>().backgroundColor = _initialColor;
     }
 }

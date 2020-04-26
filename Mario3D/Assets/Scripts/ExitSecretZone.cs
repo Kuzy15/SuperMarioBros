@@ -1,18 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ExitSecretZone : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private GameObject _pipe;
+    public void GoToSecretZone(Player player)
     {
-        
+        Vector3 _secretPosition = _pipe.transform.position;
+        //GameCamera.Instance.G
+        player.transform.position = new Vector3(_secretPosition.x, _secretPosition.y - 2, _secretPosition.z);
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector3 GetSecretZonePosition()
     {
-        
+        return _pipe.transform.position;
+    }
+
+    public void SetExitPipe(GameObject pipe)
+    {
+        _pipe = pipe;
     }
 }
