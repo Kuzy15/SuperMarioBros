@@ -20,6 +20,7 @@ public class GameCamera : MonoBehaviour
     private Vector3 _lastPos = Vector3.zero;
     private float _halfPlayerSizeX;
     private Color _initialColor;
+    private bool _canFollowInY = false;
 
     private static GameCamera _camera = null;
 
@@ -130,7 +131,16 @@ public class GameCamera : MonoBehaviour
                 {
                     Vector3 desiredPosition = target.position + offset;
                     Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-                    transform.position = new Vector3(smoothedPosition.x, transform.position.y, transform.position.z);
+                    float posY;
+                    if (_canFollowInY)
+                    {
+                        posY = smoothedPosition.y;
+                    }
+                    else
+                    {
+                        posY = this.transform.position.y;
+                    }
+                    transform.position = new Vector3(smoothedPosition.x, posY, transform.position.z); ;
                     _lastPos = transform.position;
                 }             
             }
@@ -152,5 +162,15 @@ public class GameCamera : MonoBehaviour
     public void GoToBlueScreen()
     {
         this.GetComponent<Camera>().backgroundColor = _initialColor;
+    }
+
+    public float GetCameraY()
+    {
+        return this.transform.position.y;
+    }
+
+    public void CanFollowInY(bool can)
+    {
+        _canFollowInY = can;
     }
 }

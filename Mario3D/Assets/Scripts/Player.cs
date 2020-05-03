@@ -44,6 +44,13 @@ public class Player : MonoBehaviour
     private bool _goingUp = false;
     private bool _goingRight = false;
     private bool _downAnim = false;
+    private bool _playerInCreeper = false;
+    private bool _canClimb = false;
+    private bool _cameraSaved = false;
+    private bool _goingDowOfCreeper = false;
+    private float _lastYCamera;
+    private Shuttle _shuttle;
+
 
     private Vector3 _startPosition;
 
@@ -62,7 +69,7 @@ public class Player : MonoBehaviour
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
-        //this.gameObject.transform.position = new Vector3(MapReader.GM.GetInitialPosition().x, MapReader.GM.GetInitialPosition().y, MapReader.GM.GetInitialPosition().z);
+        //this.gameObject.transform.position = new Vector3(179.6f, -22f, MapReader.GM.GetInitialPosition().z);
     }
 
     // Update is called once per frame
@@ -82,7 +89,7 @@ public class Player : MonoBehaviour
         }
         _isGroundedJ = (_rigidBody.velocity.y == 0);
 
-        if (!GameCamera.Instance.GetLooking())
+        if (!_playerInCreeper && !GameCamera.Instance.GetLooking())
         {
             _directionX = Input.GetAxis("Horizontal");
             _directionY = Input.GetAxis("Vertical");
@@ -127,7 +134,7 @@ public class Player : MonoBehaviour
             }
             CheckCollisons(Vector3.right);
             CheckCollisons(Vector3.left);
-
+            CheckOnShuttle();
             transform.position = pos;
 
             if (!_isGrowing)
@@ -175,6 +182,11 @@ public class Player : MonoBehaviour
         {
             _isGrowing = true;
             GrowDown();
+        }
+
+        if(_shuttle != null )
+        {
+
         }
 
     }
@@ -251,7 +263,8 @@ public class Player : MonoBehaviour
     private void CheckExitSecretZone()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height, 0), Vector3.right, out hit, (_collider.height) - 0.2f)) {
+        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height, 0), Vector3.right, out hit, (_collider.height) - 0.2f))
+        {
             if (hit.transform.gameObject.GetComponent<ExitSecretZone>())
             {
                 auxHit = hit;
@@ -296,7 +309,7 @@ public class Player : MonoBehaviour
         _startPosition = aux.GetSecretZonePosition();
         _goingRight = false;
         _goingUp = true;
-       // ExitMove(hit);
+        // ExitMove(hit);
         //this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
     }
     public void ExitSecretZoneMove()
@@ -349,7 +362,7 @@ public class Player : MonoBehaviour
     {
         _rigidBody.useGravity = false;
         _rigidBody.detectCollisions = false;
-        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ; 
+        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         float step = 2f * Time.deltaTime; // calculate distance to move
         transform.position = Vector3.MoveTowards(transform.position, _startPosition - new Vector3(0, 2f), step);
         if (Vector3.Distance(transform.position, _startPosition - new Vector3(0, 2f)) < 0.001f)
@@ -471,46 +484,91 @@ public class Player : MonoBehaviour
 
     private void JumpMove()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (!_canClimb)
         {
-            Debug.Log("JUMPO");
-            //and you are on the ground...
-            if (_onGround && _jumpTime > 0)
+            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                ////Debug.Log("to jump");
-                _isJumping = true;
-                _onGround = false;
-                SetAnim(2, IsBigMario());
-                //jump!
-                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
-                _stoppedJumping = false;
+                Debug.Log("JUMPO");
+                //and you are on the ground...
+                if (_onGround && _jumpTime > 0)
+                {
+                    ////Debug.Log("to jump");
+                    _isJumping = true;
+                    _onGround = false;
+                    SetAnim(2, IsBigMario());
+                    //jump!
+                    _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
+                    _stoppedJumping = false;
+                }
+
             }
 
+            //if you keep holding down the mouse button...
+            if ((Input.GetKey(KeyCode.UpArrow)) && !_stoppedJumping)
+            {
+                CheckBreakableBrick();
+                //and your counter hasn't reached zero...
+                if (_jumpTime > 0)
+                {
+                    //keep jumping!
+                    _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
+                    _jumpTime -= Time.deltaTime;
+                }
+                else
+                {
+                    _stoppedJumping = true;
+                }
+            }
+
+
+            //if you stop holding down the mouse button...
+            if (Input.GetKeyUp(KeyCode.UpArrow))
+            {
+                //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
+                _jumpTime = _time;
+                //_stoppedJumping = true;
+            }
         }
-
-        //if you keep holding down the mouse button...
-        if ((Input.GetKey(KeyCode.UpArrow)) && !_stoppedJumping)
+        else
         {
-            //and your counter hasn't reached zero...
-            if (_jumpTime > 0)
+            if (Input.GetKey(KeyCode.UpArrow))
             {
-                //keep jumping!
-                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _force);
-                _jumpTime -= Time.deltaTime;
+                /*_goingDowOfCreeper = true;
+                if (!_cameraSaved)
+                {
+                    _cameraSaved = true;
+                    _lastYCamera = GameCamera.Instance.GetCameraY();
+                    GameCamera.Instance.CanFollowInY(true);
+                }
+                _playerInCreeper = true;*/
+                _playerInCreeper = true;
+                this.gameObject.transform.Translate(Vector3.up * Time.deltaTime * 2f);
             }
-            else
+
+            if (Input.GetKey(KeyCode.DownArrow))
             {
-                _stoppedJumping = true;
-            }
-        }
 
 
-        //if you stop holding down the mouse button...
-        if (Input.GetKeyUp(KeyCode.UpArrow))
-        {
-            //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
-            _jumpTime = _time;
-            //_stoppedJumping = true;
+                _cameraSaved = false;
+                this.gameObject.transform.Translate(-Vector3.up * Time.deltaTime * 2f);
+                //_rigidBody.useGravity = true;
+                //_playerInCreeper = false;
+                _canClimb = false;
+                /*if(_rigidBody.velocity.y == 0)
+                {
+                    Debug.Log("IM OUT OF CREEPER");
+                    _playerInCreeper = false;
+                    _goingDowOfCreeper = true;
+                    _canClimb = false;
+                    GameCamera.Instance.SetCameraY(_lastYCamera);
+                }*/
+            }
+            /*if(_onGround && !_playerInCreeper)
+            {
+                    _rigidBody.useGravity = true;
+                    _playerInCreeper = false;
+                    _canClimb = false;
+            }*/
         }
     }
 
@@ -572,6 +630,30 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void OnTriggerStay(Collider other)
+    {
+        if (!_playerInCreeper && !_isJumping && other.GetComponent<Creeper>())
+        {
+            Debug.Log("IM IN CREEPER");
+            _rigidBody.useGravity = false;
+            _canClimb = true;
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        /*if (other.GetComponent<Creeper>())
+        {
+            Debug.Log("IM IN CREEPER");
+        }*/
+        Debug.Log("IM NOT IN CREEPER");
+        _playerInCreeper = false;
+        //_canClimb = false;
+
+
+        //GameCamera.Instance.CanFollowInY(false);
+    }
+
     public Vector3 GetMarioPosition()
     {
         return transform.position;
@@ -604,7 +686,7 @@ public class Player : MonoBehaviour
         this.GetComponentInChildren<CapsuleCollider>().enabled = false;
         this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
         _goingDown = true;
-         transform.Translate(value * Vector3.down * Time.deltaTime / 4f);
+        transform.Translate(value * Vector3.down * Time.deltaTime / 4f);
         //GetComponentInParent<Rigidbody>().AddForce(Vector3.up * 2f);
         //this.tr
         /*if (_downAnim)
@@ -612,5 +694,36 @@ public class Player : MonoBehaviour
             this.GetComponent<Transform>().localPosition = new Vector3(this.GetComponent<Transform>().localPosition.x, this.GetComponent<Transform>().localPosition.y,
                    this.GetComponent<Transform>().localPosition.z - 2);
         }*/
+    }
+
+    public void CheckBreakableBrick()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height/2, 0), Vector3.up, out hit, (_collider.height/2) + 0.2f)) {
+            if (hit.transform.gameObject.GetComponent<BreakableBrick>())
+            {
+                hit.transform.gameObject.GetComponent<BreakableBrick>().DestroyBrick();
+            }
+        }
+    }
+
+    private void CheckOnShuttle()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), Vector3.down, out hit, (_collider.height / 2) + 0.1f) ||
+                Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), Vector3.down, out hit, (_collider.height / 2) + 0.1f))
+        {
+            if (hit.transform.gameObject.GetComponent<Shuttle>())
+            {
+                _shuttle = hit.transform.gameObject.GetComponent<Shuttle>();
+                _shuttle.StartShuttle();
+                ShuttlePlayer();
+            }
+        }
+    }
+
+    public void ShuttlePlayer()
+    {
+        _rigidBody.AddForce(Vector3.up*90.5f - _rigidBody.velocity, ForceMode.Impulse);
     }
 }

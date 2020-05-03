@@ -63,9 +63,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\BreakableBrick.cs" />
     <Compile Include="Assets\Scripts\Brick.cs" />
     <Compile Include="Assets\Scripts\ButtonLevel.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\Creeper.cs" />
     <Compile Include="Assets\Scripts\DeadZone.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnterSecretZone.cs" />
@@ -78,39 +80,45 @@
     <Compile Include="Assets\Scripts\MapLoader.cs" />
     <Compile Include="Assets\Scripts\MapReader.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
+    <Compile Include="Assets\Scripts\Platform.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PopulateGrid.cs" />
     <Compile Include="Assets\Scripts\PythonThread.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
+    <Compile Include="Assets\Scripts\Shuttle.cs" />
+    <None Include="Assets\Resources\Logs\20200503-171717_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200503-171549_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200503-171745_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200503-171952_NGRAMS.txt" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>D:/Curso19-20/TFG/SM-REF/SuperMarioBros/Mario3D/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>D:/Curso19-20/TFG/SM-CURRENT/SuperMarioBros/Mario3D/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.15f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

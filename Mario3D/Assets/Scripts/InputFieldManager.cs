@@ -17,6 +17,8 @@ public class InputFieldManager : MonoBehaviour
     public GameObject filesHolder;
     public GameObject continueButton;
     public GameObject checkBox;
+    public GameObject loadButton;
+    public GameObject generateButton;
     public List<string> arrFiles = new List<string>();
 
     private string _nGramsInput;
@@ -28,6 +30,7 @@ public class InputFieldManager : MonoBehaviour
     private string[] _files;
     private string[] _fileNames;
     private int n = 0;
+    private bool _generationMode;
 
     void Awake()
     {
@@ -42,6 +45,7 @@ public class InputFieldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        nGramsField.SetActive(false);
         lengthField.SetActive(false);
         nFilesField.SetActive(false);
         filesToConcatenateField.SetActive(false);
@@ -153,16 +157,60 @@ public class InputFieldManager : MonoBehaviour
 
     public void OnClickContinue()
     {
-        if (arrFiles.Count > 0)
+        if (_generationMode)
         {
-            PythonThread.ExecuteCommand();
-            MapReader.GM.InitMap(14);
-            SceneManager.LoadScene(1);
+            if (arrFiles.Count > 0)
+            {
+                PythonThread.ExecuteCommand();
+                MapReader.GM.InitMap(14.ToString());
+                SceneManager.LoadScene(1);
+            }
+        }
+        else
+        {
+            if (arrFiles.Count == 1)
+            {
+                PythonThread.ExecuteCommand();
+                MapReader.GM.InitMap(arrFiles[0], false);
+                SceneManager.LoadScene(1);
+            }
         }
     }
 
     public void OnCheckBoxValueChanged()
     {
         _checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
+    }
+
+    public void OnClickMode(bool generation = false) {
+        generateButton.SetActive(false);
+        loadButton.SetActive(false);
+        if (generation)
+        {
+            _generationMode = true;
+            OnGeneratingMode();
+        }
+        else
+        {
+            OnLoadMode();
+        }
+    }
+
+    public void OnGeneratingMode()
+    {
+        nGramsField.SetActive(true);
+        /*SetNGramsInput();
+        SetLengthInput();
+        SetNFilesInput();*/
+    }
+
+    public void OnLoadMode()
+    {
+        SetNFilesInput();
+    }
+
+    public bool GetGenerationMode()
+    {
+        return _generationMode;
     }
 }

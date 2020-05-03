@@ -18,8 +18,10 @@ public class MapReader : MonoBehaviour
     private List<PipeCoords> _pipes;
     private List<Transform> _secretZonePos;
     private List<GameObject> _exitSecretZones;
+    private List<GameObject> _platforms;
     private Vector3 _marioPosition;
     private bool _notSet = false;
+    private int _platformIndex = -1;
 
     private struct PipeCoords
     {
@@ -33,6 +35,16 @@ public class MapReader : MonoBehaviour
 
     }
 
+    private struct PlatformSt
+    {
+        public GameObject tileL, tileR, tileM;
+
+        public void SetTileL(GameObject tile) { tileL = tile; }
+        public void SetTileR(GameObject tile) { tileR = tile; }
+        public void SetTileM(GameObject tile) { tileM = tile; }
+
+    }
+
     void Awake()
     {
         if (GM != null)
@@ -43,7 +55,7 @@ public class MapReader : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void InitMap(int mapLevel)
+    public void InitMap(string mapLevel, bool generationMode = true)
     {
         _stringList = new List<string>();
         _parsedList = new List<string[]>();
@@ -52,8 +64,17 @@ public class MapReader : MonoBehaviour
         _tiles = new Dictionary<string, GameObject>();
         _pipes = new List<PipeCoords>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
+        string fileToRead = "";
+        if (generationMode)
+        {
+            fileToRead = "1-" + mapLevel;
+        }
+        else
+        {
+            fileToRead = mapLevel;
+        }
 
-        ReadTextFile(Application.dataPath + "/Resources/Maps/1-" + mapLevel.ToString() + ".csv");
+        ReadTextFile(Application.dataPath + "/Resources/Maps/" + fileToRead + ".csv");
         LoadTiles();
     }
 
@@ -116,12 +137,12 @@ public class MapReader : MonoBehaviour
         {
             for (int j = 0; j < SIZEX; j++)
             {
+                Debug.Log(_parsedList[j][i]);
                 if (_parsedList[j][i] != "-1" && _parsedList[j][i] != null)
                 {
                     GameObject tile = null;
                     if (_parsedList[j][i] != "265")
                     {
-                        //Debug.Log(_parsedList[j][i]);
                         tile = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
                        this.gameObject.transform.rotation, this.gameObject.transform);
                     }
@@ -134,23 +155,25 @@ public class MapReader : MonoBehaviour
                     {
                         tile.GetComponent<BoxCollider>().isTrigger = true;
                     }
-                    else if(_parsedList[j][i] == "123" || _parsedList[j][i] == "57")
+                    else if (_parsedList[j][i] == "123" || _parsedList[j][i] == "57")
                     {
                         tile.GetComponent<Coin>().SetMove(false);
                     }
                     else if (_parsedList[j][i] == "264")
                     {
-                        PipeCoords coords;
-                        coords.x = j;
-                        coords.y = i;
-                        coords.tileL = tile;
-                        coords.tileR = null;
+                        if (_parsedList[j][i + 1] != null && _parsedList[j][i + 1] == "265")
+                        {
+                            PipeCoords coords;
+                            coords.x = j;
+                            coords.y = i;
+                            coords.tileL = tile;
+                            coords.tileR = null;
+                            GameObject tileR = Instantiate(_tiles[_parsedList[j][i + 1]], new Vector3(this.gameObject.transform.position.x + i + 1, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                            this.gameObject.transform.rotation, this.gameObject.transform);
 
-                        GameObject tileR = Instantiate(_tiles[_parsedList[j][i + 1]], new Vector3(this.gameObject.transform.position.x + i + 1, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
-                        this.gameObject.transform.rotation, this.gameObject.transform);
-
-                        coords.tileR = tileR;
-                        _pipes.Add(coords);
+                            coords.tileR = tileR;
+                            _pipes.Add(coords);
+                        }
                     }
                     else if (_parsedList[j][i] == "922")
                     {
@@ -164,10 +187,44 @@ public class MapReader : MonoBehaviour
                     {
                         _exitSecretZones.Add(tile);
                     }
+                    else if (_parsedList[j][i] == "292")
+                    {
+                        //tile.AddComponent<Platform>();
+                        /* Debug.Log("PLATFORM: " + "J " + j + "    I " + i);
+                         GameObject platform = new GameObject();
+                         platform.transform.SetParent(GameObject.Find("Platforms").transform);
+                         GameObject tile1 = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                        platform.transform.rotation);
+                         if(_parsedList[j][i+1] == "292")
+                         {
+                             GameObject tile2 = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j + 1, this.gameObject.transform.position.z),
+                        platform.transform.rotation);
+                         if (_parsedList[j][i + 2] == "292")
+                         {
+                             GameObject tile3 = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j + 2, this.gameObject.transform.position.z),
+                    platform.transform.rotation, platform.transform);
+                         }
+                     }
+                             // j += 3;
+                         platform.AddComponent<Platform>();
+                         if(platform.transform.childCount == 3)
+                         /*if(j != _platformIndex)
+                         {
+                             _platformIndex = j;
+                             gen.GetComponent<Platform>().SetDirection(false);
+                         }
+                             _platforms.Add(platform);*/
+                    }
+                    else if (_parsedList[j][i] == "148")
+                    {
+
+                    }
+                    
                 }
             }
         }
         //Debug.Log("FINISH");
+        //Debug.Log("PLATFORMS: " + _platforms.Count);
         CheckPipes();
     }
 
