@@ -101,4 +101,4 @@ MonoBehaviour:
   - {fileID: -4895939845043267702, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  animSpeed: 20
+  animSpeed: 14
