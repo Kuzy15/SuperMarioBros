@@ -24,6 +24,8 @@ public class InputFieldManager : MonoBehaviour
     public GameObject nGramsContinue;
     public GameObject layersObject;
     public Text modeText;
+    public Text layersText;
+    public GameObject resetLayers;
 
 
     private string _nFilesInput;
@@ -46,6 +48,9 @@ public class InputFieldManager : MonoBehaviour
     private int _rnnSimpleLayers;
     private int _gruLayers;
     private int _lstmLayers;
+    private string _batchSize;
+    private string _width;
+    private List<string> _layersArr = new List<string>();
 
     //NGRAMS
     private string _nGramsInput;
@@ -253,7 +258,7 @@ public class InputFieldManager : MonoBehaviour
         else
         {
             StartRNN();
-            modeText.text = "Neural Networks";
+            modeText.text = "Recurrent Neural Networks";
             //SetRNNInput();
         }
     }
@@ -301,6 +306,16 @@ public class InputFieldManager : MonoBehaviour
         _fileNameRNN = rnnObject.transform.GetChild(6).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
+    public void SetBatchSize()
+    {
+        _batchSize = rnnObject.transform.GetChild(7).GetChild(0).GetComponentInChildren<InputField>().text;
+    }
+
+    public void SetWidth()
+    {
+        _width = rnnObject.transform.GetChild(8).GetChild(0).GetComponentInChildren<InputField>().text;
+    }
+
     public void OnClickContinueRNN()
     {
         //ADD LAYERS INPUT
@@ -322,15 +337,33 @@ public class InputFieldManager : MonoBehaviour
 
     public void OnClickRNNSimpleLayer(int quantity)
     {
+        if(quantity == 1)
+        {
+            _layersArr.Add("SRNN");
+            SetLayersText();
+        }
+        else
+        {
+            ResetLayers();
+        }
         _rnnSimpleLayers += quantity;
         if (_rnnSimpleLayers < 0)
         {
             _rnnSimpleLayers = 0;
         }
-        layersObject.transform.GetChild(0).GetComponent<Text>().text = "RNNSimple layers: " + (_rnnSimpleLayers).ToString();
+        layersObject.transform.GetChild(0).GetComponent<Text>().text = "SRNN layers: " + (_rnnSimpleLayers).ToString();
     }
     public void OnClickGRULayer(int quantity)
     {
+        if (quantity == 1)
+        {
+            _layersArr.Add("GRU");
+            SetLayersText();
+        }
+        else
+        {
+            ResetLayers();
+        }
         _gruLayers += quantity;
         if (_gruLayers < 0)
         {
@@ -340,12 +373,44 @@ public class InputFieldManager : MonoBehaviour
     }
     public void OnClickLSTMLayer(int quantity)
     {
+        if (quantity == 1)
+        {
+            _layersArr.Add("LSTM");
+            SetLayersText();
+        }
+        else
+        {
+            ResetLayers();
+        }
         _lstmLayers += quantity;
         if(_lstmLayers < 0)
         {
             _lstmLayers = 0;
         }
         layersObject.transform.GetChild(2).GetComponent<Text>().text = "LSTM layers: " + (_lstmLayers).ToString();
+    }
+
+    public void ResetLayers()
+    {
+        _layersArr.Clear();
+        _rnnSimpleLayers = 0;
+        _gruLayers = 0;
+        _lstmLayers = 0;
+        layersObject.transform.GetChild(0).GetComponent<Text>().text = "SRNN layers: " + (_rnnSimpleLayers).ToString();
+        layersObject.transform.GetChild(1).GetComponent<Text>().text = "GRU layers: " + (_gruLayers).ToString();
+        layersObject.transform.GetChild(2).GetComponent<Text>().text = "LSTM layers: " + (_lstmLayers).ToString();
+        layersText.GetComponent<Text>().text = "LAYERS: ";
+    }
+
+    public void SetLayersText()
+    {
+        string textLayers;
+        textLayers = layersText.text = "LAYERS: ";
+        for (int i = 0; i < _layersArr.Count; i++)
+        {
+            textLayers += " " + _layersArr[i];
+        }
+        layersText.text = textLayers;
     }
 
     //NGRAMS
@@ -401,6 +466,13 @@ public class InputFieldManager : MonoBehaviour
             string concatS = file + sufix;
             concat = concat + " " + concatS;
         }
+        string concatLayers = "";
+        for(int i = 0; i < _layersArr.Count; i++)
+        {
+            string file = _layersArr[i];
+            string concatS = file;
+            concatLayers = concatLayers + " " + concatS;
+        }
         string debug = "";
         bool debugMode = GetCheckBoxActive();
         if (debugMode)
@@ -415,8 +487,8 @@ public class InputFieldManager : MonoBehaviour
         else
         {
             //"python NeuralNetworks.py 70 1-1.csv 10000 512 1024 70 0.5 LSTM_UNITY_1.csv"
-            command = "/C python NeuralNetworks.py " + _seqLengthInput + " " + concat + /*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
-               + _temperatureInput + " " + _fileNameRNN + ".csv " + debug;
+            command = "/C python NeuralNetworks.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
+               + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + _width + " " + _fileNameRNN + ".csv " + debug;
         }
         return command;
     }

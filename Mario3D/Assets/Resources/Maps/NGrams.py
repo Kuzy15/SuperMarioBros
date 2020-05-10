@@ -10,10 +10,10 @@
 # Gonzalo Guzmán del Río
 # Carlos Llames Arribas
 # 
-#The generated output file contains all "-1" numbers like decimals (1.0) for that reason
-#we must open the outputfile in a texteditor like sublime and replace all ".0" characters
-#by nothing.
 # -----------------------------------------------------------
+
+#EXAMPLE COMMAND: python NGrams.py 2 1-1.csv 1-2.csv 3 250 ngramMap.csv (-d/--debug)
+
 
 from nltk.util import bigrams
 from nltk.util import ngrams
@@ -56,16 +56,6 @@ def Multiple():
     ngramsjoin = {}
     wordsjoin = []
 
-#alternative 
-#    for f in FILE:
-#        auxngrams, auxwords = GenerateNgrams(ReadFile(f), N)
-#        ngramsjoin = {**ngramsjoin, **auxngrams}
-#        for key, value in ngramsjoin.items():
-#            if key in ngramsjoin and key in auxngrams:
-#                for k in ngramsjoin[key]:
-#                    ngramsjoin[key].append(k)
-################
-
     for f in FILE:
         auxngrams, auxwords = GenerateNgrams(ReadFile(f), N)
         if not ngramsjoin:
@@ -84,8 +74,6 @@ def Multiple():
                 else:
                     new[key] = value + auxngrams[key]
             ngramsjoin = new
-
-################
 
         wordsjoin += auxwords
 

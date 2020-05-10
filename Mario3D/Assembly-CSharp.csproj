@@ -86,13 +86,7 @@
     <Compile Include="Assets\Scripts\PythonThread.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
     <Compile Include="Assets\Scripts\Shuttle.cs" />
-    <None Include="Assets\Resources\Logs\20200510-145509_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200510-125003_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200510-124928_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200510-124815_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200510-145427_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200510-150145_NGRAMS.txt" />
-    <None Include="Assets\Resources\Logs\20200510-153828_NGRAMS.txt" />
+    <None Include="Assets\Resources\Logs\20200510-172057_NGRAMS.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/SM-RNN/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

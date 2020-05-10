@@ -10,12 +10,12 @@
 # Gonzalo Guzmán del Río
 # Carlos Llames Arribas
 # 
-#
-#
-#
 # -----------------------------------------------------------
 
-#EXAMPLE COMMAND: python NeuralNetworks.py 70 1-1.csv 10000 512 1024 70 0.5 LSTM_UNITY_1.csv
+#EXAMPLE COMMAND: python NeuralNetworks.py 2 1-1.csv 1-2.csv 15 10000 256 1024 50 2 GRU LSTM 0.5 250 LSTM_UNITY_1.csv
+#in case you want a default network you must put "1 default" in NHIDDENLAYERS and NHIDDENLAYERS respectively in the
+#command line
+
 
 import tensorflow as tf
 
@@ -27,21 +27,60 @@ import random
 import csv
 import sys
 
-
 try:
     from StringIO import StringIO ## for Python 2
 except ImportError:
     from io import StringIO ## for Python 3
 
 
-SEQLENGTH = int(sys.argv[1])
-FILE = str(sys.argv[2])
-BUFFERSIZE = int(sys.argv[3])
-EMBEDDINGDIM = int(sys.argv[4])
-NNUNITS = int(sys.argv[5])
-EPOCHS = int(sys.argv[6])
-TEMPERATURE = float(sys.argv[7])
-OUTPUT = str(sys.argv[8])
+NFILES = int(sys.argv[1])
+FILE = []
+for f in range(NFILES):
+    FILE.append(str(sys.argv[f + 2]))
+
+print(FILE)
+
+# The maximum length sentence we want for a single input in characters
+SEQLENGTH = int(sys.argv[NFILES + 2])
+print(SEQLENGTH)
+
+# Batch size
+BATCHSIZE = int(sys.argv[NFILES + 3])
+print(BATCHSIZE)
+# Buffer size to shuffle the dataset
+# (TF data is designed to work with possibly infinite sequences,
+# so it doesn't attempt to shuffle the entire sequence in memory. Instead,
+# it maintains a buffer in which it shuffles elements).
+BUFFERSIZE = int(sys.argv[NFILES + 4])
+print(BUFFERSIZE)
+# The embedding dimension
+EMBEDDINGDIM = int(sys.argv[NFILES + 5])
+print(EMBEDDINGDIM)
+# Number of NN units
+NNUNITS = int(sys.argv[NFILES + 6])
+print(NNUNITS)
+#Number of times to train
+EPOCHS = int(sys.argv[NFILES + 7])
+print(EPOCHS)
+#Number of functional hidden layers
+NHIDDENLAYERS = int(sys.argv[NFILES + 8])
+print(NHIDDENLAYERS)
+
+HIDDENLAYERS = []
+for l in range(NHIDDENLAYERS):
+    HIDDENLAYERS.append(str(sys.argv[NFILES + l + 9]))
+print(HIDDENLAYERS)
+print()
+
+#Give back more or less random results
+TEMPERATURE = float(sys.argv[NFILES + NHIDDENLAYERS + 9])
+print(TEMPERATURE)
+#The with of the level (length)
+WIDTH = int(sys.argv[NFILES + NHIDDENLAYERS + 10])
+print(WIDTH)
+#Output name
+OUTPUT = str(sys.argv[NFILES + NHIDDENLAYERS + 11])
+print(OUTPUT)
 
 
 # Read a file that is delimited by ',' and return a matrix of the level
@@ -122,23 +161,37 @@ def SplitInputTarget(chunk):
 
 #Build a model of different types of neural networks
 def BuildModel(vocabSize, embeddingDim, nnUnits, batchSize):
-    model = tf.keras.Sequential([
-        tf.keras.layers.Embedding(vocabSize, embeddingDim, batch_input_shape=[batchSize, None]),
+    # model = tf.keras.Sequential([
+    #     tf.keras.layers.Embedding(vocabSize, embeddingDim, batch_input_shape=[batchSize, None]),
         
-        ##tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        #tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
+    #     ##tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
+    #     #tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
         
-        #tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        #tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
+    #     #tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
+    #     #tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
         
-        tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
+    #     #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
+    #     #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
         
-        tf.keras.layers.Dense(vocabSize)])
+    #     tf.keras.layers.Dense(vocabSize)])
+
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Embedding(vocabSize, embeddingDim, batch_input_shape=[batchSize, None]))
+
+    if (HIDDENLAYERS[0] == "default"):
+            model.add(tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'))
+            model.add(tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'))
+    else:
+        for hl in HIDDENLAYERS:
+            if (hl == "SRNN"):
+                model.add(tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'))
+            elif (hl == "LSTM"):
+                model.add(tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'))
+            else:
+                model.add(tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'))
+        
+        model.add(tf.keras.layers.Dense(vocabSize))
+
     return model
 
 
@@ -155,7 +208,6 @@ def GenerateText(model, startString, length):
     numGenerate = length
 
   # Converting our start string to numbers (vectorizing)
-    #inputEval = [char2idx[s] for s in startString]
     inputEval = [char2idx[startString]]
     print(inputEval)
     inputEval = tf.expand_dims(inputEval, 0)
@@ -165,7 +217,6 @@ def GenerateText(model, startString, length):
 
   # Low temperatures results in more predictable text.
   # Higher temperatures results in more surprising text.
-  # Experiment to find the best setting.
     temperature = TEMPERATURE
 
   # Here batch size == 1
@@ -184,8 +235,9 @@ def GenerateText(model, startString, length):
         inputEval = tf.expand_dims([predictedId], 0)
 
         textGenerated.append(',' + idx2char[predictedId])
-    print(startString)
-    print()
+
+    # print(startString)
+    # print()
     return (startString + ''.join(textGenerated))
 
 
@@ -193,16 +245,9 @@ def GenerateText(model, startString, length):
 def SaveFile(fileName, text):
     text = text.replace(',', '\n')
     text = text.replace(' ', ',')
-    print()
-    #print(text)
-    matrix = np.genfromtxt(StringIO(text), delimiter=',', dtype=None)
-    #matrix = np.zeros((len(text), len(text[0])))
-    matrix = matrix.astype(int)
-    print(matrix)
 
-    #for i in range(len(text)):
-     #   line=text[i]
-      #  matrix[i] = line
+    matrix = np.genfromtxt(StringIO(text), delimiter=',', dtype=None)
+    matrix = matrix.astype(int)
 
     csvoutput = open(fileName, 'w', newline='')
     result = csv.writer(csvoutput)
@@ -214,52 +259,42 @@ def SaveFile(fileName, text):
 
 
 
+#"Empty" tensorflow dataset to store the possible multiple train data set
+combinedDataset = tf.data.Dataset.range(0)
 
+#Auxiliar variables to store the first sequence to generate text
+firstFile = True
+firstSequence = ""
+listDatasets = []
+for f in FILE:
+    text = ReadFile(f)
+    print(len(text))
+    textstr, char2idx, idx2char, textint, vocab = VectorizeText(text)
+    print(len(vocab))
+    examplesPerEpoch = GetExamplesPerEpoch(text, SEQLENGTH)
+    print(examplesPerEpoch)
+    trainingSample, charDataset = CreateTrainingSamples(textint, idx2char)
 
+    if(firstFile):
+        firstSequence = trainingSample
 
-# The maximum length sentence we want for a single input in characters
-seqLength = SEQLENGTH
+    sequencesCreated = CreateSequences(SEQLENGTH, charDataset)
 
-text = ReadFile(FILE)
+    dataset = sequencesCreated.map(SplitInputTarget)
 
-textstr, char2idx, idx2char, textint, vocab = VectorizeText(text)
-
-examplesPerEpoch = GetExamplesPerEpoch(text, seqLength)
-
-trainingSample, charDataset = CreateTrainingSamples(textint, idx2char)
-
-sequencesCreated = CreateSequences(seqLength, charDataset)
-
-dataset = sequencesCreated.map(SplitInputTarget)
-
-# Batch size
-batchSize = examplesPerEpoch
-
-print()
-print()
-print(batchSize)
-print()
-print()
-
-# Buffer size to shuffle the dataset
-# (TF data is designed to work with possibly infinite sequences,
-# so it doesn't attempt to shuffle the entire sequence in memory. Instead,
-# it maintains a buffer in which it shuffles elements).
-bufferSize = BUFFERSIZE
-
-dataset = dataset.shuffle(bufferSize).batch(batchSize, drop_remainder=True)
+    dataset = dataset.shuffle(BUFFERSIZE).batch(BATCHSIZE, drop_remainder=True)
+    listDatasets.append(dataset)
+    if firstFile:
+        combinedDataset = dataset
+        firstFile = False
+    else:
+        combinedDataset = combinedDataset.concatenate(dataset)
+    print()
 
 # Length of the vocabulary in chars
 vocabSize = len(vocab)
-
-# The embedding dimension
-embeddingDim = EMBEDDINGDIM
-
-# Number of NN units
-nnUnits = NNUNITS
-
-model = BuildModel(vocabSize = vocabSize, embeddingDim=embeddingDim, nnUnits=nnUnits, batchSize=batchSize)
-
+model = BuildModel(vocabSize = vocabSize, embeddingDim=EMBEDDINGDIM, nnUnits=NNUNITS, batchSize=BATCHSIZE)
+model.summary()
 model.compile(optimizer='adam', loss=Loss)
 
 # Directory where the checkpoints will be saved
@@ -269,13 +304,14 @@ checkpointPrefix = os.path.join(checkpointDir, "ckpt_{epoch}")
 
 checkpointCallback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpointPrefix, save_weights_only=True)
 
+model.fit(combinedDataset, epochs=EPOCHS, callbacks=[checkpointCallback])
 
-EPOCHS = EPOCHS
-history = model.fit(dataset, epochs=EPOCHS, callbacks=[checkpointCallback])
+
+
 
 tf.train.latest_checkpoint(checkpointDir)
 
-model = BuildModel(vocabSize, embeddingDim, nnUnits, batchSize=1)
+model = BuildModel(vocabSize, EMBEDDINGDIM, NNUNITS, batchSize=1)
 
 model.load_weights(tf.train.latest_checkpoint(checkpointDir))
 
@@ -283,7 +319,7 @@ model.build(tf.TensorShape([1, None]))
 
 model.summary()
 
-genText = GenerateText(model, trainingSample, 1000)
+genText = GenerateText(model, firstSequence, WIDTH)
 
 SaveFile(OUTPUT, genText)
 
