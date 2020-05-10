@@ -64,17 +64,8 @@ public class MapReader : MonoBehaviour
         _tiles = new Dictionary<string, GameObject>();
         _pipes = new List<PipeCoords>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
-        string fileToRead = "";
-        if (generationMode)
-        {
-            fileToRead = "1-" + mapLevel;
-        }
-        else
-        {
-            fileToRead = mapLevel;
-        }
 
-        ReadTextFile(Application.dataPath + "/Resources/Maps/" + fileToRead + ".csv");
+        ReadTextFile(Application.dataPath + "/Resources/Maps/" + mapLevel + ".csv");
         LoadTiles();
     }
 

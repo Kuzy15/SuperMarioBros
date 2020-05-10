@@ -24,22 +24,7 @@ public class PythonThread : MonoBehaviour
 
     static void Command()
     {
-        int nFiles = InputFieldManager.GM.GetFilesSelectedLength();
-        string concat = "";
-        for(int i = 0; i < nFiles; i++)
-        {
-            string file = InputFieldManager.GM.GetFilesToConcatInput()[i];
-            string sufix = ".csv";
-            string concatS = file + sufix;
-            concat = concat + " " + concatS;
-        }
-        string debug = "";
-        bool debugMode = InputFieldManager.GM.GetCheckBoxActive();
-        if (debugMode)
-        {
-            debug = " -d";
-        }
-        string command = "/C python NGrams.py " + nFiles.ToString() + concat + " " + InputFieldManager.GM.GetNGramsInput() + " " + InputFieldManager.GM.GetLengthInput() + " " + "1-14.csv" + debug;
+        string command = InputFieldManager.GM.SendCommand();
         var processInfo = new ProcessStartInfo("cmd.exe", command);
         processInfo.CreateNoWindow = false;
         processInfo.UseShellExecute = true;

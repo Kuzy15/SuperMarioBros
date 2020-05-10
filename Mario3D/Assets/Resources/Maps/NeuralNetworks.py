@@ -233,7 +233,13 @@ sequencesCreated = CreateSequences(seqLength, charDataset)
 dataset = sequencesCreated.map(SplitInputTarget)
 
 # Batch size
-batchSize = examplesPerEpoch//4
+batchSize = examplesPerEpoch
+
+print()
+print()
+print(batchSize)
+print()
+print()
 
 # Buffer size to shuffle the dataset
 # (TF data is designed to work with possibly infinite sequences,
