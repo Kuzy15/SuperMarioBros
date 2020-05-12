@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4824208344247201686}
   - component: {fileID: 8702724380600969611}
+  - component: {fileID: 3492809617820348250}
+  - component: {fileID: 4574646733290239974}
   m_Layer: 0
   m_Name: 189
   m_TagString: Untagged
@@ -81,3 +83,44 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!136 &3492809617820348250
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288969470711887932}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.31991038
+  m_Height: 0.8823905
+  m_Direction: 1
+  m_Center: {x: 0.0036753118, y: -0.05880475, z: 0}
+--- !u!114 &4574646733290239974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288969470711887932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a60aea48bd685e4eb1af48b1ea4a529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim:
+  - {fileID: -1977760837791518271, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: 4226848489356718782, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: -8236584472190259415, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: 4226848489356718782, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  animInstantiated:
+  - {fileID: 7958683927536999042, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4895939845043267702, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  animSpeed: 4
+  animInstantiatedSpeed: 10
+  _canMove: 0

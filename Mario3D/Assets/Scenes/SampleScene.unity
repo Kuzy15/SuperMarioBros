@@ -153,6 +153,7 @@ MonoBehaviour:
   - {fileID: 8583795624767844145, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
   - {fileID: -1940978224295770917, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
   - {fileID: -7571806759933008649, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: -1940978224295770917, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
   disableBlock: {fileID: -2813474672514172855, guid: ec8f6c59ea4365449a90737de5b38878,
     type: 3}
   animSpeed: 4

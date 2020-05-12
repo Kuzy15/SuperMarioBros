@@ -39,7 +39,7 @@ public class GameCamera : MonoBehaviour
         orthoSize = targetOrtho;
         _refPosition = this.transform.position;
         _initialColor = this.GetComponent<Camera>().backgroundColor;
-        this.transform.position = new Vector3(this.transform.position.x,-16.5f, this.transform.position.z);
+        this.transform.position = new Vector3(this.transform.position.x + 3,-16.5f, this.transform.position.z);
         //GoToBlackScreen();
     }
 
@@ -106,6 +106,12 @@ public class GameCamera : MonoBehaviour
     public void SetCameraY(float y)
     {
         this.transform.position = new Vector3(this.transform.position.x, y, this.transform.position.z);
+    }
+
+
+    public void SetCameraX(float x)
+    {
+        this.transform.position = new Vector3(x, this.transform.position.y, this.transform.position.z);
     }
 
     private void Awake()

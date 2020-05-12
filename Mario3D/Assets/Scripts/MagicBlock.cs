@@ -5,6 +5,7 @@ using UnityEngine;
 public class MagicBlock : MonoBehaviour
 {
 
+    public Sprite[] _upAnim;
     public GameObject entity;
 
     private float _time;
@@ -18,6 +19,7 @@ public class MagicBlock : MonoBehaviour
     private Sprite[] _anim;
     private Sprite _disableBlock;
     private float _animSpeed = 0;
+
 
 
 
@@ -116,6 +118,11 @@ public class MagicBlock : MonoBehaviour
 
     private void InstantiateEntity()
     {
+        if (entity.GetComponent<Coin>())
+        {
+            entity.GetComponent<Coin>().SetInstantiated();
+            entity.GetComponent<Coin>().SetMove(true);
+        }
         Instantiate(entity, _startPosition, Quaternion.identity);
     }
 

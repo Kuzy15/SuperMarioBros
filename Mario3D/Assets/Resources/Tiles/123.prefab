@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4599923549147866893}
   - component: {fileID: 2256015034800632620}
-  - component: {fileID: 4632835120441918567}
   - component: {fileID: 5476810684124893100}
+  - component: {fileID: -4499122374516368989}
   m_Layer: 0
   m_Name: 123
   m_TagString: Untagged
@@ -83,26 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4632835120441918567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5921992082603286075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a60aea48bd685e4eb1af48b1ea4a529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim:
-  - {fileID: 7958683927536999042, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  - {fileID: -4895939845043267702, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  animSpeed: 20
 --- !u!136 &5476810684124893100
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -117,3 +97,29 @@ CapsuleCollider:
   m_Height: 0.87579346
   m_Direction: 1
   m_Center: {x: -0.021918774, y: -0.06210327, z: 0}
+--- !u!114 &-4499122374516368989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5921992082603286075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a60aea48bd685e4eb1af48b1ea4a529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim:
+  - {fileID: 9174235224718242758, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: 6312037128003990989, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: -3713311849071092161, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: 6312037128003990989, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  animInstantiated:
+  - {fileID: 7958683927536999042, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4895939845043267702, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
+  animSpeed: 4
+  _canMove: 0

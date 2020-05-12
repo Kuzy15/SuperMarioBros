@@ -102,7 +102,7 @@ def ReadFile(file):
 #"idx2char": to translate from int (id) to char
 #"textint": list of unique ids of the text after parsing with "char2idx"
 #"vocab": list with the vocabulary of the text
-def VectorizeText(text):
+def VectorizeText(text, index):
 
     #Convert the matrox to a strtext
     textstr=[]
@@ -115,7 +115,7 @@ def VectorizeText(text):
     #print((vocab))
     
     # Creating a mapping from unique characters to indices
-    char2idx = {u:i for i, u in enumerate(vocab)}
+    char2idx = {u:i + index for i, u in enumerate(vocab)}
     idx2char = np.array(vocab)
     
     textint = np.array([char2idx[c] for c in textstr])
@@ -266,10 +266,12 @@ combinedDataset = tf.data.Dataset.range(0)
 firstFile = True
 firstSequence = ""
 listDatasets = []
+index = 0
 for f in FILE:
     text = ReadFile(f)
     print(len(text))
-    textstr, char2idx, idx2char, textint, vocab = VectorizeText(text)
+    textstr, char2idx, idx2char, textint, vocab = VectorizeText(text, index)
+    index += len(char2idx)
     print(len(vocab))
     examplesPerEpoch = GetExamplesPerEpoch(text, SEQLENGTH)
     print(examplesPerEpoch)
@@ -290,6 +292,12 @@ for f in FILE:
     else:
         combinedDataset = combinedDataset.concatenate(dataset)
     print()
+
+print()
+print()
+print("FIRST SEQUENCE: " + firstSequence)
+print()
+print()
 
 # Length of the vocabulary in chars
 vocabSize = len(vocab)

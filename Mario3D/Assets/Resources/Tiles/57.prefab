@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3768378054103049036}
   - component: {fileID: 3624098443171102216}
   - component: {fileID: -108199246578911090}
+  - component: {fileID: 4369313559216644475}
   m_Layer: 0
   m_Name: 57
   m_TagString: Untagged
@@ -95,10 +96,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim:
+  - {fileID: -3338749442709606003, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: -1773546174022703011, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: 5819859602717393601, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  - {fileID: -1773546174022703011, guid: ec8f6c59ea4365449a90737de5b38878, type: 3}
+  animInstantiated:
   - {fileID: 7958683927536999042, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -4895939845043267702, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -3789951099581812512, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
   - {fileID: -4080114192895528127, guid: ec9dbc41eabbc2b4aa83d43493c8a087, type: 3}
-  animSpeed: 14
+  animSpeed: 4
+  animInstantiatedSpeed: 10
+  _canMove: 1
+--- !u!136 &4369313559216644475
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1657145522936818069}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.31623507
+  m_Height: 0.8897412
+  m_Direction: 1
+  m_Center: {x: -0.007350683, y: -0.05512941, z: 0}

@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
     private bool _goingDowOfCreeper = false;
     private float _lastYCamera;
     private Shuttle _shuttle;
+    private bool _isUnderground = false;
 
 
     private Vector3 _startPosition;
@@ -184,7 +185,7 @@ public class Player : MonoBehaviour
             GrowDown();
         }
 
-        if(_shuttle != null )
+        if (_shuttle != null)
         {
 
         }
@@ -283,13 +284,24 @@ public class Player : MonoBehaviour
         blackImage.gameObject.SetActive(true);
         this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
         yield return new WaitForSeconds(1.5f);
-        GameCamera.Instance.SetCameraY(-46.5f);
         _rigidBody.useGravity = false;
         auxHit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
+        if (auxHit.transform.gameObject.GetComponent<EnterSecretZone>().GetIfUnderground())
+        {
+            GameCamera.Instance.GoToBlackScreen();
+            GameCamera.Instance.SetCameraY(-46.5f);
+            _isUnderground = true;
+        }
+        else
+        {
+            GameCamera.Instance.SetCameraY(-31.5f);
+            _isUnderground = false;
+            _rigidBody.useGravity = false;
+        }
         //GameCamera.Instance.ResetCamera();
-        GameCamera.Instance.GoToBlackScreen();
 
         blackImage.gameObject.SetActive(false);
+        GameCamera.Instance.SetCameraX(this.transform.position.x + 9.5f);
         yield return new WaitForSeconds(0.5f);
         _rigidBody.useGravity = true;
     }
@@ -298,13 +310,17 @@ public class Player : MonoBehaviour
     {
         blackImage.gameObject.SetActive(true);
         GameCamera.Instance.SetCameraY(-16.5f);
+        //GameCamera.Instance.SetCameraX(this.transform.position.x - 6);
         yield return new WaitForSeconds(1f);
         //_goingDown = true;
         //GrowUp();
         blackImage.gameObject.SetActive(false);
-        GameCamera.Instance.GoToBlueScreen();
-        //ChangeCollider();
         ExitSecretZone aux = auxHit.transform.gameObject.GetComponent<ExitSecretZone>();
+        if (_isUnderground)
+        {
+            GameCamera.Instance.GoToBlueScreen();
+        }
+        //ChangeCollider();
         aux.GoToSecretZone(this);
         _startPosition = aux.GetSecretZonePosition();
         _goingRight = false;
@@ -699,7 +715,8 @@ public class Player : MonoBehaviour
     public void CheckBreakableBrick()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height/2, 0), Vector3.up, out hit, (_collider.height/2) + 0.2f)) {
+        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height / 2, 0), Vector3.up, out hit, (_collider.height / 2) + 0.2f))
+        {
             if (hit.transform.gameObject.GetComponent<BreakableBrick>())
             {
                 hit.transform.gameObject.GetComponent<BreakableBrick>().DestroyBrick();
@@ -724,6 +741,6 @@ public class Player : MonoBehaviour
 
     public void ShuttlePlayer()
     {
-        _rigidBody.AddForce(Vector3.up*90.5f - _rigidBody.velocity, ForceMode.Impulse);
+        _rigidBody.AddForce(Vector3.up * 90.5f - _rigidBody.velocity, ForceMode.Impulse);
     }
 }
