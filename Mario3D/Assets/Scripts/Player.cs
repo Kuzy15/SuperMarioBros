@@ -301,7 +301,7 @@ public class Player : MonoBehaviour
         //GameCamera.Instance.ResetCamera();
 
         blackImage.gameObject.SetActive(false);
-        GameCamera.Instance.SetCameraX(this.transform.position.x + 9.5f);
+        GameCamera.Instance.SetCameraX(this.transform.position.x + 10f);
         yield return new WaitForSeconds(0.5f);
         _rigidBody.useGravity = true;
     }

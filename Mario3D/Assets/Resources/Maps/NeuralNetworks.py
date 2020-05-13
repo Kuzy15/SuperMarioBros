@@ -95,32 +95,29 @@ def ReadFile(file):
     return text
 
 
-#Vectorize the text and return the text as character, the text as integers
-#and the vocabulary of the text
-#"textstr": list of slices of the map
-#"char2idx": to translete from char to int (id)
-#"idx2char": to translate from int (id) to char
-#"textint": list of unique ids of the text after parsing with "char2idx"
-#"vocab": list with the vocabulary of the text
-def VectorizeText(text, index):
-
-    #Convert the matrox to a strtext
+#Get vocabulary from the input text
+def GetVocabulary(text):
+    #Convert the matrix to a strtext
     textstr=[]
     for t in text:
         textstr.append(' '.join([str(elem) for elem in t]))
 
     # Get the unique characters
     vocab = sorted(set(textstr))
-    #print (str(len(vocab)) + ' unique characters')
-    #print((vocab))
-    
+
+    return vocab, textstr
+
+#Vectorize the text and return the text as character, the text as integers
+#and the vocabulary of the text
+#"char2idx": to translete from char to int (id)
+#"idx2char": to translate from int (id) to char
+def VectorizeText(vocab):
+
     # Creating a mapping from unique characters to indices
-    char2idx = {u:i + index for i, u in enumerate(vocab)}
-    idx2char = np.array(vocab)
-    
-    textint = np.array([char2idx[c] for c in textstr])
-    
-    return textstr, char2idx, idx2char, textint, vocab
+    char2idx = {u:i for i, u in enumerate(vocab)}
+    idx2char = list(vocab)
+
+    return char2idx, idx2char
 
 
 #Number of examples to evaluate in each epoch
@@ -133,13 +130,14 @@ def CreateTrainingSamples(textint, idx2char):
 
     charDataset = tf.data.Dataset.from_tensor_slices(textint)
 
-    for i in charDataset.take(1):
-        #print(i)
-        firstSeq = idx2char[i.numpy()]
-        #print(charDataset.take(1))
+    # for i in charDataset.take(1):
+    #     #print(i)
+    #     firstSeq = idx2char[i.numpy()]
+    #     #print(charDataset.take(1))
 
     #charDataset is the same as textint buit in tf format
     listDataset = list(charDataset.as_numpy_iterator())
+    print(listDataset[0])
     firstSeq = idx2char[listDataset[0]]
     
     return firstSeq, charDataset
@@ -221,7 +219,10 @@ def GenerateText(model, startString, length):
 
   # Here batch size == 1
     model.reset_states()
+    cont = 0
     for i in range(numGenerate):
+        cont+=1
+        print(cont)
         predictions = model(inputEval)
       # remove the batch dimension
         predictions = tf.squeeze(predictions, 0)
@@ -263,41 +264,48 @@ def SaveFile(fileName, text):
 combinedDataset = tf.data.Dataset.range(0)
 
 #Auxiliar variables to store the first sequence to generate text
-firstFile = True
-firstSequence = ""
 listDatasets = []
-index = 0
-for f in FILE:
-    text = ReadFile(f)
-    print(len(text))
-    textstr, char2idx, idx2char, textint, vocab = VectorizeText(text, index)
-    index += len(char2idx)
-    print(len(vocab))
-    examplesPerEpoch = GetExamplesPerEpoch(text, SEQLENGTH)
-    print(examplesPerEpoch)
-    trainingSample, charDataset = CreateTrainingSamples(textint, idx2char)
+vocab = []
+textstr = []
 
-    if(firstFile):
-        firstSequence = trainingSample
+for f in FILE:
+    text = ReadFile(f) 
+    v, tstr = GetVocabulary(text)
+    vocab += (v)
+    textstr.append(tstr) 
+
+vocab = set(vocab)
+
+
+char2idx, idx2char = VectorizeText(vocab)
+#print(idx2char.size)
+
+textint = []
+for t in textstr:
+    textint.append(np.array([char2idx[s] for s in t]))
+
+
+firstSeq = False
+firstSequenceToUse = ""
+datasets = []
+for t in textint:
+    print(t)
+    print()
+    firstSequence, charDataset = CreateTrainingSamples(t, idx2char)
+    if not firstSeq:
+        firstSequenceToUse = firstSequence
+        firstSeq = True
 
     sequencesCreated = CreateSequences(SEQLENGTH, charDataset)
 
     dataset = sequencesCreated.map(SplitInputTarget)
 
     dataset = dataset.shuffle(BUFFERSIZE).batch(BATCHSIZE, drop_remainder=True)
-    listDatasets.append(dataset)
-    if firstFile:
-        combinedDataset = dataset
-        firstFile = False
-    else:
-        combinedDataset = combinedDataset.concatenate(dataset)
-    print()
+    datasets.append(dataset)
 
-print()
-print()
-print("FIRST SEQUENCE: " + firstSequence)
-print()
-print()
+
+
+
 
 # Length of the vocabulary in chars
 vocabSize = len(vocab)
@@ -312,7 +320,9 @@ checkpointPrefix = os.path.join(checkpointDir, "ckpt_{epoch}")
 
 checkpointCallback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpointPrefix, save_weights_only=True)
 
-model.fit(combinedDataset, epochs=EPOCHS, callbacks=[checkpointCallback])
+
+for d in datasets:
+    model.fit(d, epochs=EPOCHS, callbacks=[checkpointCallback])
 
 
 
@@ -327,9 +337,6 @@ model.build(tf.TensorShape([1, None]))
 
 model.summary()
 
-genText = GenerateText(model, firstSequence, WIDTH)
+genText = GenerateText(model, firstSequenceToUse, WIDTH)
 
 SaveFile(OUTPUT, genText)
-
-
-
