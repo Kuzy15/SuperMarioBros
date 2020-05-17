@@ -130,10 +130,10 @@ def GenerateNgrams(text, N):
             
         ngrams[sequence].append(words[i + N])
         
-    #if DEPURATION: 
-    #    print("Words: " + str(words) + "\n")
-    #    print("Ngrmas: " + str(ngrams) + "\n")
-    #    print()
+    if DEPURATION: 
+        print("Words: " + str(words) + "\n")
+        print("Ngrmas: " + str(ngrams) + "\n")
+        print()
 
     return ngrams, words
         
@@ -220,7 +220,17 @@ def SaveFile(fileName, text, width, height):
     if DEPURATION:
         print("Generated a " + str(N) + "gram file " + str(fileName) + " with a length of " + str(width + N))
 
-
+if DEPURATION:
+    print("FILES: " + str(NFILES))
+    for f in FILE:
+        print("   FILE: " + str(f))
+    print()
+    print("NGRAMS: " + str(N))
+    print()
+    print("WIDTH: " + str(WIDTH))
+    print()
+    print("FILE TO GENERATE: " + str(OUTPUT))
+    print()
 
 if NFILES == 1:
 

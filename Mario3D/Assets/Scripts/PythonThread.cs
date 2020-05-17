@@ -4,17 +4,23 @@ using UnityEngine;
 using System.Threading;
 using System.Diagnostics;
 
-
+/// <summary>
+/// Class that allows us to communicate with NGRAMS.py and NeuralNetworks.py thorugh python commands on cmd and C#
+/// </summary>
 public class PythonThread : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //PAth of where to find the resources
     private static string _path;
 
+    // Start is called before the first frame update
     private void Start()
     {
         _path = Application.dataPath;
     }
 
+    /// <summary>
+    /// This method executes a command on a thread
+    /// </summary>
     public static void ExecuteCommand()
     {
         var thread = new Thread(delegate () { Command(); });
@@ -22,6 +28,9 @@ public class PythonThread : MonoBehaviour
         thread.Join();
     }
 
+    /// <summary>
+    /// This method manages a command to send via cmd
+    /// </summary>
     static void Command()
     {
         string command = InputFieldManager.GM.SendCommand();

@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     public Sprite[] smallJump;
     public Sprite[] toBigMario;
     public Sprite[] toSmallMario;
+    public Sprite[] swimAnim;
+    public Sprite[] smallSwimAnim;
     public UnityEngine.UI.Image blackImage;
 
 
@@ -51,6 +53,7 @@ public class Player : MonoBehaviour
     private float _lastYCamera;
     private Shuttle _shuttle;
     private bool _isUnderground = false;
+    private bool _isInWater = false;
 
 
     private Vector3 _startPosition;
@@ -70,7 +73,7 @@ public class Player : MonoBehaviour
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
-        //this.gameObject.transform.position = new Vector3(179.6f, -22f, MapReader.GM.GetInitialPosition().z);
+        this.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y + 25f, this.gameObject.transform.position.z);
     }
 
     // Update is called once per frame
@@ -97,20 +100,26 @@ public class Player : MonoBehaviour
 
             if (!_isGrowing)
             {
-
+                if (_isInWater)
+                {
+                    SetAnim(4, _isBig);
+                }
+                else
+                {
+                    SetAnim(1, _isBig);
+                }
                 if (_directionX < 0)
                 {
                     _marioSprite.flipX = true;
-                    SetAnim(1, _isBig);
                 }
                 else if (_directionX > 0)
                 {
                     _marioSprite.flipX = false;
-                    SetAnim(1, _isBig);
                 }
                 else
                 {
-                    SetAnim(0, _isBig);
+                    if (!_isInWater)
+                        SetAnim(0, _isBig);
                 }
             }
             else
@@ -172,22 +181,38 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         CheckSecretZone();
-        JumpMove();
-
-        if (Input.GetKeyDown(KeyCode.O))
+        if (!_isInWater)
         {
-            _isGrowing = true;
-            GrowUp();
+            JumpMove();
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                _isGrowing = true;
+                GrowUp();
+            }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                _isGrowing = true;
+                GrowDown();
+            }
+
+            if (_shuttle != null)
+            {
+
+            }
         }
-        if (Input.GetKeyDown(KeyCode.P))
+        else
         {
-            _isGrowing = true;
-            GrowDown();
-        }
-
-        if (_shuttle != null)
-        {
-
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                _rigidBody.AddForce(new Vector2(0, 6f * Time.deltaTime), ForceMode.Impulse);
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                _rigidBody.AddForce(new Vector2(0, -6f * Time.deltaTime), ForceMode.Impulse);
+            }
+            _rigidBody.AddForce(new Vector2(0, 8f * Time.deltaTime), ForceMode.Impulse);
+            Debug.Log("IN WATER");
         }
 
     }
@@ -238,6 +263,12 @@ public class Player : MonoBehaviour
                     else
                         _currentAnim = toBigMario;
                     break;
+                case 4:
+                    if (big)
+                        _currentAnim = swimAnim;
+                    else
+                        _currentAnim = smallSwimAnim;
+                    break;
             }
             _animState = state;
         }
@@ -284,19 +315,22 @@ public class Player : MonoBehaviour
         blackImage.gameObject.SetActive(true);
         this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
         yield return new WaitForSeconds(1.5f);
-        _rigidBody.useGravity = false;
+        //_rigidBody.useGravity = false;
         auxHit.transform.gameObject.GetComponent<EnterSecretZone>().GoToSecretZone(this);
         if (auxHit.transform.gameObject.GetComponent<EnterSecretZone>().GetIfUnderground())
         {
             GameCamera.Instance.GoToBlackScreen();
             GameCamera.Instance.SetCameraY(-46.5f);
             _isUnderground = true;
+            _isInWater = false;
         }
         else
         {
             GameCamera.Instance.SetCameraY(-31.5f);
             _isUnderground = false;
-            _rigidBody.useGravity = false;
+            //_rigidBody.useGravity = false;
+            _isInWater = true;
+            Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
         }
         //GameCamera.Instance.ResetCamera();
 
@@ -325,6 +359,9 @@ public class Player : MonoBehaviour
         _startPosition = aux.GetSecretZonePosition();
         _goingRight = false;
         _goingUp = true;
+        _isInWater = false;
+        _rigidBody.mass = 3f;
+        Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
         // ExitMove(hit);
         //this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
     }
@@ -421,7 +458,7 @@ public class Player : MonoBehaviour
                 {
                     _onGround = true;
 
-                    if (_isJumping)
+                    if (!_isInWater && _isJumping)
                     {
                         SetAnim(0, IsBigMario());
                         _isJumping = false;
@@ -506,7 +543,7 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("JUMPO");
                 //and you are on the ground...
-                if (_onGround && _jumpTime > 0)
+                if (!_isInWater && _onGround && _jumpTime > 0)
                 {
                     ////Debug.Log("to jump");
                     _isJumping = true;
@@ -645,7 +682,13 @@ public class Player : MonoBehaviour
             CheckDead();
         }
     }
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("ExitWater"))
+        {
 
+        }
+    }
     public void OnTriggerStay(Collider other)
     {
         if (!_playerInCreeper && !_isJumping && other.GetComponent<Creeper>())

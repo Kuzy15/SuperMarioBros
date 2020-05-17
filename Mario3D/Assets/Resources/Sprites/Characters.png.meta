@@ -35,6 +35,39 @@ TextureImporter:
   - first:
       213: -5115795548720348820
     second: Mario_Middle
+  - first:
+      213: 7234344069704235119
+    second: MarioSwim_0
+  - first:
+      213: 5201576057100067250
+    second: MarioSwim_1
+  - first:
+      213: 3376703585871969060
+    second: MarioSwim_2
+  - first:
+      213: 7585291887518631893
+    second: MarioSwim_3
+  - first:
+      213: 3134798503643370390
+    second: MarioSwim_4
+  - first:
+      213: -2198186262770673734
+    second: MarioSwim_5
+  - first:
+      213: 8357101457339862085
+    second: MarioSwim_S0
+  - first:
+      213: 1511884759072402483
+    second: MarioSwim_S1
+  - first:
+      213: 3542127132570728493
+    second: MarioSwim_S2
+  - first:
+      213: -1960546628078278901
+    second: MarioSwim_S3
+  - first:
+      213: 8248543377919322394
+    second: MarioSwim_S4
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -357,6 +390,237 @@ TextureImporter:
       bones: []
       spriteID: af76efca161a6c640a58703214483c7a
       internalID: -5115795548720348820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_0
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 496
+        width: 14
+        height: 30
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 456aa081c8e837a409f99050134870b0
+      internalID: 7234344069704235119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_1
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 497
+        width: 16
+        height: 29
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf935e5ceffaace468b78d2212a1a2df
+      internalID: 5201576057100067250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_2
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 496
+        width: 14
+        height: 30
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cec73f2744a05f49bf079d815f4e281
+      internalID: 3376703585871969060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_3
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 497
+        width: 16
+        height: 29
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1671c7ad86eba2f4f84a67cc2f27e43b
+      internalID: 7585291887518631893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_4
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 496
+        width: 16
+        height: 30
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b373c5aac4e6ef14594f4be46f5797e4
+      internalID: 3134798503643370390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_5
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 497
+        width: 16
+        height: 29
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90d746eb6f6801347a27c871cb2faef8
+      internalID: -2198186262770673734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_S0
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 480
+        width: 13
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06706172aac69f74ebb5397f12708024
+      internalID: 8357101457339862085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_S1
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 480
+        width: 13
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a49dc0f9adffabc46a8e24cea06e185d
+      internalID: 1511884759072402483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_S2
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 480
+        width: 13
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2076a2cc3c667f42b24691b8e2b371c
+      internalID: 3542127132570728493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_S3
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 480
+        width: 13
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30484b89d53510345a625eae19ea6f24
+      internalID: -1960546628078278901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarioSwim_S4
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 480
+        width: 14
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b5fca82402a3f6489cf10ef595eece9
+      internalID: 8248543377919322394
       vertices: []
       indices: 
       edges: []

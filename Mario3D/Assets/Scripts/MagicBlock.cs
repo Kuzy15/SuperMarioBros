@@ -2,25 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Method that represents a magic block. It can instantiate a mushroom or a coin, when player collision
+/// </summary>
 public class MagicBlock : MonoBehaviour
 {
-
+    //Bounce animation of the block
     public Sprite[] _upAnim;
+    //Entity containing this class
     public GameObject entity;
-
+    //Animation time
     private float _time;
+    //Current frame of the animation
     private int _currentAnim;
+    //Renderer to "draw" the object
     private SpriteRenderer _renderer;
+    //Start position of the block, to make it bounce
     private Vector2 _startPosition;
+    //Bools to check if has already dropped an object and to see if it has bounced
     private bool _active = false;
     private bool _disable = false;
     private bool _goDown = false;
     private bool _dropped = false;
+    //Array with all the animation frames
     private Sprite[] _anim;
+    //Sprite to put when an object has been dropped from the block
     private Sprite _disableBlock;
+    //Animation speed
     private float _animSpeed = 0;
-
-
 
 
     // Start is called before the first frame update
@@ -32,6 +41,9 @@ public class MagicBlock : MonoBehaviour
         _renderer = this.GetComponent<SpriteRenderer>();
     }
 
+    /// <summary>
+    /// Fills the current block with the animation, disable sprite, and the entinty that instantiates
+    /// </summary>
     void FillMagicBlock()
     {
         _anim = MagicBlockManager.GM.GetAnim();
@@ -50,7 +62,10 @@ public class MagicBlock : MonoBehaviour
         MoveBlock();
     }
 
-
+    /// <summary>
+    /// Function that calculates the distance from an start position to an end point. On equal distance, the block is allowed to go down.
+    /// Represents the whole bouncing movement.
+    /// </summary>
     private void BounceMove()
     {
         if (_active)
@@ -76,7 +91,9 @@ public class MagicBlock : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Animation of the magic block
+    /// </summary>
     private void MagicBlockAnim()
     {
         if (!_disable)
@@ -99,7 +116,9 @@ public class MagicBlock : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Check if the current block is active in order to see if an object can be instantiated
+    /// </summary>
     private void MoveBlock()
     {
         if (_active)
@@ -116,6 +135,9 @@ public class MagicBlock : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Instantiates an entity on the magic block position
+    /// </summary>
     private void InstantiateEntity()
     {
         if (entity.GetComponent<Coin>())
@@ -126,6 +148,9 @@ public class MagicBlock : MonoBehaviour
         Instantiate(entity, _startPosition, Quaternion.identity);
     }
 
+    /// <summary>
+    /// Activates the block, once the player has collided with it.
+    /// </summary>
     public void ActivateBlock()
     {
         if (!_dropped)

@@ -12,7 +12,7 @@
 # 
 # -----------------------------------------------------------
 
-#EXAMPLE COMMAND: python NeuralNetworks.py 2 1-1.csv 1-2.csv 15 10000 256 1024 50 2 GRU LSTM 0.5 250 LSTM_UNITY_1.csv
+#EXAMPLE COMMAND: python NeuralNetworks.py 2 1-1.csv 1-2.csv 15 20 10000 256 1024 50 2 GRU LSTM 0.5 250 LSTM_UNITY_1.csv
 #in case you want a default network you must put "1 default" in NHIDDENLAYERS and NHIDDENLAYERS respectively in the
 #command line
 
@@ -32,55 +32,62 @@ try:
 except ImportError:
     from io import StringIO ## for Python 3
 
-
 NFILES = int(sys.argv[1])
 FILE = []
 for f in range(NFILES):
     FILE.append(str(sys.argv[f + 2]))
 
-print(FILE)
-
 # The maximum length sentence we want for a single input in characters
 SEQLENGTH = int(sys.argv[NFILES + 2])
-print(SEQLENGTH)
 
 # Batch size
 BATCHSIZE = int(sys.argv[NFILES + 3])
-print(BATCHSIZE)
+
 # Buffer size to shuffle the dataset
 # (TF data is designed to work with possibly infinite sequences,
 # so it doesn't attempt to shuffle the entire sequence in memory. Instead,
 # it maintains a buffer in which it shuffles elements).
 BUFFERSIZE = int(sys.argv[NFILES + 4])
-print(BUFFERSIZE)
+
 # The embedding dimension
 EMBEDDINGDIM = int(sys.argv[NFILES + 5])
-print(EMBEDDINGDIM)
+
 # Number of NN units
 NNUNITS = int(sys.argv[NFILES + 6])
-print(NNUNITS)
+
 #Number of times to train
 EPOCHS = int(sys.argv[NFILES + 7])
-print(EPOCHS)
+
 #Number of functional hidden layers
 NHIDDENLAYERS = int(sys.argv[NFILES + 8])
-print(NHIDDENLAYERS)
 
 HIDDENLAYERS = []
 for l in range(NHIDDENLAYERS):
     HIDDENLAYERS.append(str(sys.argv[NFILES + l + 9]))
-print(HIDDENLAYERS)
-print()
+
 
 #Give back more or less random results
 TEMPERATURE = float(sys.argv[NFILES + NHIDDENLAYERS + 9])
-print(TEMPERATURE)
+
 #The with of the level (length)
 WIDTH = int(sys.argv[NFILES + NHIDDENLAYERS + 10])
-print(WIDTH)
+
 #Output name
 OUTPUT = str(sys.argv[NFILES + NHIDDENLAYERS + 11])
-print(OUTPUT)
+
+DEPURATION = False
+if(len(sys.argv) > NFILES + NHIDDENLAYERS + 12):
+    if str(sys.argv[NFILES + NHIDDENLAYERS + 12]) == "-d" or str(sys.argv[NFILES + NHIDDENLAYERS + 12]) == "--debug":
+        DEPURATION = True
+        try: 
+            path = "../Logs/"
+            if not os.path.exists(path):
+                os.makedirs(path)
+            logFileName = time.strftime("%Y%m%d-%H%M%S") 
+            sys.stdout = open(path + logFileName +"_RNN.txt", "w")
+        except OSError:
+            if not os.path.isdir(path):
+                raise
 
 
 # Read a file that is delimited by ',' and return a matrix of the level
@@ -89,8 +96,10 @@ def ReadFile(file):
     text = np.genfromtxt(file, delimiter=',',dtype=None)
     text = text.transpose()
     
-    #print(text)
-    #print()
+    if DEPURATION:
+        print("File name: " + str(file))
+        print(text)
+        print()
     
     return text
 
@@ -105,6 +114,10 @@ def GetVocabulary(text):
     # Get the unique characters
     vocab = sorted(set(textstr))
 
+    if DEPURATION:
+	    print("Vocabulary: " + str(vocab))
+	    print()
+
     return vocab, textstr
 
 #Vectorize the text and return the text as character, the text as integers
@@ -117,11 +130,18 @@ def VectorizeText(vocab):
     char2idx = {u:i for i, u in enumerate(vocab)}
     idx2char = list(vocab)
 
+    if DEPURATION:
+    	print("char2idx: " + str(char2idx))
+
     return char2idx, idx2char
 
 
 #Number of examples to evaluate in each epoch
 def GetExamplesPerEpoch(text, seqLength):
+
+    if DEPURATION:
+        print("Examples per epoch:" + str(len(text) // (seqLength + 1)))
+
     return len(text) // (seqLength + 1)
 
 
@@ -130,15 +150,14 @@ def CreateTrainingSamples(textint, idx2char):
 
     charDataset = tf.data.Dataset.from_tensor_slices(textint)
 
-    # for i in charDataset.take(1):
-    #     #print(i)
-    #     firstSeq = idx2char[i.numpy()]
-    #     #print(charDataset.take(1))
-
     #charDataset is the same as textint buit in tf format
     listDataset = list(charDataset.as_numpy_iterator())
-    print(listDataset[0])
+
     firstSeq = idx2char[listDataset[0]]
+
+    if DEPURATION:
+    	print("Data list: " + str(listDataset))
+    	print("First sequence: " + str(firstSeq))
     
     return firstSeq, charDataset
 
@@ -159,19 +178,6 @@ def SplitInputTarget(chunk):
 
 #Build a model of different types of neural networks
 def BuildModel(vocabSize, embeddingDim, nnUnits, batchSize):
-    # model = tf.keras.Sequential([
-    #     tf.keras.layers.Embedding(vocabSize, embeddingDim, batch_input_shape=[batchSize, None]),
-        
-    #     ##tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-    #     #tf.keras.layers.SimpleRNN(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        
-    #     #tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-    #     #tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        
-    #     #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-    #     #tf.keras.layers.LSTM(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
-        
-    #     tf.keras.layers.Dense(vocabSize)])
 
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.Embedding(vocabSize, embeddingDim, batch_input_shape=[batchSize, None]))
@@ -189,6 +195,9 @@ def BuildModel(vocabSize, embeddingDim, nnUnits, batchSize):
                 model.add(tf.keras.layers.GRU(nnUnits, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'))
         
         model.add(tf.keras.layers.Dense(vocabSize))
+
+    if DEPURATION:
+    	model.summary()
 
     return model
 
@@ -225,11 +234,23 @@ def GenerateText(model, startString, length):
         print(cont)
         predictions = model(inputEval)
       # remove the batch dimension
-        predictions = tf.squeeze(predictions, 0)
+        tfPredictions = tf.squeeze(predictions, 0)
 
       # using a categorical distribution to predict the character returned by the model
-        predictions = predictions / temperature
+        predictions = tfPredictions / temperature
         predictedId = tf.random.categorical(predictions, num_samples=1)[-1,0].numpy()
+
+        if DEPURATION:
+	        print("TensorFlow predictions:")
+        	print(tfPredictions)
+        	print()
+        	print("Predictions applying temperature:")
+        	print(predictions)
+        	print()
+        	print("Predicted next id: " + str(predictedId))
+        	print()
+        	print("Next sequence: " + str(idx2char[predictedId]))
+        	print()
 
       # We pass the predicted character as the next input to the model
       # along with the previous hidden state
@@ -255,14 +276,40 @@ def SaveFile(fileName, text):
     result.writerows(matrix.T)
     del result
     csvoutput.close()
+    if DEPURATION:
+        print("Generated a RNN file " + str(fileName) + " with a length of " + str(WIDTH))
 
 
-
-
-
-#"Empty" tensorflow dataset to store the possible multiple train data set
-combinedDataset = tf.data.Dataset.range(0)
-
+if DEPURATION: 
+    print("FILES: " + str(NFILES))
+    for f in FILE:
+        print("   FILE: " + str(f))
+    print()
+    print("SEQUENCE LENGHT: " + str(SEQLENGTH))
+    print()
+    print("BATCH SIZE: " + str(BATCHSIZE))
+    print()
+    print("BUFFER SIZE: " + str(BUFFERSIZE))
+    print()
+    print("EMBEDDING DIM: " + str(EMBEDDINGDIM))
+    print()
+    print("NN UNITS: " + str(NNUNITS))
+    print()
+    print("EPOCHS: " + str(EPOCHS))
+    print()
+    print("LAYERS: " + str(NHIDDENLAYERS))
+    for l in HIDDENLAYERS:
+        print("   LAYER: " + str(l))
+    print()
+    print("TEMPERATURE: " + str(TEMPERATURE))
+    print()
+    print("WIDTH: " + str(WIDTH))
+    print()
+    print("FILE TO GENERATE: " + str(OUTPUT))
+    print()
+    
+print("Generating neural network:")
+print()
 #Auxiliar variables to store the first sequence to generate text
 listDatasets = []
 vocab = []
@@ -300,7 +347,7 @@ for t in textint:
 
     dataset = sequencesCreated.map(SplitInputTarget)
 
-    dataset = dataset.shuffle(BUFFERSIZE).batch(BATCHSIZE, drop_remainder=True)
+    dataset = dataset.shuffle(BUFFERSIZE, False).batch(GetExamplesPerEpoch(t, SEQLENGTH), drop_remainder=True)
     datasets.append(dataset)
 
 
@@ -309,7 +356,7 @@ for t in textint:
 
 # Length of the vocabulary in chars
 vocabSize = len(vocab)
-model = BuildModel(vocabSize = vocabSize, embeddingDim=EMBEDDINGDIM, nnUnits=NNUNITS, batchSize=BATCHSIZE)
+model = BuildModel(vocabSize = vocabSize, embeddingDim=EMBEDDINGDIM, nnUnits=NNUNITS, batchSize=GetExamplesPerEpoch(t, SEQLENGTH))
 model.summary()
 model.compile(optimizer='adam', loss=Loss)
 

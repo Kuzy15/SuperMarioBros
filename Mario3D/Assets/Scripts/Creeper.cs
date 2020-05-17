@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class that reprsents a single creeper
+/// </summary>
 public class Creeper : MonoBehaviour
 {
+    //Animation array
     public Sprite[] anim;
+    //Animation speed
     public float animSpeed = 0;
 
-
+    //Animation time
     private float _time;
+    //Current frame of the animation
     private int _currentAnim;
+    //Renderer of the object
     private SpriteRenderer _renderer;
+    //Bool to check if the creeper can flip
     private bool _canFlip = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +32,9 @@ public class Creeper : MonoBehaviour
     {
         CreeperAnim();
     }
-
+    /// <summary>
+    /// CreeperAnimation
+    /// </summary>
     private void CreeperAnim()
     {
         _time += Time.deltaTime * animSpeed;
@@ -33,14 +44,5 @@ public class Creeper : MonoBehaviour
             _time = 0;
             _canFlip = !_canFlip;
         }
-
-        /*if (_currentAnim < anim.Length)
-        {
-            _renderer.sprite = anim[_currentAnim];
-        }
-        else
-        {
-            _currentAnim = 0;
-        }*/
     }
 }

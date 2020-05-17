@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Class that represents a brick that bounces (not destroy) on collision
+/// </summary>
 public class Brick : MonoBehaviour
 {
-
+    //start position of the brick
     private Vector2 _startPosition;
+    //bool to check if a brick can bounce
     private bool _goDown = false;
+    //bool to activate bouncing
     private bool _active = false;
 
 
@@ -22,19 +28,29 @@ public class Brick : MonoBehaviour
         MoveBrick();
     }
 
+    /// <summary>
+    /// Function that allows to a brick to make a bouncing move
+    /// </summary>
     public void StartMoveBrick()
     {
         ActivateBounce();
         StartCoroutine("MoveBrickCouroutine");
     }
 
+    /// <summary>
+    /// Coroutine function that starts bounce moving for a second
+    /// </summary>
+    /// <returns></returns>
     IEnumerator MoveBrickCouroutine()
     {
         yield return new WaitForSeconds(1.0f);
         MoveBrick();   
     }
 
-
+    /// <summary>
+    /// Function that calculates the distance from an start position to an end point. On equal distance, the brick is allowed to go down.
+    /// Represents the whole bouncing movement.
+    /// </summary>
     private void MoveBrick()
     {
         if (_active)
@@ -60,6 +76,9 @@ public class Brick : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activate bouncing flag (_active)
+    /// </summary>
     private void ActivateBounce()
     {
         if(!_active)

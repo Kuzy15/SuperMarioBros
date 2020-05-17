@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ButtonLevel class allows us to manage a button of SelectLevel scene, setting it lock or
-/// unlocked depending on the levels passed of each category
+/// ButtonLevel class allows us to manage a button on the scroll
 /// </summary>
 public class ButtonLevel : MonoBehaviour
 {
@@ -30,8 +29,7 @@ public class ButtonLevel : MonoBehaviour
 
     /// <summary>
     /// Method to set button locked or unlocked. If the button is unlocked
-    /// we change the sprite to the unlocked one, and put below the "star" of the sprite, 
-    /// its correspondant level
+    /// we change the sprite to the unlocked one.
     /// </summary>
     /// <param name="newValue">value to set the button state
     public void SetLocked(bool newValue)

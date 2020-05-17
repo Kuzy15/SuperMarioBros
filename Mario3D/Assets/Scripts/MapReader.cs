@@ -6,42 +6,53 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 
-
+/// <summary>
+/// Class that reads a map tile by tile and gives them "a representation"
+/// </summary>
 public class MapReader : MonoBehaviour
 {
+    //Instance of MapReader
     public static MapReader GM;
 
+    //List of tile values (string format)
     private List<string> _stringList;
+    //Parsed list of the strings
     private List<string[]> _parsedList;
+    //Array with the gameobjects that can represent a single tile
     private GameObject[] _prefabs;
+    //Dictionary to keep relationship between tile value and sprite
     private Dictionary<string, GameObject> _tiles;
+    //List of all the pipes on the map
     private List<PipeCoords> _pipes;
+    //List of all the secret zone positions of the map
     private List<Transform> _secretZonePos;
+    //List of all the exit secret zones of the map
     private List<GameObject> _exitSecretZones;
-    private List<GameObject> _platforms;
+    //Player position
     private Vector3 _marioPosition;
-    private bool _notSet = false;
-    private int _platformIndex = -1;
 
+    /// <summary>
+    /// Struct that represents the enter of a pipe
+    /// </summary>
     private struct PipeCoords
     {
-
+        //X, Y coords of the pipe
         public int x, y;
 
+        //Left and right sprites of the pipe
         public GameObject tileL, tileR;
 
+        /// <summary>
+        /// Set tileL sprite
+        /// </summary>
+        /// <param name="tile"></param>
+       
         public void SetTileL(GameObject tile) { tileL = tile; }
+        /// <summary>
+        /// Set tileR sprite
+        /// </summary>
+        /// <param name="tile"></param>
         public void SetTileR(GameObject tile) { tileR = tile; }
-
-    }
-
-    private struct PlatformSt
-    {
-        public GameObject tileL, tileR, tileM;
-
-        public void SetTileL(GameObject tile) { tileL = tile; }
-        public void SetTileR(GameObject tile) { tileR = tile; }
-        public void SetTileM(GameObject tile) { tileM = tile; }
 
     }
 
@@ -55,6 +66,11 @@ public class MapReader : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
+    /// <summary>
+    /// Method that allows us to load the specified map given a mapLevel sprite
+    /// </summary>
+    /// <param name="mapLevel"></param>
+    /// <param name="generationMode"></param>
     public void InitMap(string mapLevel, bool generationMode = true)
     {
         _stringList = new List<string>();
@@ -69,11 +85,19 @@ public class MapReader : MonoBehaviour
         LoadTiles();
     }
 
+    /// <summary>
+    /// Creates a map
+    /// </summary>
     public void GenerateMap()
     {
         CreateMap();
     }
 
+    /// <summary>
+    /// Reads a given file and fills a string with the tile values
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="parse"></param>
     private void ReadTextFile(string path, bool parse = true)
     {
         if (_stringList.Count > 0)
@@ -94,7 +118,9 @@ public class MapReader : MonoBehaviour
             ParseList();
     }
 
-
+    /// <summary>
+    /// Parses the list filled when reading a file in order to use it when creating tiles.
+    /// </summary>
     private void ParseList()
     {
         for (int i = 0; i < _stringList.Count; i++)
@@ -108,6 +134,10 @@ public class MapReader : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Loads the tiles dictionary with the relationship between name and sprite
+    /// </summary>
     private void LoadTiles()
     {
         for (int i = 0; i < _prefabs.Length; i++)
@@ -116,6 +146,10 @@ public class MapReader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates the map, reading the whole _parsedlist matrix, and instantiating in an specific position
+    /// a tile with its own properties depending on the string value reades. (e.g. _parsedList[j][i] == "24" represents a magicblock)
+    /// </summary>
     void CreateMap()
     {
         int pipeIdx = 0;
@@ -178,39 +212,6 @@ public class MapReader : MonoBehaviour
                     {
                         _exitSecretZones.Add(tile);
                     }
-                    else if (_parsedList[j][i] == "292")
-                    {
-                        //tile.AddComponent<Platform>();
-                        /* Debug.Log("PLATFORM: " + "J " + j + "    I " + i);
-                         GameObject platform = new GameObject();
-                         platform.transform.SetParent(GameObject.Find("Platforms").transform);
-                         GameObject tile1 = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
-                        platform.transform.rotation);
-                         if(_parsedList[j][i+1] == "292")
-                         {
-                             GameObject tile2 = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j + 1, this.gameObject.transform.position.z),
-                        platform.transform.rotation);
-                         if (_parsedList[j][i + 2] == "292")
-                         {
-                             GameObject tile3 = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j + 2, this.gameObject.transform.position.z),
-                    platform.transform.rotation, platform.transform);
-                         }
-                     }
-                             // j += 3;
-                         platform.AddComponent<Platform>();
-                         if(platform.transform.childCount == 3)
-                         /*if(j != _platformIndex)
-                         {
-                             _platformIndex = j;
-                             gen.GetComponent<Platform>().SetDirection(false);
-                         }
-                             _platforms.Add(platform);*/
-                    }
-                    else if (_parsedList[j][i] == "148")
-                    {
-
-                    }
-
                     else if(_parsedList[j][i] == "255")
                     {
                        GameObject tileBackWater = Instantiate(_tiles["894"], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
@@ -226,6 +227,9 @@ public class MapReader : MonoBehaviour
         CheckPipes();
     }
 
+    /// <summary>
+    /// Destroys all the map tiles one  by one
+    /// </summary>
     public void DestroyMap()
     {
 
@@ -236,6 +240,11 @@ public class MapReader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method to check where the pipes are. It check pipe by pipe if that pipe can be an exit pipe. This is done
+    /// by looking down and seeing if it has an "exit secret zone pipe". If this is true, it gives the very previous pipe the enter secret zone component.
+    /// Also checks if the secret zone is undergorund or underwater
+    /// </summary>
     public void CheckPipes()
     {
         int _exitIndex = 0;
@@ -327,11 +336,20 @@ public class MapReader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Getter of initial mario position as a tile
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetInitialPosition()
     {
         return _marioPosition;
     }
 
+    /// <summary>
+    /// Getter of the secret zone position dpending on the given index
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
     public Transform GetSecretZonePos(int i)
     {
         return _secretZonePos[i];

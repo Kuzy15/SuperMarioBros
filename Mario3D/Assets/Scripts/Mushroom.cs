@@ -2,29 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class that represents a mushroom. A mushroom makes Mario bigger when colliding with him.
+/// </summary>
 public class Mushroom : MonoBehaviour
 {
-    private int _currentAnim;
-    private SpriteRenderer _renderer;
+    //Start position of the mushroom
     private Vector3 _startPosition;
+    //Move direction of the mushroom
     private int _dir;
+    //Rigidbody of the mushroom
     private Rigidbody _rigidbody;
-    private bool _spawning = true;
-    private float speed = 3;
+    //Bool to check if the mushroom can move
     private bool _canMove = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        _renderer = this.GetComponent<SpriteRenderer>();
         _rigidbody = this.GetComponent<Rigidbody>();
         _startPosition = transform.position;
-        //_rigidbody.AddForce(new Vector3(0, 4f), ForceMode.Impulse);
-        //Physics.gravity = new Vector3(0, -9 * _rigidbody.mass, 0);
-
     }
 
     private void FixedUpdate()
+    {
+        MoveMushroom();
+    }
+
+    /// <summary>
+    /// This method allows a mushroom to move up until it is out of the magic block. Once is out, it check the position of the player. 
+    /// It goes to the opposite direction of the player.
+    /// </summary>
+    private void MoveMushroom()
     {
         if (!_canMove)
         {
@@ -62,39 +70,5 @@ public class Mushroom : MonoBehaviour
                 }
             }
         }
-
-        /*
-        this.transform.Translate(new Vector3(2f * _dir * Time.deltaTime, _rigidbody.velocity.y*Time.deltaTime, 0));
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 0.6f))
-        {
-            // Apply the force to the rigidbody.
-            this.transform.position = new Vector3(this.transform.position.x - 0.2f * _dir, this.transform.position.y, this.transform.position.z);
-            _dir *= -1;
-        }*/
-        ////Debug.Log(_player.GetComponent<Player>().GetMarioPosition().x + "    " + this.transform.position.x);
     }
-
-    // Update is called once per frame
-    /* private void OnCollisionEnter(Collision collision)
-     {
-         if (collision.gameObject.tag == "Player")
-         {
-             //Growup
-             Destroy(this.gameObject);
-         }
-         /*else
-         {
-             //Debug.Log("Colliding");
-             _rigidbody.velocity = new Vector3(2f * _dir, _rigidbody.velocity.y, 0);
-         }*/
-    /*else if (collision.gameObject.tag == "Solid" /*&& !_canMove)
-    {
-        //Debug.Log("SOLID");
-        _canMove = true;
-        _rigidbody.AddForce(new Vector3(4f, 0f)*Time.deltaTime, ForceMode.Impulse);
-    }*/
-    //}*/
-
-
 }

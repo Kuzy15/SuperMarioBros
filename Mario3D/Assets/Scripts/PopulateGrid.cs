@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
+/// <summary>
+/// Class that generates the content of an scroll view
+/// </summary>
 public class PopulateGrid : MonoBehaviour
 {
+    //Instance of PopulateGrid
     public static PopulateGrid GM;
     //prefab from where the button will be created
     public GameObject prefab;
@@ -24,6 +27,11 @@ public class PopulateGrid : MonoBehaviour
         //DontDestroyOnLoad(this);
     }
 
+    /// <summary>
+    /// Creates the content of the scroll view
+    /// </summary>
+    /// <param name="buttons">Number of buttons to generate (number of .csv files)</param>
+    /// <param name="names">Name of the .csv files</param>
     public void Populate(int buttons, string[] names)
     {
         buttonsList = new GameObject[buttons];
@@ -39,6 +47,11 @@ public class PopulateGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Listener for each scroll view button (Adding or removing file)
+    /// </summary>
+    /// <param name="index">Index of the clicked button</param>
+    /// <param name="item">File name to add or remove</param>
     public void TaskOnClick(int index, string item)
     {
         if (!buttonsList[index].GetComponent<ButtonLevel>().GetLocked())

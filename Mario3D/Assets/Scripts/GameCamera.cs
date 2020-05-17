@@ -1,12 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// Class that represents the camera used in the gameplay scene. This camera follows Mario in the X axis
+/// </summary>
 public class GameCamera : MonoBehaviour
 {
+    //Gamecamera target
     public Transform target;
+    //Bool for following the player
     public bool followPlayer = true;
+    //Distance to the player
     public Vector3 offset;
+    //Following speed
     public float smoothSpeed = 10f;
+    //Variables of the looking mode
     public float zoomSpeed;
     public float targetOrtho;
     public float orthoSize;
@@ -14,14 +23,16 @@ public class GameCamera : MonoBehaviour
     public float minOrtho = 1.0f;
     public float maxOrtho = 20.0f;
     public int scrollSpeed = 8;
-    
+    //Camera reference postion
     private Vector3 _refPosition;
+    //Get if is in looking mode
     private bool _looking = false;
     private Vector3 _lastPos = Vector3.zero;
-    private float _halfPlayerSizeX;
+    //Saves the initial color of the background
     private Color _initialColor;
     private bool _canFollowInY = false;
 
+    //Instance of this class
     private static GameCamera _camera = null;
 
     public static GameCamera Instance
@@ -32,9 +43,9 @@ public class GameCamera : MonoBehaviour
         }
     }
 
+    // Start is called before the first frame update
     void Start()
     {
-        _halfPlayerSizeX = target.GetComponentInChildren<SpriteRenderer>().bounds.size.x / 2;
         targetOrtho = Camera.main.orthographicSize;
         orthoSize = targetOrtho;
         _refPosition = this.transform.position;
@@ -43,6 +54,7 @@ public class GameCamera : MonoBehaviour
         //GoToBlackScreen();
     }
 
+    // Update is called once per frame
     private void Update()
     {
         if (target != null)
@@ -80,12 +92,20 @@ public class GameCamera : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Resets the camera to its reference position
+    /// </summary>
     public void ResetCamera()
     {
         Camera.main.transform.position = _refPosition;
         StartCoroutine("Coroutine");
     }
 
+
+    /// <summary>
+    /// Coroutine that allows camera to exit looking mode and reset its initial size
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Coroutine()
     {
         yield return new WaitForSeconds(0.3f);
@@ -93,22 +113,36 @@ public class GameCamera : MonoBehaviour
         targetOrtho = Camera.main.orthographicSize = orthoSize;
     }
 
+    /// <summary>
+    /// Setter of looking mode
+    /// </summary>
     private void SetLookingMode()
     {
         _looking = true;
     }
 
+    /// <summary>
+    /// Getter of looking mode
+    /// </summary>
+    /// <returns></returns>
     public bool GetLooking()
     {
         return _looking;
     }
 
+    /// <summary>
+    /// Setter of the y position of the camera
+    /// </summary>
+    /// <param name="y">Y position</param>
     public void SetCameraY(float y)
     {
         this.transform.position = new Vector3(this.transform.position.x, y, this.transform.position.z);
     }
 
-
+    /// <summary>
+    /// Setter of the x position of the camera
+    /// </summary>
+    /// <param name="x"></param>
     public void SetCameraX(float x)
     {
         this.transform.position = new Vector3(x, this.transform.position.y, this.transform.position.z);
@@ -126,7 +160,7 @@ public class GameCamera : MonoBehaviour
         _lastPos = transform.position;
     }
 
-    //Si tiene un target establecido, entonces la camara se encargará de seguirle, con un determinado offset.
+    //If has a set target, camera follows it with a determined offset
     void LateUpdate()
     {
         if (target != null)
@@ -154,27 +188,51 @@ public class GameCamera : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// This method allows us to check if an object is visible to camera.
+    /// If visible, it can move, if not, it will be idle
+    /// </summary>
+    /// <param name="renderer"></param>
+    /// <param name="camera"></param>
+    /// <returns></returns>
     public bool IsVisibleFrom(Renderer renderer, Camera camera)
     {
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
         return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
     }
 
+
+    /// <summary>
+    /// Camera goes to black. Used for entering and exiting secret zones
+    /// </summary>
     public void GoToBlackScreen()
     {
         this.GetComponent<Camera>().backgroundColor = Color.black;
     }
 
+    /// <summary>
+    /// Camera goes to blue, its initial color. Used for reset camera background when exiting secret zones
+    /// </summary>
     public void GoToBlueScreen()
     {
         this.GetComponent<Camera>().backgroundColor = _initialColor;
     }
 
+
+    /// <summary>
+    /// Getter of the y position of the camera
+    /// </summary>
+    /// <returns></returns>
     public float GetCameraY()
     {
         return this.transform.position.y;
     }
 
+
+    /// <summary>
+    /// Getter to see if camera can follow in Y
+    /// </summary>
+    /// <param name="can"></param>
     public void CanFollowInY(bool can)
     {
         _canFollowInY = can;

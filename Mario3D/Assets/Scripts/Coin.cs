@@ -2,25 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Class that represents a coin on the gameplay scene
+/// </summary>
 public class Coin : MonoBehaviour
 {
+    //Spinning animation array
     public Sprite[] anim;
+    //Instanciated coin animation array
     public Sprite[] animInstantiated;
+    //Spinning animation speed
     public float animSpeed = 0;
+    //Instantiated animation speed
     public float animInstantiatedSpeed = 10;
+    //bool for instantiated coins
     public bool _canMove = true;
    
-
+    //animation time
     private float _time;
+    //controls the current animation
     private int _currentAnim;
+    //Renderer used to "draw" the sprites
     private SpriteRenderer _renderer;
+    //Start position for the instantiated coin
     private Vector3 _startPosition;
+    //Bool for instantiated coin
     private bool _down = false;
-
     private bool _isInstantiated = false;
+    //Array with the animations to use (Instantiated or Spinning)
     private Sprite[] _animToUse;
+    //Speed to use (Instantiated or Spinning)
     private float _speedToUse;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +61,9 @@ public class Coin : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Animation of the gameobject with the anim array selected(Instantiated or Spinning), in this case represents a coin.
+    /// </summary>
     private void CoinAnim()
     {
         _time += Time.deltaTime * _speedToUse;
@@ -67,6 +83,9 @@ public class Coin : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method used for moving an instantiated coin up and down. Finished this movement is destroyed.
+    /// </summary>
     private void CoinMove()
     {
         float step = 12f * Time.deltaTime; // calculate distance to move
@@ -89,11 +108,19 @@ public class Coin : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Setter for the moving flag
+    /// </summary>
+    /// <param name="canMove"></param>
     public void SetMove(bool canMove)
     {
         _canMove = canMove;
     }
 
+    /// <summary>
+    /// Destroys a gameobject when collision
+    /// </summary>
+    /// <param name="collision"></param>
     public void OnTriggerEnter(Collider collision)
     {
         if (!_canMove)
@@ -102,6 +129,9 @@ public class Coin : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Setter for an instantiated coin
+    /// </summary>
     public void SetInstantiated() {
         _isInstantiated = true;
     }

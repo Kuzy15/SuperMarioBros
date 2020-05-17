@@ -2,25 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Class that represents an Enemy as an object
+/// </summary>
 public class Enemy : MonoBehaviour
 {
-
+    //Animation array of the enemy
     public Sprite[] anim;
+    //Dead animation of the enemy
     public Sprite animDead;
+    //Speed animation
     public float animSpeed = 4;
 
+    //Start position of the enemy
     protected Vector3 _startPosition;
     protected Vector3 positionShell;
+    //Renderer, collider and rigidbody of the enemy
     protected SpriteRenderer _renderer;
     protected BoxCollider _collider;
     protected Rigidbody _rigidbody;
+    //Moving direction of the enemy
     protected int _dir = -1;
+    //Moving velocity of the enemy
     protected float _velocity = 1.0f;
+    //Bool to check if enemy is dead
     protected bool _dead = false;
+    //Bool to check if the enemy can move
     protected bool _canMove = true;
 
+    //Animation time
     private float _time;
+    //Current frame of the animation
     private int _currentAnim = 0;
 
 
@@ -68,6 +80,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Class that animates an enemy
+    /// </summary>
     private void EnemyAnim()
     {
         _time += Time.deltaTime * animSpeed;
@@ -88,7 +104,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Class that allows an enemy to move right and left
+    /// </summary>
     public virtual void EnemyMove()
     {
 
@@ -113,12 +131,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // TODO: mirar si se usa luego
-    public void AddPoint()
-    {
-
-    }
-
+    /// <summary>
+    /// Enemy dead changing its sprite and destroying it
+    /// </summary>
     public virtual void Die()
     {
         _dead = true;
@@ -126,6 +141,10 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject, 1.0f);
     }
 
+    /// <summary>
+    /// Check collision with the player
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -136,6 +155,10 @@ public class Enemy : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Check collision (trigger mode) with the player
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerExit(Collider other)
     {
 

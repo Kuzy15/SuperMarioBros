@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class that represents a shuttle. When Mario collides with it, it impulses him up.
+/// </summary>
 public class Shuttle : MonoBehaviour
 {
+    //Animation array of the shuttle
     public Sprite[] anim;
+    //Animation speed
     public float animSpeed = 0;
 
+    //Animation time
     private float _time;
+    //Current frame of the animation
     private int _currentAnim;
+    //Renderer of the object to draw
     private SpriteRenderer _renderer;
+    //Bool to check if the shuttling has finished
     private bool _finishedSuttle = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +34,12 @@ public class Shuttle : MonoBehaviour
         {
             ShuttleAnim();
         }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            _finishedSuttle = false;
-        }
     }
 
+
+    /// <summary>
+    /// Represents the shuttle animation
+    /// </summary>
     private void ShuttleAnim()
     {
         _time += Time.deltaTime * animSpeed;
@@ -62,6 +72,9 @@ public class Shuttle : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Setter of _finishedSuttle in order to shuttle again
+    /// </summary>
     public void StartShuttle()
     {
         _finishedSuttle = false;
