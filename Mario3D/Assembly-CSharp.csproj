@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\PythonThread.cs" />
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
     <Compile Include="Assets\Scripts\Shuttle.cs" />
+    <None Include="Assets\Resources\Logs\20200518-183807_RNN.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/SM-RNN/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -356,7 +356,7 @@ for t in textint:
 
 # Length of the vocabulary in chars
 vocabSize = len(vocab)
-model = BuildModel(vocabSize = vocabSize, embeddingDim=EMBEDDINGDIM, nnUnits=NNUNITS, batchSize=GetExamplesPerEpoch(t, SEQLENGTH))
+model = BuildModel(vocabSize = vocabSize, embeddingDim=EMBEDDINGDIM, nnUnits=NNUNITS, batchSize=BATCHSIZE)
 model.summary()
 model.compile(optimizer='adam', loss=Loss)
 
