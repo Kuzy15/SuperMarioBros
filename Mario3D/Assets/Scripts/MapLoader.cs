@@ -8,8 +8,9 @@ using UnityEngine;
 public class MapLoader : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+        LoadScene.Instance.StartFadeOut();
         MapReader.GM.GenerateMap();
     }
 }

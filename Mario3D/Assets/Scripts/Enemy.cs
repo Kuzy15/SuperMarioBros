@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameCamera.Instance.GetLooking())
+        if (!LoadScene.Instance.GetStart() || !GameCamera.Instance.GetLooking())
         {
             bool vis = GameCamera.Instance.IsVisibleFrom(_renderer, Camera.main);
             if (vis)

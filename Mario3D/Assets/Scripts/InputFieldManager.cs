@@ -241,9 +241,9 @@ public class InputFieldManager : MonoBehaviour
             }
             if (arrFiles.Count > 0)
             {
-                PythonThread.ExecuteCommand();
-                MapReader.GM.InitMap(fileToGen);
-                SceneManager.LoadScene(1);
+                LoadScene.Instance.StartFadeIn("SampleScene");
+                StartCoroutine(StartGenCoroutine(fileToGen));
+                
             }
         }
         else
@@ -251,10 +251,19 @@ public class InputFieldManager : MonoBehaviour
             if (arrFiles.Count == 1)
             {
                 //PythonThread.ExecuteCommand();
+                LoadScene.Instance.StartFadeIn("SampleScene");
                 MapReader.GM.InitMap(arrFiles[0], false);
-                SceneManager.LoadScene(1);
+                LoadScene.Instance.ChangeScene();
             }
         }
+    }
+
+    private IEnumerator StartGenCoroutine(string fileToGen)
+    {
+        yield return new WaitForSeconds(1.5f);
+        LoadScene.Instance.ChangeScene();
+        PythonThread.ExecuteCommand();
+        MapReader.GM.InitMap(fileToGen);
     }
 
     /// <summary>
@@ -614,7 +623,7 @@ public class InputFieldManager : MonoBehaviour
         {
             string file = GetFilesToConcatInput()[i];
             string sufix = ".csv";
-            string concatS = file + sufix;
+            string concatS = "..\\Maps\\" + file + sufix;
             concat = concat + " " + concatS;
         }
         string concatLayers = "";
@@ -633,13 +642,13 @@ public class InputFieldManager : MonoBehaviour
         string command = "";
         if (_mlMode)
         {
-            command = "/C python NGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + _lengthInput + " " + _fileNameNGrams + ".csv " + debug;
+            command = "/C python NGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + _lengthInput + " " +  "..\\Maps\\" + _fileNameNGrams + ".csv " + debug;
         }
         else
         {
             //"python NeuralNetworks.py 70 1-1.csv 10000 512 1024 70 0.5 LSTM_UNITY_1.csv"
             command = "/C python NeuralNetworks.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
-               + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + _width + " " + _fileNameRNN + ".csv " + debug;
+               + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + _width + " " + "..\\Maps\\" + _fileNameRNN + ".csv " + debug;
         }
         return command;
     }

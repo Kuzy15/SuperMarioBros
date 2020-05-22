@@ -35,10 +35,10 @@ public class PythonThread : MonoBehaviour
     {
         string command = InputFieldManager.GM.SendCommand();
         var processInfo = new ProcessStartInfo("cmd.exe", command);
-        processInfo.CreateNoWindow = false;
-        processInfo.UseShellExecute = true;
+        processInfo.CreateNoWindow = true;
+        processInfo.UseShellExecute = false;
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNGramsInput() + "   Files: " + InputFieldManager.GM.GetNGramsInput());
-        processInfo.WorkingDirectory = _path + "/Resources/Maps";
+        processInfo.WorkingDirectory = _path + "/Resources/PythonScripts";
 
         var process = Process.Start(processInfo);
         process.WaitForExit();

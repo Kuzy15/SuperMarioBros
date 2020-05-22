@@ -79,142 +79,146 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_goingDown)
+        if (!LoadScene.Instance.GetStart())
         {
-            EnterMove();
-        }
-        if (_goingUp)
-        {
-            ExitMove();
-        }
-        if (_goingRight)
-        {
-            ExitSecretZoneMove();
-        }
-        _isGroundedJ = (_rigidBody.velocity.y == 0);
-
-        if (!_playerInCreeper && !GameCamera.Instance.GetLooking())
-        {
-            _directionX = Input.GetAxis("Horizontal");
-            _directionY = Input.GetAxis("Vertical");
-
-            if (!_isGrowing)
+            if (_goingDown)
             {
-                if (_isInWater)
+                EnterMove();
+            }
+            if (_goingUp)
+            {
+                ExitMove();
+            }
+            if (_goingRight)
+            {
+                ExitSecretZoneMove();
+            }
+            _isGroundedJ = (_rigidBody.velocity.y == 0);
+
+            if (!_playerInCreeper && !GameCamera.Instance.GetLooking())
+            {
+                _directionX = Input.GetAxis("Horizontal");
+                _directionY = Input.GetAxis("Vertical");
+
+                if (!_isGrowing)
                 {
-                    SetAnim(4, _isBig);
-                }
-                else
-                {
-                    SetAnim(1, _isBig);
-                }
-                if (_directionX < 0)
-                {
-                    _marioSprite.flipX = true;
-                }
-                else if (_directionX > 0)
-                {
-                    _marioSprite.flipX = false;
-                }
-                else
-                {
-                    if (!_isInWater)
-                        SetAnim(0, _isBig);
-                }
-            }
-            else
-            {
-                SetAnim(3, !_isBig);
-            }
-
-            _velocity = Mathf.Lerp(_velocity, _directionX, shift * Time.deltaTime);
-
-            if (_velocity < 0.000003f && _velocity > -0.000003f)
-            {
-                _velocity = 0;
-            }
-
-            Vector2 pos = this.transform.position;
-            pos.x += (speed * _velocity * Time.deltaTime);
-
-            CheckCollisons(Vector3.up);
-            if (!_goingDown)
-            {
-                CheckCollisons(Vector3.down);
-            }
-            CheckCollisons(Vector3.right);
-            CheckCollisons(Vector3.left);
-            CheckOnShuttle();
-            transform.position = pos;
-
-            if (!_isGrowing)
-            {
-                _animTime += Time.deltaTime * (Mathf.Abs(_velocity)) * (speed * 2);
-            }
-            else
-            {
-                _animTime += Time.deltaTime * 15;
-            }
-
-            if ((int)_animTime >= 1)
-            {
-                _animTime = 0;
-                _currentSprite++;
-            }
-            if (_currentAnim != null)
-            {
-                if (_currentSprite >= _currentAnim.Length)
-                {
-                    _currentSprite = 0;
-                    if (_isGrowing)
+                    if (_isInWater)
                     {
-                        _isGrowing = false;
-                        _currentSprite = _currentAnim.Length - 1;
+                        SetAnim(4, _isBig);
+                    }
+                    else
+                    {
+                        SetAnim(1, _isBig);
+                    }
+                    if (_directionX < 0)
+                    {
+                        _marioSprite.flipX = true;
+                    }
+                    else if (_directionX > 0)
+                    {
+                        _marioSprite.flipX = false;
+                    }
+                    else
+                    {
+                        if (!_isInWater)
+                            SetAnim(0, _isBig);
                     }
                 }
-                _marioSprite.sprite = _currentAnim[_currentSprite];
+                else
+                {
+                    SetAnim(3, !_isBig);
+                }
+
+                _velocity = Mathf.Lerp(_velocity, _directionX, shift * Time.deltaTime);
+
+                if (_velocity < 0.000003f && _velocity > -0.000003f)
+                {
+                    _velocity = 0;
+                }
+
+                Vector2 pos = this.transform.position;
+                pos.x += (speed * _velocity * Time.deltaTime);
+
+                CheckCollisons(Vector3.up);
+                if (!_goingDown)
+                {
+                    CheckCollisons(Vector3.down);
+                }
+                CheckCollisons(Vector3.right);
+                CheckCollisons(Vector3.left);
+                CheckOnShuttle();
+                transform.position = pos;
+
+                if (!_isGrowing)
+                {
+                    _animTime += Time.deltaTime * (Mathf.Abs(_velocity)) * (speed * 2);
+                }
+                else
+                {
+                    _animTime += Time.deltaTime * 15;
+                }
+
+                if ((int)_animTime >= 1)
+                {
+                    _animTime = 0;
+                    _currentSprite++;
+                }
+                if (_currentAnim != null)
+                {
+                    if (_currentSprite >= _currentAnim.Length)
+                    {
+                        _currentSprite = 0;
+                        if (_isGrowing)
+                        {
+                            _isGrowing = false;
+                            _currentSprite = _currentAnim.Length - 1;
+                        }
+                    }
+                    _marioSprite.sprite = _currentAnim[_currentSprite];
+                }
             }
         }
-
     }
 
     private void FixedUpdate()
     {
-        CheckSecretZone();
-        if (!_isInWater)
+        if (!LoadScene.Instance.GetStart())
         {
-            JumpMove();
-
-            if (Input.GetKeyDown(KeyCode.O))
+            CheckSecretZone();
+            if (!_isInWater)
             {
-                _isGrowing = true;
-                GrowUp();
+                JumpMove();
+
+                if (Input.GetKeyDown(KeyCode.O))
+                {
+                    _isGrowing = true;
+                    GrowUp();
+                }
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    _isGrowing = true;
+                    GrowDown();
+                }
+
+                if (_shuttle != null)
+                {
+
+                }
             }
-            if (Input.GetKeyDown(KeyCode.P))
+            else
             {
-                _isGrowing = true;
-                GrowDown();
-            }
-
-            if (_shuttle != null)
-            {
-
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    _rigidBody.AddForce(new Vector2(0, 6f * Time.deltaTime), ForceMode.Impulse);
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    _rigidBody.AddForce(new Vector2(0, -6f * Time.deltaTime), ForceMode.Impulse);
+                }
+                _rigidBody.AddForce(new Vector2(0, 8f * Time.deltaTime), ForceMode.Impulse);
+                Debug.Log("IN WATER");
             }
         }
-        else
-        {
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
-                _rigidBody.AddForce(new Vector2(0, 6f * Time.deltaTime), ForceMode.Impulse);
-            }
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                _rigidBody.AddForce(new Vector2(0, -6f * Time.deltaTime), ForceMode.Impulse);
-            }
-            _rigidBody.AddForce(new Vector2(0, 8f * Time.deltaTime), ForceMode.Impulse);
-            Debug.Log("IN WATER");
-        }
-
     }
 
     private void CheckSecretZone()
