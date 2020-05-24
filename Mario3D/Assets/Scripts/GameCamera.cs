@@ -23,6 +23,9 @@ public class GameCamera : MonoBehaviour
     public float minOrtho = 1.0f;
     public float maxOrtho = 20.0f;
     public int scrollSpeed = 8;
+    public GameObject deadZone;
+
+
     //Camera reference postion
     private Vector3 _refPosition;
     //Get if is in looking mode
@@ -50,7 +53,7 @@ public class GameCamera : MonoBehaviour
         orthoSize = targetOrtho;
         _refPosition = this.transform.position;
         _initialColor = this.GetComponent<Camera>().backgroundColor;
-        this.transform.position = new Vector3(this.transform.position.x + 3,-16.5f, this.transform.position.z);
+        this.transform.position = new Vector3(this.transform.position.x + 3, -16.5f, this.transform.position.z);
         //GoToBlackScreen();
     }
 
@@ -59,10 +62,11 @@ public class GameCamera : MonoBehaviour
     {
         if (target != null)
         {
-            if (Input.GetKeyDown(KeyCode.L))
+            if (!_looking && Input.GetKeyDown(KeyCode.L))
             {
                 _refPosition = Camera.main.transform.position;
                 SetLookingMode();
+                deadZone.SetActive(false);
             }
             if (_looking)
             {
@@ -87,7 +91,7 @@ public class GameCamera : MonoBehaviour
             }
             else
             {
-                targetOrtho = Camera.main.orthographicSize = orthoSize;            
+                targetOrtho = Camera.main.orthographicSize = orthoSize;
             }
         }
     }
@@ -111,6 +115,7 @@ public class GameCamera : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         _looking = false;
         targetOrtho = Camera.main.orthographicSize = orthoSize;
+        deadZone.SetActive(true);
     }
 
     /// <summary>
@@ -182,7 +187,7 @@ public class GameCamera : MonoBehaviour
                     }
                     transform.position = new Vector3(smoothedPosition.x, posY, transform.position.z); ;
                     _lastPos = transform.position;
-                }             
+                }
             }
         }
 

@@ -15,7 +15,7 @@ public class PythonThread : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _path = Application.dataPath;
+        _path = Application.streamingAssetsPath;
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class PythonThread : MonoBehaviour
         processInfo.CreateNoWindow = true;
         processInfo.UseShellExecute = false;
         //Debug.Log("Ngrams: " + InputFieldManager.GM.GetNGramsInput() + "   NFiles: " + InputFieldManager.GM.GetNGramsInput() + "   Files: " + InputFieldManager.GM.GetNGramsInput());
-        processInfo.WorkingDirectory = _path + "/Resources/PythonScripts";
+        processInfo.WorkingDirectory = _path + "/PythonScripts";
 
         var process = Process.Start(processInfo);
         process.WaitForExit();

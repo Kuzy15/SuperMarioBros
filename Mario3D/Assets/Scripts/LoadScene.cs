@@ -6,12 +6,14 @@ using UnityEngine.SceneManagement;
 public class LoadScene : MonoBehaviour
 {
     public static LoadScene Instance { get; private set; }
+    public GameObject image;
+
     private bool _change = true;
     private bool _start = false;
     private bool _canChangeScene = false;
     private string _scene;
-
-    public GameObject image;
+    private GameObject _internalImage;
+    
 
     private void Awake()
     {
@@ -20,16 +22,27 @@ public class LoadScene : MonoBehaviour
 
     private void LoadSceneSingleton()
     {
+        DontDestroyOnLoad(this);
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this);
-            image.SetActive(false);
         }
-        /*else
+
+        else
         {
+            //DestroyMap();
             Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        _internalImage = Instantiate(image, this.gameObject.transform);
+        /*if (image == null)
+        {
+            image = GameObject.Find("CanvasLoad");
         }*/
+        _internalImage.SetActive(false);
     }
 
     // Update is called once per frame
@@ -39,11 +52,11 @@ public class LoadScene : MonoBehaviour
         {
             if (_change)
             {
-                Color tmp = image.GetComponentInChildren<UnityEngine.UI.Image>().color;
+                Color tmp = _internalImage.GetComponentInChildren<UnityEngine.UI.Image>().color;
                 tmp.a += 0.03f;
-                image.GetComponentInChildren<UnityEngine.UI.Image>().color = tmp;
-                Debug.Log("ALPHA: " + image.GetComponentInChildren<UnityEngine.UI.Image>().color.a);
-                if (image.GetComponentInChildren<UnityEngine.UI.Image>().color.a > 1.5)
+                _internalImage.GetComponentInChildren<UnityEngine.UI.Image>().color = tmp;
+                Debug.Log("ALPHA: " + _internalImage.GetComponentInChildren<UnityEngine.UI.Image>().color.a);
+                if (_internalImage.GetComponentInChildren<UnityEngine.UI.Image>().color.a > 1.5)
                 {
                     _start = false;
                 }
@@ -51,27 +64,31 @@ public class LoadScene : MonoBehaviour
             else
             {
                 // Debug.Log("AA");
-                Color tmp = image.GetComponentInChildren<UnityEngine.UI.Image>().color;
+                Color tmp = _internalImage.GetComponentInChildren<UnityEngine.UI.Image>().color;
                 tmp.a -= 0.01f;
-                image.GetComponentInChildren<UnityEngine.UI.Image>().color = tmp;
+                _internalImage.GetComponentInChildren<UnityEngine.UI.Image>().color = tmp;
                 if (tmp.a <= 0)
                 {
                     _start = false;
-                    image.gameObject.SetActive(false);
+                    _internalImage.gameObject.SetActive(false);
                 }
             }
         }
         Debug.Log("START: " + _start + "       CHANGESCENE: " + _canChangeScene);
         if(!_start && _canChangeScene)
         {
-            SceneManager.LoadScene(_scene);
+            GameManager.GM.ChangeScene(GameManager.SceneFlow.NEXT);
             _canChangeScene = false;
         }
     }
 
     public void StartFadeIn(string scene)
     {
-        image.gameObject.SetActive(true);
+        /*if(_internalImage == null)
+        {
+            image = GameObject.Find("CanvasLoad");
+        }*/
+        _internalImage.gameObject.SetActive(true);
         _start = true;
         _change = true;
         _scene = scene;
@@ -79,7 +96,11 @@ public class LoadScene : MonoBehaviour
 
     public void StartFadeOut()
     {
-        image.gameObject.SetActive(true);
+        /*if (image == null)
+        {
+            image = GameObject.Find("CanvasLoad");
+        }*/
+        _internalImage.gameObject.SetActive(true);
         _start = true;
         _change = false;
     }
@@ -92,5 +113,20 @@ public class LoadScene : MonoBehaviour
     public void ChangeScene()
     {
         _canChangeScene = true;
+    }
+
+    public void ActiveLoadObject()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+    public GameObject CheckImageNull()
+    {
+        return _internalImage;
+    }
+
+    public void SetLoadText(string text)
+    {
+        this.transform.GetChild(0).GetChild(1).GetComponent<UnityEngine.UI.Text>().text = text;
     }
 }

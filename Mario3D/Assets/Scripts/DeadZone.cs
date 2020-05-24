@@ -16,7 +16,7 @@ public class DeadZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
         }
     }
 }

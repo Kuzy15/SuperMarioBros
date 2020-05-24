@@ -227,6 +227,7 @@ MonoBehaviour:
   minOrtho: 1
   maxOrtho: 20
   scrollSpeed: 12
+  deadZone: {fileID: 1769173880}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -296,8 +297,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.07359314, y: 14.998058, z: 1}
-  m_Center: {x: -9.9, y: -0.012266159, z: 0}
+  m_Size: {x: 0.03900051, y: 14.998058, z: 1}
+  m_Center: {x: -10.021072, y: -0.012266159, z: 0}
 --- !u!65 &519420034
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -46,7 +46,7 @@ public class MapReader : MonoBehaviour
         /// Set tileL sprite
         /// </summary>
         /// <param name="tile"></param>
-       
+
         public void SetTileL(GameObject tile) { tileL = tile; }
         /// <summary>
         /// Set tileR sprite
@@ -58,12 +58,17 @@ public class MapReader : MonoBehaviour
 
     void Awake()
     {
-        if (GM != null)
-            GameObject.Destroy(GM);
-        else
-            GM = this;
-
         DontDestroyOnLoad(this);
+        if (GM == null)
+        {
+            GM = this;
+        }
+        else
+        {
+            //DestroyMap();
+            Destroy(gameObject);
+        }
+
     }
 
     /// <summary>
@@ -81,7 +86,7 @@ public class MapReader : MonoBehaviour
         _pipes = new List<PipeCoords>();
         _prefabs = Resources.LoadAll("Tiles").Cast<GameObject>().ToArray();
 
-        ReadTextFile(Application.dataPath + "/Resources/Maps/" + mapLevel + ".csv");
+        ReadTextFile(Application.streamingAssetsPath + "/Maps/" + mapLevel + ".csv");
         LoadTiles();
     }
 
@@ -212,10 +217,10 @@ public class MapReader : MonoBehaviour
                     {
                         _exitSecretZones.Add(tile);
                     }
-                    else if(_parsedList[j][i] == "255")
+                    else if (_parsedList[j][i] == "255")
                     {
-                       GameObject tileBackWater = Instantiate(_tiles["894"], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
-                       this.gameObject.transform.rotation, this.gameObject.transform);
+                        GameObject tileBackWater = Instantiate(_tiles["894"], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                        this.gameObject.transform.rotation, this.gameObject.transform);
                         tileBackWater.GetComponent<SpriteRenderer>().sortingOrder = -2;
                     }
 
@@ -249,7 +254,6 @@ public class MapReader : MonoBehaviour
     {
         int _exitIndex = 0;
         int _enterIndex = 0;
-        bool checkEnv = false;
         bool isUnderground = false;
         Debug.Log("CHECK PIPES");
         for (int i = 0; i < _pipes.Count; i++)
@@ -287,15 +291,18 @@ public class MapReader : MonoBehaviour
                 Debug.Log("SECRET: " + _parsedList[j][_pipes[i].y]);
                 if (_parsedList[j][_pipes[i].y] == "299")
                 {
+                    bool checkEnv = false;
                     if (!checkEnv)
                     {
-                        if(_parsedList[j+1][_pipes[i].y] == "232")
+                        if (_parsedList[j + 1][_pipes[i].y] == "232")
                         {
                             isUnderground = false;
+                            Debug.Log("NOOOOOO");
                         }
-                        else
+                        if (_parsedList[j + 1][_pipes[i].y] == "68")
                         {
                             isUnderground = true;
+                            Debug.Log("YEEEEEEEESSSS");
                         }
                         checkEnv = true;
                     }
@@ -319,7 +326,7 @@ public class MapReader : MonoBehaviour
                     _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size = new Vector3(_exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size.x,
                         _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size.y * 2, _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size.z);
                     _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center = new Vector3(_exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.x,
-                        _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.y +0.5f, _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.z);
+                        _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.y + 0.5f, _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.z);
                     _exitIndex++;
                     _enterIndex++;
                     /* else

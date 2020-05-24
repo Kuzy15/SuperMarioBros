@@ -182,7 +182,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!LoadScene.Instance.GetStart())
+        if (!GameCamera.Instance.GetLooking() && !LoadScene.Instance.GetStart())
         {
             CheckSecretZone();
             if (!_isInWater)
@@ -207,11 +207,11 @@ public class Player : MonoBehaviour
             }
             else
             {
-                if (Input.GetKey(KeyCode.UpArrow))
+                if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
                 {
                     _rigidBody.AddForce(new Vector2(0, 6f * Time.deltaTime), ForceMode.Impulse);
                 }
-                if (Input.GetKey(KeyCode.DownArrow))
+                if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
                 {
                     _rigidBody.AddForce(new Vector2(0, -6f * Time.deltaTime), ForceMode.Impulse);
                 }
@@ -223,12 +223,12 @@ public class Player : MonoBehaviour
 
     private void CheckSecretZone()
     {
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
         {
             CheckEnterSecretZone();
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             CheckExitSecretZone();
         }
@@ -299,7 +299,7 @@ public class Player : MonoBehaviour
     private void CheckExitSecretZone()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height, 0), Vector3.right, out hit, (_collider.height) - 0.2f))
+        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height, 0), Vector3.right, out hit, 1f))
         {
             if (hit.transform.gameObject.GetComponent<ExitSecretZone>())
             {
@@ -525,7 +525,7 @@ public class Player : MonoBehaviour
                     else
                     {
                         if (!_invulnerable)
-                            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                            GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
                     }
                 }
             }
@@ -541,9 +541,9 @@ public class Player : MonoBehaviour
 
     private void JumpMove()
     {
-        if (!_canClimb)
+        if (!GameCamera.Instance.GetLooking() && !_canClimb)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
                 Debug.Log("JUMPO");
                 //and you are on the ground...
@@ -561,7 +561,7 @@ public class Player : MonoBehaviour
             }
 
             //if you keep holding down the mouse button...
-            if ((Input.GetKey(KeyCode.UpArrow)) && !_stoppedJumping)
+            if (((Input.GetKey(KeyCode.UpArrow)) || (Input.GetKey(KeyCode.W))) && !_stoppedJumping)
             {
                 CheckBreakableBrick();
                 //and your counter hasn't reached zero...
@@ -579,7 +579,7 @@ public class Player : MonoBehaviour
 
 
             //if you stop holding down the mouse button...
-            if (Input.GetKeyUp(KeyCode.UpArrow))
+            if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 //stop jumping and set your counter to zero.  The timer will reset once we touch the ground again in the update function.
                 _jumpTime = _time;
@@ -588,7 +588,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 /*_goingDowOfCreeper = true;
                 if (!_cameraSaved)
@@ -602,7 +602,7 @@ public class Player : MonoBehaviour
                 this.gameObject.transform.Translate(Vector3.up * Time.deltaTime * 2f);
             }
 
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             {
 
 
@@ -662,7 +662,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
         }
     }
 

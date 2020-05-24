@@ -79,10 +79,10 @@ public class InputFieldManager : MonoBehaviour
 
     void Awake()
     {
-        if (GM != null)
-            GameObject.Destroy(GM);
-        else
-            GM = this;
+       if (GM != null)
+           GameObject.Destroy(GM);
+       else
+           GM = this;
 
         //DontDestroyOnLoad(this);
     }
@@ -140,7 +140,7 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void GetFileNames()
     {
-        _path = Application.dataPath + "/Resources/Maps";
+        _path = Application.streamingAssetsPath + "/Maps";
         _files = System.IO.Directory.GetFiles(_path, "*.csv");
         _fileNames = new string[_files.Length];
         for (int i = 0; i < _files.Length; i++)
@@ -228,19 +228,24 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void OnClickContinue()
     {
+        string text = " ";
         if (_generationMode)
         {
             string fileToGen = "";
             if (_mlMode)
             {
+                text = "GENERATING NGRAMS";
                 fileToGen = _fileNameNGrams;
             }
             else
             {
+                text = "GENERATING RNN";
                 fileToGen = _fileNameRNN;
             }
             if (arrFiles.Count > 0)
             {
+                LoadScene.Instance.ActiveLoadObject();
+                LoadScene.Instance.SetLoadText(text);
                 LoadScene.Instance.StartFadeIn("SampleScene");
                 StartCoroutine(StartGenCoroutine(fileToGen));
                 
@@ -250,7 +255,10 @@ public class InputFieldManager : MonoBehaviour
         {
             if (arrFiles.Count == 1)
             {
+                text = "LOADING";
                 //PythonThread.ExecuteCommand();
+                LoadScene.Instance.ActiveLoadObject();
+                LoadScene.Instance.SetLoadText(text);
                 LoadScene.Instance.StartFadeIn("SampleScene");
                 MapReader.GM.InitMap(arrFiles[0], false);
                 LoadScene.Instance.ChangeScene();
@@ -353,7 +361,7 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void BackButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
     }
 
 

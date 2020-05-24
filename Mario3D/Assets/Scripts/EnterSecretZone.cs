@@ -10,7 +10,7 @@ public class EnterSecretZone : MonoBehaviour
     //Index of the pipe
     private int _i;
     //Bool to check if water or underneath
-    private bool _isUnderground;
+    public bool _isUnderground;
 
     /// <summary>
     /// Method that moves the player to the enter secret zone position
