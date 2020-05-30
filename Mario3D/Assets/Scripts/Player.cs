@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
             }
             _isGroundedJ = (_rigidBody.velocity.y == 0);
 
-            if (!_playerInCreeper && !GameCamera.Instance.GetLooking())
+            if (!_playerInCreeper && !GameCamera.Instance.GetLooking() && (!_goingDown && !_goingRight && !_goingUp))
             {
                 _directionX = Input.GetAxis("Horizontal");
                 _directionY = Input.GetAxis("Vertical");
@@ -185,7 +185,7 @@ public class Player : MonoBehaviour
         if (!GameCamera.Instance.GetLooking() && !LoadScene.Instance.GetStart())
         {
             CheckSecretZone();
-            if (!_isInWater)
+            if ((!_goingDown || !_goingRight || !_goingUp) && !_isInWater)
             {
                 JumpMove();
 
@@ -207,9 +207,9 @@ public class Player : MonoBehaviour
             }
             else
             {
-                if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+                if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
                 {
-                    _rigidBody.AddForce(new Vector2(0, 6f * Time.deltaTime), ForceMode.Impulse);
+                    _rigidBody.AddForce(new Vector2(0, 46f * Time.deltaTime), ForceMode.Impulse);
                 }
                 if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
                 {
@@ -788,6 +788,7 @@ public class Player : MonoBehaviour
 
     public void ShuttlePlayer()
     {
-        _rigidBody.AddForce(Vector3.up * 90.5f - _rigidBody.velocity, ForceMode.Impulse);
+        _rigidBody.velocity = new Vector3(0,0,0);
+        _rigidBody.AddForce(Vector3.up * 90.5f, ForceMode.Impulse);
     }
 }

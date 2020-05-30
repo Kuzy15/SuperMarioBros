@@ -21,9 +21,9 @@ public class PythonThread : MonoBehaviour
     /// <summary>
     /// This method executes a command on a thread
     /// </summary>
-    public static void ExecuteCommand()
+    public static void ExecuteCommand(string _command)
     {
-        var thread = new Thread(delegate () { Command(); });
+        var thread = new Thread(delegate () { Command(_command); });
         thread.Start();
         thread.Join();
     }
@@ -31,9 +31,9 @@ public class PythonThread : MonoBehaviour
     /// <summary>
     /// This method manages a command to send via cmd
     /// </summary>
-    static void Command()
+    static void Command(string _command)
     {
-        string command = InputFieldManager.GM.SendCommand();
+        string command = _command;
         var processInfo = new ProcessStartInfo("cmd.exe", command);
         processInfo.CreateNoWindow = true;
         processInfo.UseShellExecute = false;

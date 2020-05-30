@@ -56,12 +56,12 @@ public class PopulateGrid : MonoBehaviour
     {
         if (!buttonsList[index].GetComponent<ButtonLevel>().GetLocked())
         {
-            if (!InputFieldManager.GM.GetGenerationMode() && InputFieldManager.GM.GetFilesSelectedLength() < 1)
+            if (InputFieldManager.GM.GetFilesSelectedLength() < 1 && (!InputFieldManager.GM.GetGenerationMode()|| InputFieldManager.GM.GetGenOp() == InputFieldManager.GenerateOptions.LOAD ))
             {
                 buttonsList[index].GetComponent<ButtonLevel>().SetLocked(true);
                 InputFieldManager.GM.AddFile(item);
             }
-            else if(InputFieldManager.GM.GetGenerationMode())
+            else if(InputFieldManager.GM.GetGenerationMode() && InputFieldManager.GM.GetGenerationMode() && InputFieldManager.GM.GetGenOp() != InputFieldManager.GenerateOptions.LOAD)
             {
                 buttonsList[index].GetComponent<ButtonLevel>().SetLocked(true);
                 InputFieldManager.GM.AddFile(item);

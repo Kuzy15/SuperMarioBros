@@ -67,6 +67,8 @@ MonoBehaviour:
   - {fileID: -3423883245091955000, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
   toBigMario: []
   toSmallMario: []
+  swimAnim: []
+  smallSwimAnim: []
   blackImage: {fileID: 0}
   _jumpTime: 0.5
 --- !u!54 &7027009037439751189

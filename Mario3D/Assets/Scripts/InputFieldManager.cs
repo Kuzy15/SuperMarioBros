@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -77,6 +78,15 @@ public class InputFieldManager : MonoBehaviour
     private string _lengthInput;
     private string _fileNameNGrams;
 
+    public enum GenerateOptions
+    {
+        LOAD, LOAD_TRAIN, TRAIN
+    }
+
+    private GenerateOptions _gOp;
+
+    private List<string> _commands = new List<string>();
+
     void Awake()
     {
        if (GM != null)
@@ -96,7 +106,6 @@ public class InputFieldManager : MonoBehaviour
         //_checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
         checkBox.SetActive(false);
         n = 0;
-        GetFileNames();
     }
 
     /// <summary>
@@ -104,7 +113,27 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void StartNGrams()
     {
-        nGramsObject.SetActive(true);
+        nGramsObject.transform.GetChild(4).gameObject.SetActive(true);
+        nGramsObject.transform.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.TRAIN));
+        nGramsObject.transform.GetChild(5).gameObject.SetActive(true);
+        nGramsObject.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD_TRAIN));
+        nGramsObject.transform.GetChild(6).gameObject.SetActive(true);
+        nGramsObject.transform.GetChild(6).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD));
+    }
+
+    public void StartNGramsInput(int q)
+    {
+        for(int i = 0; i < q; i++)
+        {
+            nGramsObject.transform.GetChild(i).gameObject.SetActive(true);
+        }
+        if(nGramsObject.transform.GetChild(3).gameObject.activeSelf == false)
+            nGramsObject.transform.GetChild(3).gameObject.SetActive(true);
+    }
+
+    public void DeactivateNgramsField(int i)
+    {
+        nGramsObject.transform.GetChild(i).gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -112,7 +141,41 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void StartRNN()
     {
-        rnnObject.SetActive(true);
+        //rnnObject.SetActive(true);
+        rnnObject.transform.GetChild(10).gameObject.SetActive(true);
+        rnnObject.transform.GetChild(10).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.TRAIN));
+        rnnObject.transform.GetChild(11).gameObject.SetActive(true);
+        rnnObject.transform.GetChild(11).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD_TRAIN));
+        rnnObject.transform.GetChild(12).gameObject.SetActive(true);
+        rnnObject.transform.GetChild(12).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD));
+    }
+
+    public void StartRNNInputs(int q, int i = 0)
+    {
+        for (int j = i; j < q; j++)
+        {
+            rnnObject.transform.GetChild(j).gameObject.SetActive(true);
+        }
+        /*if (rnnObject.transform.GetChild(3).gameObject.activeSelf == false)
+            rnnObject.transform.GetChild(3).gameObject.SetActive(true);*/
+    }
+
+    public void StartRNNInput(int i)
+    {
+        rnnObject.transform.GetChild(i).gameObject.SetActive(true);
+    }
+
+    public void DeactivateRNNField(int i)
+    {
+        rnnObject.transform.GetChild(i).gameObject.SetActive(false);
+    }
+
+    public void DeactivateRNNFields(int i)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            rnnObject.transform.GetChild(j).gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -120,6 +183,7 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void SetNFilesInput()
     {
+        GetFileNames();
         filesScrollView.SetActive(true);
         PopulateGrid.GM.Populate(GetFilesLength(), GetFilesNames());
         continueButton.SetActive(true);
@@ -140,8 +204,35 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void GetFileNames()
     {
-        _path = Application.streamingAssetsPath + "/Maps";
-        _files = System.IO.Directory.GetFiles(_path, "*.csv");
+        if (!_generationMode)
+        {
+            _path = Application.streamingAssetsPath + "/Maps";
+            _files = System.IO.Directory.GetFiles(_path, "*.csv");
+        }
+        else
+        {
+            switch (_gOp)
+            {
+                case GenerateOptions.LOAD:
+                    string trainPath = "";
+                    if (_mlMode)
+                    {
+                        trainPath = "/PythonScripts/NgramsTraining";
+                    }
+                    else
+                    {
+                        trainPath = "/PythonScripts/NNTraining";
+                    }
+                    _path = Application.streamingAssetsPath + trainPath;
+                    _files = System.IO.Directory.GetFiles(_path, "*.pkl");
+                    break;
+                case GenerateOptions.LOAD_TRAIN:
+                case GenerateOptions.TRAIN:
+                    _path = Application.streamingAssetsPath + "/Maps";
+                    _files = System.IO.Directory.GetFiles(_path, "*.csv");
+                    break;
+            }
+        }
         _fileNames = new string[_files.Length];
         for (int i = 0; i < _files.Length; i++)
         {
@@ -234,20 +325,61 @@ public class InputFieldManager : MonoBehaviour
             string fileToGen = "";
             if (_mlMode)
             {
-                text = "GENERATING NGRAMS";
                 fileToGen = _fileNameNGrams;
+                text = "GENERATING NGRAMS";
             }
             else
             {
-                text = "GENERATING RNN";
                 fileToGen = _fileNameRNN;
+                text = "GENERATING RNN";
             }
             if (arrFiles.Count > 0)
             {
-                LoadScene.Instance.ActiveLoadObject();
-                LoadScene.Instance.SetLoadText(text);
-                LoadScene.Instance.StartFadeIn("SampleScene");
-                StartCoroutine(StartGenCoroutine(fileToGen));
+                if (_gOp != GenerateOptions.TRAIN)
+                {
+                    LoadScene.Instance.ActiveLoadObject();
+                    SendCommand();
+                    LoadScene.Instance.GetCommands(_commands);
+                    LoadScene.Instance.SetLoadText(text);
+                    LoadScene.Instance.StartFadeIn("SampleScene", fileToGen);
+                }
+                else
+                {
+                    int nFiles = GetFilesSelectedLength();
+                    string concat = "";
+                    
+                    for (int i = 0; i < nFiles; i++)
+                    {
+                        string file = GetFilesToConcatInput()[i];
+                        string sufix = ".csv";
+                        string concatS = "..\\Maps\\" + file + sufix;
+                        concat = concat + " " + concatS;
+                    }
+
+                    string debug = "";
+                    bool debugMode = GetCheckBoxActive();
+                    if (debugMode)
+                    {
+                        debug = " -d";
+                    }
+                    if (_mlMode)
+                    {
+                        PythonThread.ExecuteCommand("/C python TrainNGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + debug);
+                    }
+                    else
+                    {
+                        string concatLayers = "";
+                        for (int i = 0; i < _layersArr.Count; i++)
+                        {
+                            string file = _layersArr[i];
+                            string concatS = file;
+                            concatLayers = concatLayers + " " + concatS;
+                        }
+                        PythonThread.ExecuteCommand("/C python TrainNN.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
+            + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + debug);
+                    }
+                    GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
+                }
                 
             }
         }
@@ -255,24 +387,18 @@ public class InputFieldManager : MonoBehaviour
         {
             if (arrFiles.Count == 1)
             {
-                text = "LOADING";
+                text = "MAP: " + arrFiles[0];
                 //PythonThread.ExecuteCommand();
                 LoadScene.Instance.ActiveLoadObject();
                 LoadScene.Instance.SetLoadText(text);
-                LoadScene.Instance.StartFadeIn("SampleScene");
+                LoadScene.Instance.StartFadeIn("SampleScene", "");
                 MapReader.GM.InitMap(arrFiles[0], false);
                 LoadScene.Instance.ChangeScene();
             }
         }
     }
 
-    private IEnumerator StartGenCoroutine(string fileToGen)
-    {
-        yield return new WaitForSeconds(1.5f);
-        LoadScene.Instance.ChangeScene();
-        PythonThread.ExecuteCommand();
-        MapReader.GM.InitMap(fileToGen);
-    }
+    
 
     /// <summary>
     /// Method assigned to a checkbox object to get if it is marked or not
@@ -414,20 +540,13 @@ public class InputFieldManager : MonoBehaviour
         _temperatureInput = rnnObject.transform.GetChild(5).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
-    /// <summary>
-    /// Setter of the file name to create(RNN)
-    /// </summary>
-    public void SetFileNameInput()
-    {
-        _fileNameRNN = rnnObject.transform.GetChild(6).GetChild(0).GetComponentInChildren<InputField>().text;
-    }
 
     /// <summary>
     /// Setter of the batch size(RNN)
     /// </summary>
     public void SetBatchSize()
     {
-        _batchSize = rnnObject.transform.GetChild(7).GetChild(0).GetComponentInChildren<InputField>().text;
+        _batchSize = rnnObject.transform.GetChild(6).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
     /// <summary>
@@ -435,7 +554,15 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void SetWidth()
     {
-        _width = rnnObject.transform.GetChild(8).GetChild(0).GetComponentInChildren<InputField>().text;
+        _width = rnnObject.transform.GetChild(7).GetChild(0).GetComponentInChildren<InputField>().text;
+    }
+
+    /// <summary>
+    /// Setter of the file name to create(RNN)
+    /// </summary>
+    public void SetFileNameInput()
+    {
+        _fileNameRNN = rnnObject.transform.GetChild(8).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
     /// <summary>
@@ -448,7 +575,14 @@ public class InputFieldManager : MonoBehaviour
         {
             rnnObject.SetActive(false);
             rnnContinue.SetActive(false);
-            layersObject.SetActive(true);
+            if (_gOp != GenerateOptions.LOAD)
+            {
+                layersObject.SetActive(true);
+            }
+            else
+            {
+                SetNFilesInput();
+            }
             //SetNFilesInput();
         }
     }
@@ -608,9 +742,9 @@ public class InputFieldManager : MonoBehaviour
     {
         bool canContinue = true;
         //-2 because of buttons
-        for (int i = 0; i < obj.transform.childCount - 2; i++)
+        for (int i = CheckInactiveInputs(obj, obj.transform.childCount - 4); i < obj.transform.childCount - 4; i++)
         {
-            if (obj.transform.GetChild(i).GetChild(0).GetComponentInChildren<InputField>().text == "")
+            if (obj.transform.GetChild(i).gameObject.activeSelf && obj.transform.GetChild(i).GetChild(0).GetComponentInChildren<InputField>().text == "")
             {
                 canContinue = false;
                 break;
@@ -619,21 +753,105 @@ public class InputFieldManager : MonoBehaviour
         return canContinue;
     }
 
+    private int CheckInactiveInputs(GameObject obj, int q)
+    {
+        int index = 0;
+        for(int i = 0; i < q; i++)
+        {
+            if(obj.transform.GetChild(i).gameObject.activeSelf == false)
+            {
+                index++;
+            }
+        }
+        return index;
+    }
+
+    public void ButtonAction(GenerateOptions gOp)
+    {
+        _gOp = gOp;
+        switch (gOp)
+        {
+            case GenerateOptions.LOAD:
+                if (_mlMode)
+                {
+                    StartNGramsInput(4);
+                    DeactivateNgramsField(0);
+                }
+                else
+                {
+                    StartRNNInputs(10);
+                    DeactivateRNNFields(7);
+                }
+                Debug.Log("LOAD MODEL");
+                break;
+            case GenerateOptions.LOAD_TRAIN:
+                if (_mlMode)
+                {
+                    StartNGramsInput(4);
+                }
+                else
+                {
+                    StartRNNInputs(10);
+                }
+                Debug.Log("LOADTRAIN MODEL");
+                break;
+            case GenerateOptions.TRAIN:
+                if (_mlMode)
+                {
+                    StartNGramsInput(1);
+                }
+                else
+                {
+                    StartRNNInputs(7);
+                    StartRNNInput(9);
+                }
+                Debug.Log("TRAIN MODEL");
+                break;
+        }
+        if (_mlMode)
+        {
+            DeactivateNgramsField(4);
+            DeactivateNgramsField(5);
+            DeactivateNgramsField(6);
+        }
+        else
+        {
+            DeactivateRNNField(10);
+            DeactivateRNNField(11);
+            DeactivateRNNField(12);
+        }
+    }
+
     /// <summary>
     /// Sends an specific command depending on the machine learning mode selected. Gets all the machine learning mode values and concats them on an string.
     /// </summary>
     /// <returns></returns>
-    public string SendCommand()
+    public void SendCommand()
     {
         int nFiles = GetFilesSelectedLength();
         string concat = "";
-        for (int i = 0; i < nFiles; i++)
+        switch (_gOp)
         {
-            string file = GetFilesToConcatInput()[i];
-            string sufix = ".csv";
-            string concatS = "..\\Maps\\" + file + sufix;
-            concat = concat + " " + concatS;
+            case GenerateOptions.LOAD:
+                for (int i = 0; i < nFiles; i++)
+                {
+                    string file = GetFilesToConcatInput()[i];
+                    string sufix = ".pkl";
+                    string concatS = file + sufix;
+                    concat = concat + " " + concatS;
+                }
+                break;
+            case GenerateOptions.LOAD_TRAIN:
+                for (int i = 0; i < nFiles; i++)
+                {
+                    string file = GetFilesToConcatInput()[i];
+                    string sufix = ".csv";
+                    string concatS = "..\\Maps\\" + file + sufix;
+                    concat = concat + " " + concatS;
+                }
+                break;
         }
+        
         string concatLayers = "";
         for(int i = 0; i < _layersArr.Count; i++)
         {
@@ -647,17 +865,57 @@ public class InputFieldManager : MonoBehaviour
         {
             debug = " -d";
         }
-        string command = "";
-        if (_mlMode)
-        {
-            command = "/C python NGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + _lengthInput + " " +  "..\\Maps\\" + _fileNameNGrams + ".csv " + debug;
+        switch(_gOp){
+            case GenerateOptions.LOAD:
+                string commandToSend = "";
+                if (_mlMode)
+                {
+                    commandToSend = "/C python GenerateNGrams.py " + concat + " " + _lengthInput + " ..\\Maps\\" + _fileNameNGrams + ".csv" + debug;
+                }
+                else
+                {
+                    commandToSend = "/C python GenerateNN.py " + concat + " " + _width + " ..\\Maps\\" + _fileNameRNN + ".csv" + debug;
+                }
+                PushCommands(commandToSend);
+                break;
+            case GenerateOptions.LOAD_TRAIN:
+                string path = "";
+                if (_mlMode)
+                {
+                    path = "/PythonScripts/NGramsTraining";
+                }
+                else
+                {
+                    path = "/PythonScripts/NNTraining";
+                }
+                string[] files = System.IO.Directory
+                    .GetFiles(Application.streamingAssetsPath + path, "*.pkl");
+                string file = System.IO.Path.GetFileNameWithoutExtension(files[files.Length-1]);
+                string commandToSend1 = "", commandToSend2 = "";
+                if (_mlMode)
+                {
+                    commandToSend1 = "/C python GenerateNGrams.py " + "TRAININGFILE " + _lengthInput + " ..\\Maps\\" + _fileNameNGrams + ".csv" + debug;
+                    commandToSend2 = "/C python TrainNGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + debug;
+                }
+                else
+                {
+                    commandToSend1 = "/C python GenerateNN.py " + "TRAININGFILE " + _width + " ..\\Maps\\" + _fileNameRNN + ".csv" + debug;
+                    commandToSend2 = "/C python TrainNN.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
+            + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + debug;
+                }
+                PushCommands(commandToSend1);
+                PushCommands(commandToSend2);
+                break;
         }
-        else
-        {
-            //"python NeuralNetworks.py 70 1-1.csv 10000 512 1024 70 0.5 LSTM_UNITY_1.csv"
-            command = "/C python NeuralNetworks.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
-               + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + _width + " " + "..\\Maps\\" + _fileNameRNN + ".csv " + debug;
-        }
-        return command;
+    }
+
+    private void PushCommands(string command)
+    {
+        _commands.Add(command);
+    }
+
+    public GenerateOptions GetGenOp()
+    {
+        return _gOp;
     }
 }
