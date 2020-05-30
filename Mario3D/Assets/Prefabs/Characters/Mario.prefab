@@ -25,8 +25,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7027009037439751191}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.68, y: -3.5, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.5, y: -21.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7027009037887319580}
@@ -65,11 +65,37 @@ MonoBehaviour:
   smallJump:
   - {fileID: -3423883245091955000, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
   - {fileID: -3423883245091955000, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
-  toBigMario: []
-  toSmallMario: []
-  swimAnim: []
-  smallSwimAnim: []
-  blackImage: {fileID: 0}
+  toBigMario:
+  - {fileID: 3008593004299363308, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -5115795548720348820, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 3008593004299363308, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -5115795548720348820, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 3008593004299363308, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -5115795548720348820, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 4120955195336003847, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  toSmallMario:
+  - {fileID: 4120955195336003847, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -5115795548720348820, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 4120955195336003847, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -5115795548720348820, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 4120955195336003847, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -5115795548720348820, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 3008593004299363308, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  swimAnim:
+  - {fileID: 7234344069704235119, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 5201576057100067250, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 3376703585871969060, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 7585291887518631893, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 3134798503643370390, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -2198186262770673734, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  smallSwimAnim:
+  - {fileID: 8357101457339862085, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 1511884759072402483, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 3542127132570728493, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: -1960546628078278901, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  - {fileID: 8248543377919322394, guid: 2192ddc7f27f6da498a1880de056ead4, type: 3}
+  blackImage: {fileID: 3368210897434173250, guid: 2d74bce9902545a48b60076b0260a282,
+    type: 3}
   _jumpTime: 0.5
 --- !u!54 &7027009037439751189
 Rigidbody:
@@ -97,10 +123,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7027009037887319580}
   - component: {fileID: 7027009037887319581}
-  - component: {fileID: 7027009037887319578}
+  - component: {fileID: 2081441692}
   m_Layer: 11
   m_Name: Mario_0
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,8 +182,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 4120955195336003847, guid: 2192ddc7f27f6da498a1880de056ead4,
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 3008593004299363308, guid: 2192ddc7f27f6da498a1880de056ead4,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -169,8 +195,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &7027009037887319578
-BoxCollider:
+--- !u!136 &2081441692
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -179,6 +205,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 2, z: 1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}

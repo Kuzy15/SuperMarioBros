@@ -108,6 +108,11 @@ public class InputFieldManager : MonoBehaviour
         n = 0;
     }
 
+    private void Update()
+    {
+        //Debug.Log("MLMODE: " + _mlMode);
+    }
+
     /// <summary>
     /// Starts NGRAMS mode
     /// </summary>
@@ -406,7 +411,7 @@ public class InputFieldManager : MonoBehaviour
     public void OnCheckBoxValueChanged()
     {
         _checkBoxActive = checkBox.GetComponent<Toggle>().IsActive();
-        Debug.Log(_checkBoxActive);
+        //Debug.Log(_checkBoxActive);
     }
 
     /// <summary>
@@ -782,7 +787,7 @@ public class InputFieldManager : MonoBehaviour
                     StartRNNInputs(10);
                     DeactivateRNNFields(7);
                 }
-                Debug.Log("LOAD MODEL");
+                //Debug.Log("LOAD MODEL");
                 break;
             case GenerateOptions.LOAD_TRAIN:
                 if (_mlMode)
@@ -793,7 +798,7 @@ public class InputFieldManager : MonoBehaviour
                 {
                     StartRNNInputs(10);
                 }
-                Debug.Log("LOADTRAIN MODEL");
+                //Debug.Log("LOADTRAIN MODEL");
                 break;
             case GenerateOptions.TRAIN:
                 if (_mlMode)
@@ -805,7 +810,7 @@ public class InputFieldManager : MonoBehaviour
                     StartRNNInputs(7);
                     StartRNNInput(9);
                 }
-                Debug.Log("TRAIN MODEL");
+                //Debug.Log("TRAIN MODEL");
                 break;
         }
         if (_mlMode)
@@ -888,9 +893,9 @@ public class InputFieldManager : MonoBehaviour
                 {
                     path = "/PythonScripts/NNTraining";
                 }
-                string[] files = System.IO.Directory
+                /*string[] files = System.IO.Directory
                     .GetFiles(Application.streamingAssetsPath + path, "*.pkl");
-                string file = System.IO.Path.GetFileNameWithoutExtension(files[files.Length-1]);
+                string file = System.IO.Path.GetFileNameWithoutExtension(files[files.Length-1]);*/
                 string commandToSend1 = "", commandToSend2 = "";
                 if (_mlMode)
                 {
@@ -905,6 +910,7 @@ public class InputFieldManager : MonoBehaviour
                 }
                 PushCommands(commandToSend1);
                 PushCommands(commandToSend2);
+                LoadScene.Instance.GetMode(_mlMode);
                 break;
         }
     }

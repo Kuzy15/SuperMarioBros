@@ -14,10 +14,14 @@ public class MapReader : MonoBehaviour
     //Instance of MapReader
     public static MapReader GM;
 
+    public GameObject Mario;
+
     //List of tile values (string format)
     private List<string> _stringList;
     //Parsed list of the strings
     private List<string[]> _parsedList;
+    //Init pos of Mario
+    private List<string[]> _initPos;
     //Array with the gameobjects that can represent a single tile
     private GameObject[] _prefabs;
     //Dictionary to keep relationship between tile value and sprite
@@ -30,6 +34,7 @@ public class MapReader : MonoBehaviour
     private List<GameObject> _exitSecretZones;
     //Player position
     private Vector3 _marioPosition;
+    private GameObject _mario;
 
     /// <summary>
     /// Struct that represents the enter of a pipe
@@ -158,6 +163,7 @@ public class MapReader : MonoBehaviour
     void CreateMap()
     {
         int pipeIdx = 0;
+        bool _marioPosSet = false;
 
         DestroyMap();
         int SIZEX = _parsedList.Count;
@@ -167,7 +173,7 @@ public class MapReader : MonoBehaviour
         {
             for (int j = 0; j < SIZEX; j++)
             {
-                Debug.Log(_parsedList[j][i]);
+                //Debug.Log(_parsedList[j][i]);
                 if (_parsedList[j][i] != "-1" && _parsedList[j][i] != null)
                 {
                     GameObject tile = null;
@@ -209,9 +215,12 @@ public class MapReader : MonoBehaviour
                     {
                         _secretZonePos.Add(tile.transform);
                     }
-                    else if (_parsedList[j][i] == "923")
+                    else if (!_marioPosSet && _parsedList[j][i] == "923"/* && !_marioPosSet*/)
                     {
                         _marioPosition = tile.transform.position;
+                        _marioPosSet = true;
+                        GameObject.Find("Mario").GetComponent<Player>().SetMarioPosition(_marioPosition);
+                        //Instantiate(Mario, _marioPosition, this.gameObject.transform.rotation, this.gameObject.transform);
                     }
                     else if (_parsedList[j][i] == "299" && j > 32)
                     {
@@ -255,14 +264,14 @@ public class MapReader : MonoBehaviour
         int _exitIndex = 0;
         int _enterIndex = 0;
         bool isUnderground = false;
-        Debug.Log("CHECK PIPES");
+        //Debug.Log("CHECK PIPES");
         for (int i = 0; i < _pipes.Count; i++)
         {
             int j = _pipes[i].x;
-            Debug.Log("INICIAL: " + j);
+           // Debug.Log("INICIAL: " + j);
             while (_parsedList[j][_pipes[i].y] != "0")
             {
-                Debug.Log("WHILE: " + _parsedList[j][_pipes[i].y]);
+               // Debug.Log("WHILE: " + _parsedList[j][_pipes[i].y]);
                 j++;
                 if (_parsedList[j][_pipes[i].y] == "66")
                 {
@@ -276,19 +285,19 @@ public class MapReader : MonoBehaviour
                 continue;
             }
 
-            Debug.Log("ALTURA: " + j);
+            //Debug.Log("ALTURA: " + j);
             if (_parsedList[j][_pipes[i].y] == "0")
             {
                 int aux = j;
                 while (aux < j + 29 && _parsedList[aux][_pipes[i].y] != "299")
                 {
                     aux++;
-                    Debug.Log("AUX: " + aux);
+                 //   Debug.Log("AUX: " + aux);
                 }
                 //j += 13;
                 //j += 25;
                 j = aux;
-                Debug.Log("SECRET: " + _parsedList[j][_pipes[i].y]);
+               // Debug.Log("SECRET: " + _parsedList[j][_pipes[i].y]);
                 if (_parsedList[j][_pipes[i].y] == "299")
                 {
                     bool checkEnv = false;
@@ -297,12 +306,12 @@ public class MapReader : MonoBehaviour
                         if (_parsedList[j + 1][_pipes[i].y] == "232")
                         {
                             isUnderground = false;
-                            Debug.Log("NOOOOOO");
+                         //   Debug.Log("NOOOOOO");
                         }
                         if (_parsedList[j + 1][_pipes[i].y] == "68")
                         {
                             isUnderground = true;
-                            Debug.Log("YEEEEEEEESSSS");
+                          //  Debug.Log("YEEEEEEEESSSS");
                         }
                         checkEnv = true;
                     }
@@ -314,7 +323,7 @@ public class MapReader : MonoBehaviour
                         _pipes[i - 1].tileR.AddComponent<EnterSecretZone>().SetEnterZoneIndex(_enterIndex);
                         _pipes[i - 1].tileL.GetComponent<EnterSecretZone>().EnteringUnderground(isUnderground);
                         _pipes[i - 1].tileR.GetComponent<EnterSecretZone>().EnteringUnderground(isUnderground);
-                        Debug.Log("TUBERIA Nº: " + (i - 1));
+                       // Debug.Log("TUBERIA Nº: " + (i - 1));
                         //Debug.Log("1: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y] + "   2: " + _parsedList[_pipes[i - 1].x][_pipes[i - 1].y + 1]);
                         //_parsedList[_pipes[i-1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
                         //_parsedList[_pipes[i - 1].x][_pipes[i - 1].y]  addcomponent(entrada zona secreta)
@@ -339,7 +348,7 @@ public class MapReader : MonoBehaviour
 
                 }
             }
-            Debug.Log("PIPES: ");
+           // Debug.Log("PIPES: ");
         }
     }
 

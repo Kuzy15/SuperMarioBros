@@ -136,7 +136,7 @@ public class LoadScene : MonoBehaviour
                 }
             }
         }
-        Debug.Log("START: " + _start + "       CHANGESCENE: " + _canChangeScene);
+        //Debug.Log("START: " + _start + "       CHANGESCENE: " + _canChangeScene);
         if (!_start && _canChangeScene && _moveImage.GetComponent<MoveImage>().CanStartLoading())
         {
             GameManager.GM.ChangeScene(GameManager.SceneFlow.NEXT);
@@ -236,6 +236,7 @@ public class LoadScene : MonoBehaviour
         }
         string[] files = System.IO.Directory
                         .GetFiles(Application.streamingAssetsPath + "/PythonScripts/" + path, "*.pkl");
+        string f = files[0];
         string file = System.IO.Path.GetFileNameWithoutExtension(files[files.Length - 1]);
         _commands[0] = _commands[0].Replace("TRAININGFILE", "..\\" + path + "\\" + file + ".pkl ");
     }

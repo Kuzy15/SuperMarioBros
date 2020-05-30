@@ -94,6 +94,7 @@
     <Compile Include="Assets\Scripts\RedKoopaTroopa.cs" />
     <Compile Include="Assets\Scripts\ResourcesLoader.cs" />
     <Compile Include="Assets\Scripts\Shuttle.cs" />
+    <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/Training_separation/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

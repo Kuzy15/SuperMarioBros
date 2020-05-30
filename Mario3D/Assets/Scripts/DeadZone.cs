@@ -16,7 +16,8 @@ public class DeadZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
+            GameCamera.Instance.ResetCameraToInitialPos();
+            other.GetComponentInParent<Player>().ResetMarioPosition();
         }
     }
 }

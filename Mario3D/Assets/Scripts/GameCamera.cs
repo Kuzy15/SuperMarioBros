@@ -28,9 +28,12 @@ public class GameCamera : MonoBehaviour
 
     //Camera reference postion
     private Vector3 _refPosition;
+    //Camera start position
+    private Vector3 _startPos;
     //Get if is in looking mode
     private bool _looking = false;
     private Vector3 _lastPos = Vector3.zero;
+    private Vector3 _firstLastPos = Vector3.zero;
     //Saves the initial color of the background
     private Color _initialColor;
     private bool _canFollowInY = false;
@@ -54,6 +57,7 @@ public class GameCamera : MonoBehaviour
         _refPosition = this.transform.position;
         _initialColor = this.GetComponent<Camera>().backgroundColor;
         this.transform.position = new Vector3(this.transform.position.x + 3, -16.5f, this.transform.position.z);
+        _startPos = this.transform.position;
         //GoToBlackScreen();
     }
 
@@ -103,6 +107,16 @@ public class GameCamera : MonoBehaviour
     {
         Camera.main.transform.position = _refPosition;
         StartCoroutine("Coroutine");
+    }
+
+    /// <summary>
+    /// Resets the camera to its initial position
+    /// </summary>
+    public void ResetCameraToInitialPos()
+    {
+        Camera.main.transform.position = _startPos;
+        _lastPos = _firstLastPos;
+        //StartCoroutine("Coroutine");
     }
 
 
@@ -163,6 +177,7 @@ public class GameCamera : MonoBehaviour
         _camera = this;
         //DontDestroyOnLoad(this.gameObject);
         _lastPos = transform.position;
+        _firstLastPos = _lastPos;
     }
 
     //If has a set target, camera follows it with a determined offset
@@ -172,6 +187,7 @@ public class GameCamera : MonoBehaviour
         {
             if (!_looking)
             {
+                Debug.Log("FOLLOW PLAYER: " + followPlayer + "  CUENTA: " + (target.position - _lastPos).x);
                 if (followPlayer && (target.position - _lastPos).x > 0)
                 {
                     Vector3 desiredPosition = target.position + offset;
@@ -185,7 +201,7 @@ public class GameCamera : MonoBehaviour
                     {
                         posY = this.transform.position.y;
                     }
-                    transform.position = new Vector3(smoothedPosition.x, posY, transform.position.z); ;
+                    transform.position = new Vector3(smoothedPosition.x, posY, transform.position.z);
                     _lastPos = transform.position;
                 }
             }

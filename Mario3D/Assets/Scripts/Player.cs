@@ -59,9 +59,15 @@ public class Player : MonoBehaviour
     private Vector3 _startPosition;
 
     private RaycastHit auxHit;
+    private void Awake()
+    {
+        /*this.transform.localPosition = new Vector3(0, 0, 0);
+        _startPosition = MapReader.GM.GetInitialPosition();*/
+    }
     // Start is called before the first frame update
     void Start()
     {
+        // this.transform.localPosition = new Vector3(MapReader.GM.GetInitialPosition().x, MapReader.GM.GetInitialPosition().y, MapReader.GM.GetInitialPosition().z);
         _collider = this.GetComponentInChildren<CapsuleCollider>();
         _marioSprite = this.GetComponentInChildren<SpriteRenderer>();
         _isBig = false;
@@ -73,7 +79,6 @@ public class Player : MonoBehaviour
         //_collider.center = _currentAnim[0].bounds.center;
         _rigidBody = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
-        this.gameObject.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y + 25f, this.gameObject.transform.position.z);
     }
 
     // Update is called once per frame
@@ -720,6 +725,17 @@ public class Player : MonoBehaviour
     public Vector3 GetMarioPosition()
     {
         return transform.position;
+    }
+
+    public void ResetMarioPosition()
+    {
+        this.transform.position = _startPosition;
+    }
+
+    public void SetMarioPosition(Vector3 pos)
+    {
+        this.transform.position = pos;
+        _startPosition = pos;
     }
 
     public bool IsBigMario()
