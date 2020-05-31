@@ -30,6 +30,8 @@ public class InputFieldManager : MonoBehaviour
     public GameObject rnnMode;
     //Array containing all .csv on a determined path
     public List<string> arrFiles = new List<string>();
+    //Title
+    public GameObject title;
 
     //Fields related to all the rnn inputs
     public GameObject rnnObject;
@@ -474,6 +476,7 @@ public class InputFieldManager : MonoBehaviour
         rnnMode.SetActive(false);
         _mlMode = nGrams;
         modeText.gameObject.SetActive(true);
+        title.SetActive(false);
         if (_mlMode)
         {
             StartNGrams();
@@ -910,9 +913,9 @@ public class InputFieldManager : MonoBehaviour
                 }
                 PushCommands(commandToSend1);
                 PushCommands(commandToSend2);
-                LoadScene.Instance.GetMode(_mlMode);
                 break;
         }
+        LoadScene.Instance.GetMode(_mlMode);
     }
 
     private void PushCommands(string command)

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        Screen.SetResolution(1024, 768, false);
         DontDestroyOnLoad(this);
         if (GM == null)
             GM = this;

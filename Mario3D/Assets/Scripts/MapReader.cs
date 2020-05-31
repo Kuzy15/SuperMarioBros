@@ -308,7 +308,7 @@ public class MapReader : MonoBehaviour
                             isUnderground = false;
                          //   Debug.Log("NOOOOOO");
                         }
-                        if (_parsedList[j + 1][_pipes[i].y] == "68")
+                        if (_parsedList[j + 1][_pipes[i].y] == "66" || _parsedList[j + 1][_pipes[i].y] == "68")
                         {
                             isUnderground = true;
                           //  Debug.Log("YEEEEEEEESSSS");
@@ -332,10 +332,7 @@ public class MapReader : MonoBehaviour
                     }
 
                     _exitSecretZones[_exitIndex].AddComponent<ExitSecretZone>().SetExitPipe(_pipes[i].tileL);
-                    _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size = new Vector3(_exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size.x,
-                        _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size.y * 2, _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().size.z);
-                    _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center = new Vector3(_exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.x,
-                        _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.y + 0.5f, _exitSecretZones[_exitIndex].GetComponent<BoxCollider>().center.z);
+                    _exitSecretZones[_exitIndex].GetComponent<Collider>().isTrigger = true;
                     _exitIndex++;
                     _enterIndex++;
                     /* else

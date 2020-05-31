@@ -36,4 +36,14 @@ public class ExitSecretZone : MonoBehaviour
     {
         _pipe = pipe;
     }
+
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponentInParent<Player>().CheckExitSecretZone();
+            other.GetComponentInParent<Player>().SetExitZone(this);
+        }
+    }
 }

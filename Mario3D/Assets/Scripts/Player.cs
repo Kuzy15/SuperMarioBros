@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     private Shuttle _shuttle;
     private bool _isUnderground = false;
     private bool _isInWater = false;
+    private ExitSecretZone _currentExit;
 
 
     private Vector3 _startPosition;
@@ -233,10 +234,10 @@ public class Player : MonoBehaviour
             CheckEnterSecretZone();
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        /*if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             CheckExitSecretZone();
-        }
+        }*/
     }
 
 
@@ -301,20 +302,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CheckExitSecretZone()
+    public void CheckExitSecretZone()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position + new Vector3(0, _collider.height, 0), Vector3.right, out hit, 1f))
-        {
-            if (hit.transform.gameObject.GetComponent<ExitSecretZone>())
-            {
-                auxHit = hit;
-                Debug.Log("EXITTTTT");
+         Debug.Log("EXITTTTT");
                 //AnimatePlayer();
-                _startPosition = this.transform.position;
-                _goingRight = true;
-            }
-        }
+         _startPosition = this.transform.position;
+         _goingRight = true;
     }
 
     public IEnumerator SecretZoneCoroutine()
@@ -339,6 +332,7 @@ public class Player : MonoBehaviour
             _isUnderground = false;
             //_rigidBody.useGravity = false;
             _isInWater = true;
+            //GameCamera.Instance.SetCameraX(this.transform.position.x + 5f);
             Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
         }
         //GameCamera.Instance.ResetCamera();
@@ -358,14 +352,14 @@ public class Player : MonoBehaviour
         //_goingDown = true;
         //GrowUp();
         blackImage.gameObject.SetActive(false);
-        ExitSecretZone aux = auxHit.transform.gameObject.GetComponent<ExitSecretZone>();
+        //ExitSecretZone aux = auxHit.transform.gameObject.GetComponent<ExitSecretZone>();
         if (_isUnderground)
         {
             GameCamera.Instance.GoToBlueScreen();
         }
         //ChangeCollider();
-        aux.GoToSecretZone(this);
-        _startPosition = aux.GetSecretZonePosition();
+        _currentExit.GoToSecretZone(this);
+        _startPosition = _currentExit.GetSecretZonePosition();
         _goingRight = false;
         _goingUp = true;
         _isInWater = false;
@@ -373,6 +367,11 @@ public class Player : MonoBehaviour
         Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
         // ExitMove(hit);
         //this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+    }
+
+    public void SetExitZone(ExitSecretZone zone)
+    {
+        _currentExit = zone;
     }
     public void ExitSecretZoneMove()
     {
@@ -730,6 +729,16 @@ public class Player : MonoBehaviour
     public void ResetMarioPosition()
     {
         this.transform.position = _startPosition;
+        if (_isInWater)
+        {
+            _isInWater = false;
+            _rigidBody.mass = 3f;
+            Physics.gravity = new Vector3(0, -9.8f * _rigidBody.mass, 0);
+        }
+        if (_isUnderground)
+        {
+            GameCamera.Instance.GoToBlueScreen();
+        }
     }
 
     public void SetMarioPosition(Vector3 pos)

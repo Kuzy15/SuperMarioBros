@@ -236,7 +236,6 @@ public class LoadScene : MonoBehaviour
         }
         string[] files = System.IO.Directory
                         .GetFiles(Application.streamingAssetsPath + "/PythonScripts/" + path, "*.pkl");
-        string f = files[0];
         string file = System.IO.Path.GetFileNameWithoutExtension(files[files.Length - 1]);
         _commands[0] = _commands[0].Replace("TRAININGFILE", "..\\" + path + "\\" + file + ".pkl ");
     }
