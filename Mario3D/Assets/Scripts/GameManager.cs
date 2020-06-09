@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
     public enum SceneFlow
     {
-        PREVIOUS, CURRENT, NEXT
+        PREVIOUS, CURRENT, NEXT, INFO, MENU
     }
 
     private int _sceneIndex = 0;
@@ -33,7 +33,14 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ChangeScene(SceneFlow.PREVIOUS);
+            if (_sceneIndex != 2)
+            {
+                ChangeScene(SceneFlow.PREVIOUS);
+            }
+            else
+            {
+                ChangeScene(SceneFlow.MENU);
+            }
         }
     }
 
@@ -48,6 +55,12 @@ public class GameManager : MonoBehaviour
                 break;
             case SceneFlow.NEXT:
                 _sceneIndex++;
+                break;
+            case SceneFlow.INFO:
+                _sceneIndex = 2;
+                break;
+            case SceneFlow.MENU:
+                _sceneIndex = 0;
                 break;
         }
         if(_sceneIndex >= 0){ 

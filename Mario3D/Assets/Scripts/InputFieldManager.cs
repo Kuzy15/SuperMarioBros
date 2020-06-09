@@ -32,6 +32,8 @@ public class InputFieldManager : MonoBehaviour
     public List<string> arrFiles = new List<string>();
     //Title
     public GameObject title;
+    //Info button
+    public GameObject infoButton;
 
     //Fields related to all the rnn inputs
     public GameObject rnnObject;
@@ -91,10 +93,10 @@ public class InputFieldManager : MonoBehaviour
 
     void Awake()
     {
-       if (GM != null)
-           GameObject.Destroy(GM);
-       else
-           GM = this;
+        if (GM != null)
+            GameObject.Destroy(GM);
+        else
+            GM = this;
 
         //DontDestroyOnLoad(this);
     }
@@ -130,11 +132,11 @@ public class InputFieldManager : MonoBehaviour
 
     public void StartNGramsInput(int q)
     {
-        for(int i = 0; i < q; i++)
+        for (int i = 0; i < q; i++)
         {
             nGramsObject.transform.GetChild(i).gameObject.SetActive(true);
         }
-        if(nGramsObject.transform.GetChild(3).gameObject.activeSelf == false)
+        if (nGramsObject.transform.GetChild(3).gameObject.activeSelf == false)
             nGramsObject.transform.GetChild(3).gameObject.SetActive(true);
     }
 
@@ -308,7 +310,7 @@ public class InputFieldManager : MonoBehaviour
     {
         return arrFiles.Count;
     }
-    
+
     /// <summary>
     /// Getter of the value of the debug log check box
     /// </summary>
@@ -354,7 +356,7 @@ public class InputFieldManager : MonoBehaviour
                 {
                     int nFiles = GetFilesSelectedLength();
                     string concat = "";
-                    
+
                     for (int i = 0; i < nFiles; i++)
                     {
                         string file = GetFilesToConcatInput()[i];
@@ -387,7 +389,7 @@ public class InputFieldManager : MonoBehaviour
                     }
                     GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
                 }
-                
+
             }
         }
         else
@@ -405,7 +407,7 @@ public class InputFieldManager : MonoBehaviour
         }
     }
 
-    
+
 
     /// <summary>
     /// Method assigned to a checkbox object to get if it is marked or not
@@ -601,8 +603,8 @@ public class InputFieldManager : MonoBehaviour
     public void OnClickContinueScroll()
     {
         //ADD LAYERS INPUT
-            layersObject.SetActive(false);
-            SetNFilesInput();
+        layersObject.SetActive(false);
+        SetNFilesInput();
     }
 
     /// <summary>
@@ -610,7 +612,7 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void OnClickRNNSimpleLayer(int quantity)
     {
-        if(quantity == 1)
+        if (quantity == 1)
         {
             _layersArr.Add("SRNN");
             SetLayersText();
@@ -664,7 +666,7 @@ public class InputFieldManager : MonoBehaviour
             ResetLayers();
         }
         _lstmLayers += quantity;
-        if(_lstmLayers < 0)
+        if (_lstmLayers < 0)
         {
             _lstmLayers = 0;
         }
@@ -764,9 +766,9 @@ public class InputFieldManager : MonoBehaviour
     private int CheckInactiveInputs(GameObject obj, int q)
     {
         int index = 0;
-        for(int i = 0; i < q; i++)
+        for (int i = 0; i < q; i++)
         {
-            if(obj.transform.GetChild(i).gameObject.activeSelf == false)
+            if (obj.transform.GetChild(i).gameObject.activeSelf == false)
             {
                 index++;
             }
@@ -859,9 +861,9 @@ public class InputFieldManager : MonoBehaviour
                 }
                 break;
         }
-        
+
         string concatLayers = "";
-        for(int i = 0; i < _layersArr.Count; i++)
+        for (int i = 0; i < _layersArr.Count; i++)
         {
             string file = _layersArr[i];
             string concatS = file;
@@ -873,7 +875,8 @@ public class InputFieldManager : MonoBehaviour
         {
             debug = " -d";
         }
-        switch(_gOp){
+        switch (_gOp)
+        {
             case GenerateOptions.LOAD:
                 string commandToSend = "";
                 if (_mlMode)
@@ -926,5 +929,10 @@ public class InputFieldManager : MonoBehaviour
     public GenerateOptions GetGenOp()
     {
         return _gOp;
+    }
+
+    public void OnInfoButton()
+    {
+        GameManager.GM.ChangeScene(GameManager.SceneFlow.INFO);
     }
 }

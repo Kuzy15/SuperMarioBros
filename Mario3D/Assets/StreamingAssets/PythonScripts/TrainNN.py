@@ -13,6 +13,7 @@
 # -----------------------------------------------------------
 
 #EXAMPLE COMMAND: python TrainNN.py 1 1-1.csv 15 20 10000 256 1024 10 2 GRU LSTM 0.5
+#"/C python TrainNN.py 1 ..\\Maps\\1-1.csv 15  10000 256 1024 20 1  LSTM 0.2 "
 #in case you want a default network you must put "1 default" in NHIDDENLAYERS and NHIDDENLAYERS respectively in the
 #command line
 
@@ -138,6 +139,9 @@ def GetExamplesPerEpoch(text, seqLength):
 
     if DEPURATION:
         print("Examples per epoch:" + str(len(text) // (seqLength + 1)))
+        
+    if BATCHSIZE > (len(text) // (seqLength + 1)):
+        sys.exit("BATCHSIZE is greater than examplesPerEpoch. Please introduce a value for BATCHSIZE below " + str(len(text) // (seqLength + 1)) )
 
     return len(text) // (seqLength + 1)
 

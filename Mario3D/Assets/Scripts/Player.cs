@@ -47,6 +47,8 @@ public class Player : MonoBehaviour
     private bool _goingRight = false;
     private bool _downAnim = false;
     private bool _playerInCreeper = false;
+    private bool _enteringCreeper = false;
+    private bool _startClimbing = false;
     private bool _canClimb = false;
     private bool _cameraSaved = false;
     private bool _goingDowOfCreeper = false;
@@ -58,6 +60,7 @@ public class Player : MonoBehaviour
 
 
     private Vector3 _startPosition;
+    private Vector3 _creeperPosition;
 
     private RaycastHit auxHit;
     private void Awake()
@@ -91,6 +94,11 @@ public class Player : MonoBehaviour
             {
                 EnterMove();
             }
+            if (/*!_playerInCreeper && _enteringCreeper*/_startClimbing/* && !_playerInCreeper*/)
+            {
+                EnterCreeper();
+                Debug.Log("ENTER CREPPER");
+            }
             if (_goingUp)
             {
                 ExitMove();
@@ -101,7 +109,7 @@ public class Player : MonoBehaviour
             }
             _isGroundedJ = (_rigidBody.velocity.y == 0);
 
-            if (!_playerInCreeper && !GameCamera.Instance.GetLooking() && (!_goingDown && !_goingRight && !_goingUp))
+            if (!_enteringCreeper && !GameCamera.Instance.GetLooking() && (!_goingDown && !_goingRight && !_goingUp))
             {
                 _directionX = Input.GetAxis("Horizontal");
                 _directionY = Input.GetAxis("Vertical");
@@ -222,7 +230,7 @@ public class Player : MonoBehaviour
                     _rigidBody.AddForce(new Vector2(0, -6f * Time.deltaTime), ForceMode.Impulse);
                 }
                 _rigidBody.AddForce(new Vector2(0, 8f * Time.deltaTime), ForceMode.Impulse);
-                Debug.Log("IN WATER");
+               // Debug.Log("IN WATER");
             }
         }
     }
@@ -293,7 +301,7 @@ public class Player : MonoBehaviour
             if (hit.transform.gameObject.GetComponent<EnterSecretZone>())
             {
                 auxHit = hit;
-                Debug.Log("ENTERRRRRR");
+                //Debug.Log("ENTERRRRRR");
                 this.GetComponentInChildren<SpriteRenderer>().sortingOrder = -2;
                 //EnterMove(hit);
                 _startPosition = this.transform.position;
@@ -304,10 +312,26 @@ public class Player : MonoBehaviour
 
     public void CheckExitSecretZone()
     {
-         Debug.Log("EXITTTTT");
-                //AnimatePlayer();
-         _startPosition = this.transform.position;
-         _goingRight = true;
+        //Debug.Log("EXITTTTT");
+        //AnimatePlayer();
+        _startPosition = this.transform.position;
+        _goingRight = true;
+    }
+    public IEnumerator CreeperCamCoroutine()
+    {
+        _rigidBody.useGravity = false;
+        _rigidBody.detectCollisions = false;
+        yield return new WaitForSeconds(1f);
+        blackImage.gameObject.SetActive(true);
+        this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+        yield return new WaitForSeconds(1.5f);
+        GameCamera.Instance.GoToBlueScreen();
+        Debug.Log("HELL YEA");
+        GameCamera.Instance.SetCameraY(-0.5f);
+        //_playerInCreeper = true;
+        blackImage.gameObject.SetActive(false);
+        GameCamera.Instance.SetCameraX(this.transform.position.x + 8f);
+        yield return new WaitForSeconds(0.5f);
     }
 
     public IEnumerator SecretZoneCoroutine()
@@ -440,6 +464,55 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void EnterCreeper()
+    {
+        _rigidBody.useGravity = false;
+        _rigidBody.detectCollisions = false;
+        _rigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        float step = 2f * Time.deltaTime; // calculate distance to move
+        transform.position = Vector3.MoveTowards(transform.position, _creeperPosition + new Vector3(0, 9f), step);
+        _canClimb = false;
+
+        Debug.Log("DISTANCE: " + Vector3.Distance(transform.position, _creeperPosition + new Vector3(0, 9f)));
+        if (Vector3.Distance(transform.position, _creeperPosition + new Vector3(0, 9f)) <= 1f)
+        {
+            Debug.Log("HII");
+            // Swap the position of the cylinder.
+            _rigidBody.AddForce(Vector3.right * 5.5f, ForceMode.Impulse);
+            _rigidBody.useGravity = true;
+            _rigidBody.detectCollisions = false;
+            _rigidBody.constraints = RigidbodyConstraints.None;
+            _rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
+            //_goingDown = false;
+            _enteringCreeper = false;
+            _playerInCreeper = true;
+            _rigidBody.detectCollisions = true;
+            _startClimbing = false;
+            //_downAnim = true;
+            //EnterMove();
+        }
+    }
+
+    public void ExitCreeper()
+    {
+        StartCoroutine(ExitCreeperCoroutine());
+    }
+
+    public IEnumerator ExitCreeperCoroutine()
+    {
+        blackImage.gameObject.SetActive(true);
+        //this.GetComponentInChildren<SpriteRenderer>().sortingOrder = 2;
+        yield return new WaitForSeconds(1.5f);
+        GameCamera.Instance.GoToBlueScreen();
+        GameCamera.Instance.SetCameraY(-16.5f);
+        _startClimbing = false;
+        //this.transform.position = _creeperPosition;
+        //_playerInCreeper = true;
+        blackImage.gameObject.SetActive(false);
+        _playerInCreeper = false;
+
+    }
+
     public void AnimatePlayer()
     {
         MoveMario();
@@ -451,7 +524,7 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if (dir == Vector3.down)
         {
-            Debug.Log("COLLISION DOWN");
+            //Debug.Log("COLLISION DOWN");
             if (Physics.Raycast(transform.position + new Vector3(-_collider.radius / 2 - 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f) ||
                 Physics.Raycast(transform.position + new Vector3(_collider.radius / 2 + 0.05f, _collider.height / 2, 0), dir, out hit, (_collider.height / 2) + 0.1f))
             {
@@ -549,7 +622,7 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
-                Debug.Log("JUMPO");
+                //Debug.Log("JUMPO");
                 //and you are on the ground...
                 if (!_isInWater && _onGround && _jumpTime > 0)
                 {
@@ -592,7 +665,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
                 /*_goingDowOfCreeper = true;
                 if (!_cameraSaved)
@@ -602,27 +675,18 @@ public class Player : MonoBehaviour
                     GameCamera.Instance.CanFollowInY(true);
                 }
                 _playerInCreeper = true;*/
-                _playerInCreeper = true;
-                this.gameObject.transform.Translate(Vector3.up * Time.deltaTime * 2f);
-            }
-
-            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
-            {
-
-
-                _cameraSaved = false;
-                this.gameObject.transform.Translate(-Vector3.up * Time.deltaTime * 2f);
-                //_rigidBody.useGravity = true;
-                //_playerInCreeper = false;
-                _canClimb = false;
-                /*if(_rigidBody.velocity.y == 0)
+                //_playerInCreeper = true;
+                //-0.5;
+                //this.gameObject.transform.Translate(Vector3.up * Time.deltaTime * 2f);
+                if (!_playerInCreeper && !_enteringCreeper)
                 {
-                    Debug.Log("IM OUT OF CREEPER");
-                    _playerInCreeper = false;
-                    _goingDowOfCreeper = true;
-                    _canClimb = false;
-                    GameCamera.Instance.SetCameraY(_lastYCamera);
-                }*/
+                    _enteringCreeper = true;
+                    //_playerInCreeper = true;
+                    _startClimbing = true;
+                    _creeperPosition = this.transform.position;
+                    Debug.Log("CREEPERCOROUTINE");
+                    StartCoroutine(CreeperCamCoroutine());
+                }
             }
             /*if(_onGround && !_playerInCreeper)
             {
@@ -690,16 +754,10 @@ public class Player : MonoBehaviour
             CheckDead();
         }
     }
+
     public void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ExitWater"))
-        {
-
-        }
-    }
-    public void OnTriggerStay(Collider other)
-    {
-        if (!_playerInCreeper && !_isJumping && other.GetComponent<Creeper>())
+        if (!_playerInCreeper && !_enteringCreeper && !_isJumping && other.GetComponent<Creeper>())
         {
             Debug.Log("IM IN CREEPER");
             _rigidBody.useGravity = false;
@@ -707,19 +765,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnTriggerExit(Collider other)
-    {
-        /*if (other.GetComponent<Creeper>())
-        {
-            Debug.Log("IM IN CREEPER");
-        }*/
-        Debug.Log("IM NOT IN CREEPER");
-        _playerInCreeper = false;
-        //_canClimb = false;
 
-
-        //GameCamera.Instance.CanFollowInY(false);
-    }
 
     public Vector3 GetMarioPosition()
     {
@@ -813,7 +859,12 @@ public class Player : MonoBehaviour
 
     public void ShuttlePlayer()
     {
-        _rigidBody.velocity = new Vector3(0,0,0);
+        _rigidBody.velocity = new Vector3(0, 0, 0);
         _rigidBody.AddForce(Vector3.up * 90.5f, ForceMode.Impulse);
+    }
+
+    public bool PlayerInCreeper()
+    {
+        return _playerInCreeper;
     }
 }
