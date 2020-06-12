@@ -99,6 +99,8 @@ public class InfoManager : MonoBehaviour
             _selectButtonsOn = false;
             infotitle.SetActive(true);
             questionButton.SetActive(false);
+            lookingModePanel.SetActive(false);
+            _panelShown = false;
         }
     }
 

@@ -31,7 +31,6 @@ ScriptsOnlyBuild:
     - Shuttle
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
@@ -69,6 +68,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9662}
     - Class: 114
+      Script: {instanceID: 9824}
+    - Class: 114
       Script: {instanceID: 9864}
     - Class: 114
       Script: {instanceID: 10258}
@@ -81,6 +82,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11462}
     - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
@@ -595,7 +598,7 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
-      Hash: 8df83f9b9f45b7cf283e5f38cf7d992d
+      Hash: a51a6f2e3697fcddc7a2bca9249811af
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InfoManager
@@ -898,4 +901,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/Intro.unity
   - Assets/Scenes/SampleScene.unity
   - Assets/Scenes/Info.unity
-  playerPath: C:/Users/Gonzalo/Desktop/yiii/Mario3D.exe
+  playerPath: C:/Users/Gonzalo/MarioBuild/Mario3D.exe
