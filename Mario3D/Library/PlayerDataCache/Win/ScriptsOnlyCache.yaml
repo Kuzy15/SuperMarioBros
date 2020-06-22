@@ -31,6 +31,7 @@ ScriptsOnlyBuild:
     - Shuttle
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
+    - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
@@ -901,4 +902,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/Intro.unity
   - Assets/Scenes/SampleScene.unity
   - Assets/Scenes/Info.unity
-  playerPath: C:/Users/Gonzalo/MarioBuild/Mario3D.exe
+  playerPath: C:/Users/Gonzalo/Desktop/MarioBuild-Borrador/Mario3D.exe

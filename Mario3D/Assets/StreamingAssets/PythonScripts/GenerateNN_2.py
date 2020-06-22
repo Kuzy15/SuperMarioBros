@@ -12,6 +12,12 @@
 #
 # -----------------------------------------------------------
 
+#EXAMPLE COMMAND: python GenerateNN.py 20200528_201621_Training_NN.pkl 250 LSTM_UNITY_1.csv
+#in case you want a default network you must put "1 default" in NHIDDENLAYERS and NHIDDENLAYERS respectively in the
+#command line
+
+import os
+import tensorflow as tf
 
 import NN
 
@@ -29,7 +35,9 @@ def main():
     NN.HIDDENLAYERS = []
     NN.TEMPERATURE = 0
 
-    with open('./NNTraining/' + TRAINFILE, 'rb') as f:
+    NN.ReadArgsForGenerating()
+
+    with open('./NNTraining/' + NN.TRAINFILE, 'rb') as f:
         char2idx = pickle.load(f)
         idx2char = pickle.load(f)
         vocabSize = pickle.load(f)
@@ -50,7 +58,7 @@ def main():
 
     model.summary()
 
-    genText = NN.GenerateText(model, firstSequenceToUse, NN.WIDTH)
+    genText = NN.GenerateText(model, firstSequenceToUse, NN.WIDTH, char2idx, idx2char)
 
     NN.SaveFile(NN.OUTPUT, genText)
 

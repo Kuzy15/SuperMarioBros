@@ -61,6 +61,8 @@ public class InputFieldManager : MonoBehaviour
     private bool _generationMode;
     //Controls the current machine learning model (NGRAMS or RNN)
     private bool _mlMode;
+    //Value of the interpolation check box
+    private bool _makeInterpolation;
 
     //RNN inputs (Related to rnn object). Variables used on the NeuralNetworks.py
     private string _seqLengthInput;
@@ -73,7 +75,6 @@ public class InputFieldManager : MonoBehaviour
     private int _rnnSimpleLayers;
     private int _gruLayers;
     private int _lstmLayers;
-    private string _batchSize;
     private string _width;
     private List<string> _layersArr = new List<string>();
 
@@ -81,6 +82,7 @@ public class InputFieldManager : MonoBehaviour
     private string _nGramsInput;
     private string _lengthInput;
     private string _fileNameNGrams;
+    private string _interpolationProbs;
 
     public enum GenerateOptions
     {
@@ -128,6 +130,7 @@ public class InputFieldManager : MonoBehaviour
         nGramsObject.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD_TRAIN));
         nGramsObject.transform.GetChild(6).gameObject.SetActive(true);
         nGramsObject.transform.GetChild(6).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD));
+        nGramsObject.transform.GetChild(7).gameObject.SetActive(true);
     }
 
     public void StartNGramsInput(int q)
@@ -145,18 +148,23 @@ public class InputFieldManager : MonoBehaviour
         nGramsObject.transform.GetChild(i).gameObject.SetActive(false);
     }
 
+    public void ActivateNgramsField(int i)
+    {
+        nGramsObject.transform.GetChild(i).gameObject.SetActive(true);
+    }
+
     /// <summary>
     /// Starts RNN mode
     /// </summary>
     public void StartRNN()
     {
         //rnnObject.SetActive(true);
+        rnnObject.transform.GetChild(9).gameObject.SetActive(true);
+        rnnObject.transform.GetChild(9).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.TRAIN));
         rnnObject.transform.GetChild(10).gameObject.SetActive(true);
-        rnnObject.transform.GetChild(10).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.TRAIN));
+        rnnObject.transform.GetChild(10).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD_TRAIN));
         rnnObject.transform.GetChild(11).gameObject.SetActive(true);
-        rnnObject.transform.GetChild(11).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD_TRAIN));
-        rnnObject.transform.GetChild(12).gameObject.SetActive(true);
-        rnnObject.transform.GetChild(12).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD));
+        rnnObject.transform.GetChild(11).GetComponent<Button>().onClick.AddListener(() => ButtonAction(GenerateOptions.LOAD));
     }
 
     public void StartRNNInputs(int q, int i = 0)
@@ -365,6 +373,12 @@ public class InputFieldManager : MonoBehaviour
                         concat = concat + " " + concatS;
                     }
 
+                    string interpolation = "0";
+                    if (_makeInterpolation)
+                    {
+                        interpolation = "1 " + _interpolationProbs;
+                    }
+
                     string debug = "";
                     bool debugMode = GetCheckBoxActive();
                     if (debugMode)
@@ -373,7 +387,7 @@ public class InputFieldManager : MonoBehaviour
                     }
                     if (_mlMode)
                     {
-                        PythonThread.ExecuteCommand("/C python TrainNGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + debug);
+                        PythonThread.ExecuteCommand("/C python TrainNGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + interpolation + " " + debug);
                     }
                     else
                     {
@@ -384,7 +398,7 @@ public class InputFieldManager : MonoBehaviour
                             string concatS = file;
                             concatLayers = concatLayers + " " + concatS;
                         }
-                        PythonThread.ExecuteCommand("/C python TrainNN.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
+                        PythonThread.ExecuteCommand("/C python TrainNN_2.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
             + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + debug);
                     }
                     GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
@@ -497,7 +511,7 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void BackButton()
     {
-        GameManager.GM.ChangeScene(GameManager.SceneFlow.CURRENT);
+        GameManager.GM.ChangeScene(GameManager.SceneFlow.PREVIOUS);
     }
 
 
@@ -550,21 +564,12 @@ public class InputFieldManager : MonoBehaviour
         _temperatureInput = rnnObject.transform.GetChild(5).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
-
-    /// <summary>
-    /// Setter of the batch size(RNN)
-    /// </summary>
-    public void SetBatchSize()
-    {
-        _batchSize = rnnObject.transform.GetChild(6).GetChild(0).GetComponentInChildren<InputField>().text;
-    }
-
     /// <summary>
     /// Setter of map width(RNN)
     /// </summary>
     public void SetWidth()
     {
-        _width = rnnObject.transform.GetChild(7).GetChild(0).GetComponentInChildren<InputField>().text;
+        _width = rnnObject.transform.GetChild(6).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
     /// <summary>
@@ -572,7 +577,7 @@ public class InputFieldManager : MonoBehaviour
     /// </summary>
     public void SetFileNameInput()
     {
-        _fileNameRNN = rnnObject.transform.GetChild(8).GetChild(0).GetComponentInChildren<InputField>().text;
+        _fileNameRNN = rnnObject.transform.GetChild(7).GetChild(0).GetComponentInChildren<InputField>().text;
     }
 
     /// <summary>
@@ -729,9 +734,17 @@ public class InputFieldManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Method assigned to a button, to continue to the next step(NGRAMS)
+    /// Setter of interpolation probabilities(NGRAMS)
     /// </summary>
-    public void OnClickContinueNGrams()
+    public void SetInterpolationInputNGRAMS()
+    {
+        _interpolationProbs = nGramsObject.transform.GetChild(8).GetChild(0).GetComponentInChildren<InputField>().text;
+    }
+
+/// <summary>
+/// Method assigned to a button, to continue to the next step(NGRAMS)
+/// </summary>
+public void OnClickContinueNGrams()
     {
         //ADD LAYERS INPUT
         if (CheckIfCanContinue(nGramsObject))
@@ -752,12 +765,27 @@ public class InputFieldManager : MonoBehaviour
     {
         bool canContinue = true;
         //-2 because of buttons
-        for (int i = CheckInactiveInputs(obj, obj.transform.childCount - 4); i < obj.transform.childCount - 4; i++)
+        /*for (int i = CheckInactiveInputs(obj, obj.transform.childCount - 4); i < obj.transform.childCount - 4; i++)
         {
             if (obj.transform.GetChild(i).gameObject.activeSelf && obj.transform.GetChild(i).GetChild(0).GetComponentInChildren<InputField>().text == "")
             {
                 canContinue = false;
                 break;
+            }
+        }*/
+        for(int i = 0; i < obj.transform.childCount; i++)
+        {
+            if (obj.transform.GetChild(i).childCount > 0)
+            {
+                InputField iField = obj.transform.GetChild(i).GetChild(0).GetComponentInChildren<InputField>();
+                if (iField)
+                {
+                    if (obj.transform.GetChild(i).gameObject.activeSelf && iField.text == "")
+                    {
+                        canContinue = false;
+                        break;
+                    }
+                }
             }
         }
         return canContinue;
@@ -786,11 +814,15 @@ public class InputFieldManager : MonoBehaviour
                 {
                     StartNGramsInput(4);
                     DeactivateNgramsField(0);
+                    MoveInputField(nGramsObject.transform.GetChild(1).gameObject, new Vector3(0, 100, 0));
+                    MoveInputField(nGramsObject.transform.GetChild(2).gameObject, new Vector3(0, 100, 0));
                 }
                 else
                 {
                     StartRNNInputs(10);
-                    DeactivateRNNFields(7);
+                    DeactivateRNNFields(6);
+                    MoveInputField(rnnObject.transform.GetChild(6).gameObject, new Vector3(0, 300, 0));
+                    MoveInputField(rnnObject.transform.GetChild(7).gameObject, new Vector3(0, 300, 0));
                 }
                 //Debug.Log("LOAD MODEL");
                 break;
@@ -798,6 +830,11 @@ public class InputFieldManager : MonoBehaviour
                 if (_mlMode)
                 {
                     StartNGramsInput(4);
+                    if (_makeInterpolation)
+                    {
+                        ActivateNgramsField(8);
+                    }
+
                 }
                 else
                 {
@@ -809,11 +846,17 @@ public class InputFieldManager : MonoBehaviour
                 if (_mlMode)
                 {
                     StartNGramsInput(1);
+                    if (_makeInterpolation)
+                    {
+                        MoveInputField(nGramsObject.transform.GetChild(8).gameObject, new Vector3(0, 200, 0));
+                        ActivateNgramsField(8);
+
+                    }
                 }
                 else
                 {
-                    StartRNNInputs(7);
-                    StartRNNInput(9);
+                    StartRNNInputs(6);
+                    StartRNNInput(8);
                 }
                 //Debug.Log("TRAIN MODEL");
                 break;
@@ -823,12 +866,13 @@ public class InputFieldManager : MonoBehaviour
             DeactivateNgramsField(4);
             DeactivateNgramsField(5);
             DeactivateNgramsField(6);
+            DeactivateNgramsField(7);
         }
         else
         {
+            DeactivateRNNField(9);
             DeactivateRNNField(10);
             DeactivateRNNField(11);
-            DeactivateRNNField(12);
         }
     }
 
@@ -869,6 +913,13 @@ public class InputFieldManager : MonoBehaviour
             string concatS = file;
             concatLayers = concatLayers + " " + concatS;
         }
+
+        string interpolation = "0";
+        if (_makeInterpolation)
+        {
+            interpolation = "1 " + _interpolationProbs;
+        }
+
         string debug = "";
         bool debugMode = GetCheckBoxActive();
         if (debugMode)
@@ -885,7 +936,7 @@ public class InputFieldManager : MonoBehaviour
                 }
                 else
                 {
-                    commandToSend = "/C python GenerateNN.py " + concat + " " + _width + " ..\\Maps\\" + _fileNameRNN + ".csv" + debug;
+                    commandToSend = "/C python GenerateNN_2.py " + concat + " " + _width + " ..\\Maps\\" + _fileNameRNN + ".csv" + debug;
                 }
                 PushCommands(commandToSend);
                 break;
@@ -906,12 +957,12 @@ public class InputFieldManager : MonoBehaviour
                 if (_mlMode)
                 {
                     commandToSend1 = "/C python GenerateNGrams.py " + "TRAININGFILE " + _lengthInput + " ..\\Maps\\" + _fileNameNGrams + ".csv" + debug;
-                    commandToSend2 = "/C python TrainNGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + debug;
+                    commandToSend2 = "/C python TrainNGrams.py " + nFiles.ToString() + concat + " " + _nGramsInput + " " + interpolation + " " + debug;
                 }
                 else
                 {
-                    commandToSend1 = "/C python GenerateNN.py " + "TRAININGFILE " + _width + " ..\\Maps\\" + _fileNameRNN + ".csv" + debug;
-                    commandToSend2 = "/C python TrainNN.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _batchSize + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
+                    commandToSend1 = "/C python GenerateNN_2.py " + "TRAININGFILE " + _width + " ..\\Maps\\" + _fileNameRNN + ".csv" + debug;
+                    commandToSend2 = "/C python TrainNN_2.py " + nFiles.ToString() + concat/*ESTO ES PARA LO DE MEZCLA DE ARCHIVOS nFiles.ToString() + concat +*/ + " " + _seqLengthInput + " " + _bufferSizeInput + " " + _embedDimInput + " " + _nnUnitsInput + " " + _epochsInput + " "
             + _layersArr.Count + " " + concatLayers + " " + _temperatureInput + " " + debug;
                 }
                 PushCommands(commandToSend1);
@@ -934,5 +985,15 @@ public class InputFieldManager : MonoBehaviour
     public void OnInfoButton()
     {
         GameManager.GM.ChangeScene(GameManager.SceneFlow.INFO);
+    }
+
+    public void OnInterpolationCheckBox()
+    {
+        _makeInterpolation = nGramsObject.transform.GetChild(7).GetComponent<Toggle>().IsActive();
+    }
+
+    public void MoveInputField(GameObject obj, Vector3 pos)
+    {
+        obj.transform.position += pos;
     }
 }

@@ -32,6 +32,8 @@ def ReadArgsForTrainning():
 
     global NFILES
     NFILES = int(sys.argv[1])
+    print(NFILES)
+    print()
     global FILE
     FILE = []
     for f in range(NFILES):
@@ -40,50 +42,54 @@ def ReadArgsForTrainning():
     # The maximum length sentence we want for a single input in characters
     global SEQLENGTH
     SEQLENGTH = int(sys.argv[NFILES + 2])
-
-    # Batch size
-    global BATCHSIZE
-    BATCHSIZE = int(sys.argv[NFILES + 3])
-
+    print(SEQLENGTH)
+    print()
     # Buffer size to shuffle the dataset
     # (TF data is designed to work with possibly infinite sequences,
     # so it doesn't attempt to shuffle the entire sequence in memory. Instead,
     # it maintains a buffer in which it shuffles elements).
     global BUFFERSIZE
-    BUFFERSIZE = int(sys.argv[NFILES + 4])
-
+    BUFFERSIZE = int(sys.argv[NFILES + 3])
+    print(BUFFERSIZE)
+    print()
     # The embedding dimension
     global EMBEDDINGDIM
-    EMBEDDINGDIM = int(sys.argv[NFILES + 5])
-
+    EMBEDDINGDIM = int(sys.argv[NFILES + 4])
+    print(EMBEDDINGDIM)
+    print()
 
     # Number of NN units
     global NNUNITS
-    NNUNITS = int(sys.argv[NFILES + 6])
-
+    NNUNITS = int(sys.argv[NFILES + 5])
+    print(NNUNITS)
+    print()
     #Number of times to train
     global EPOCHS
-    EPOCHS = int(sys.argv[NFILES + 7])
-
+    EPOCHS = int(sys.argv[NFILES + 6])
+    print(EPOCHS)
+    print()
     #Number of functional hidden layers
     global NHIDDENLAYERS
-    NHIDDENLAYERS = int(sys.argv[NFILES + 8])
-
+    NHIDDENLAYERS = int(sys.argv[NFILES + 7])
+    print(NHIDDENLAYERS)
+    print()
     global HIDDENLAYERS
     HIDDENLAYERS = []
     for l in range(NHIDDENLAYERS):
-        HIDDENLAYERS.append(str(sys.argv[NFILES + l + 9]))
+        HIDDENLAYERS.append(str(sys.argv[NFILES + l + 8]))
+        print(str(sys.argv[NFILES + l + 8]))
 
-
+    print()
     #Give back more or less random results
     global TEMPERATURE
-    TEMPERATURE = float(sys.argv[NFILES + NHIDDENLAYERS + 9])
-
+    TEMPERATURE = float(sys.argv[NFILES + NHIDDENLAYERS + 8])
+    print(TEMPERATURE)
+    print()
 
     global DEPURATION
     DEPURATION = False
-    if(len(sys.argv) > NFILES + NHIDDENLAYERS + 10):
-        if str(sys.argv[NFILES + NHIDDENLAYERS + 10]) == "-d" or str(sys.argv[NFILES + NHIDDENLAYERS + 10]) == "--debug":
+    if(len(sys.argv) > NFILES + NHIDDENLAYERS + 9):
+        if str(sys.argv[NFILES + NHIDDENLAYERS + 9]) == "-d" or str(sys.argv[NFILES + NHIDDENLAYERS + 9]) == "--debug":
             DEPURATION = True
             try:
                 path = "../Logs/"
@@ -175,8 +181,6 @@ def GetExamplesPerEpoch(text, seqLength):
 
     examplesPerEpoch = len(text) // (seqLength + 1)
 
-    if BATCHSIZE > examplesPerEpoch:
-        sys.exit("BATCHSIZE is greater than examplesPerEpoch. Please introduce a value for BATCHSIZE below " + examplesPerEpoch )
 
     # BATCHSIZE > examplesPerEpoch ---> sys.exit("BATCHSIZE IS GREATER THAN examplesPerEpoch")
     return examplesPerEpoch
@@ -245,7 +249,7 @@ def Loss(labels, logits):
 
 
 #Generate slices of the level from a trained model, a starting sequence and a length
-def GenerateText(model, startString, length):
+def GenerateText(model, startString, length, char2idx, idx2char):
   # Evaluation step (generating text using the learned model)
 
   # Number of characters to generate

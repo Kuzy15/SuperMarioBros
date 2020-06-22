@@ -12,7 +12,19 @@
 # 
 # -----------------------------------------------------------
 
-#EXAMPLE COMMAND: python TrainNGrams.py 2 1-1.csv 1-2.csv 3 (-d/--debug)
+#EXAMPLE COMMAND:
+#
+# One file without interpolation
+# python TrainNGrams.py 1 1-1.csv 3 0(-d/--debug)
+#
+# One file with interpolation
+# python TrainNGrams.py 1 1-1.csv 3 1 0.7 0.2 0.1(-d/--debug)
+#
+# Several files without interpolation
+# python TrainNGrams.py 2 1-1.csv 1-2.csv 0(-d/--debug)
+#
+# Several files with interpolation
+# python TrainNGrams.py 2 1-1.csv 1-2.csv 3 1 0.7 0.2 0.1(-d/--debug)
 
 
 from nltk.util import bigrams
@@ -36,9 +48,15 @@ for f in range(NFILES):
 
 N = int(sys.argv[NFILES + 2])
 
+INTERPOLATION = int(sys.argv[NFILES + 3])
+LAMBDAPERCENT = []
+if(INTERPOLATION == 1):
+    for percent in range(N):
+        LAMBDAPERCENT.append(float(sys.argv[NFILES + percent + 4]))
+
 DEPURATION = False
-if(len(sys.argv) > NFILES + 3):
-    if str(sys.argv[NFILES + 3]) == "-d" or str(sys.argv[NFILES + 3]) == "--debug":
+if(len(sys.argv) > NFILES + len(LAMBDAPERCENT) + 4):
+    if str(sys.argv[NFILES + len(LAMBDAPERCENT) + 4]) == "-d" or str(sys.argv[NFILES + len(LAMBDAPERCENT) + 4]) == "--debug":
         DEPURATION = True
         try: 
             path = "../Logs/"
@@ -111,12 +129,12 @@ def GenerateNgrams(text, N):
 # In case we want to train our ngrams with more than one file
 # we must create an all combined words list without repetitions
 # and a ngrams with all posibilities of both files
-def Multiple():
+def Multiple(n = N):
     ngramsjoin = {}
     wordsjoin = []
 
     for f in FILE:
-        auxngrams, auxwords = GenerateNgrams(ReadFile(f), N)
+        auxngrams, auxwords = GenerateNgrams(ReadFile(f), n)
         if not ngramsjoin:
             ngramsjoin = auxngrams
         else:
@@ -140,39 +158,66 @@ def Multiple():
         
 
 
-if DEPURATION:
-    print("FILES: " + str(NFILES))
-    for f in FILE:
-        print("   FILE: " + str(f))
-    print()
-    print("NGRAMS: " + str(N))
-    print()
-    print("WIDTH: " + str(WIDTH))
-    print()
-    print("FILE TO GENERATE: " + str(OUTPUT))
-    print()
+# if DEPURATION:
+#     print("FILES: " + str(NFILES))
+#     for f in FILE:
+#         print("   FILE: " + str(f))
+#     print()
+#     print("NGRAMS: " + str(N))
+#     print()
+
+
+# To save the different results of each N-gram in case that
+# interpolation be true
+ngramList = []
+wordsList = []
 
 if NFILES == 1:
 
     #Read the input file
     text = ReadFile(FILE[0])
 
-    # Retrieve the ngram sets and the possible words
-    ngrams, words = GenerateNgrams(text, N)
 
-    if DEPURATION:
-        print("Generating " + str(N) + "grams: " + str(ngrams))
-        print()
+    if(INTERPOLATION == 1):
+        # Retrieve the ngram sets and the possible words
+        for i in range(N):
+            ngrams, words = GenerateNgrams(text, i + 1)
+            ngramList.append(ngrams)
+            wordsList.append(words)
+
+        if DEPURATION:
+            print("Generating interpolated " + str(N) + "grams: " + str(ngramList))
+            print()
+    else:
+        ngrams, words = GenerateNgrams(text, N)
+        ngramList.append(ngrams)
+        wordsList.append(words)
+        if DEPURATION:
+            print("Generating " + str(N) + "grams: " + str(ngramList))
+            print()
+
+
 
 else:
     if DEPURATION:
         print("Multiple input files")
-    
-    ngrams, words = Multiple()
 
-    if DEPURATION:
-        print("Generating " + str(N) + "grams: " + str(ngrams))
-        print()
+    if(INTERPOLATION == 1):
+        for i in range(N):
+            ngrams, words = Multiple(i + 1)
+            ngramList.append(ngrams)
+            wordsList.append(words)
+        if DEPURATION:
+            print("Generating interpolated " + str(N) + "grams: " + str(ngramList))
+            print()
+
+    else:
+        ngrams, words = Multiple()
+        ngramList.append(ngrams)
+        wordsList.append(words)
+        if DEPURATION:
+            print("Generating " + str(N) + "grams: " + str(ngramList))
+            print()
 
 try:
     os.mkdir('./NgramsTraining/')
@@ -183,7 +228,9 @@ trainFileName = time.strftime("%Y%m%d_%H%M%S")
 
 with open('./NgramsTraining/' + trainFileName + '_Training_Ngrams.pkl', "wb") as f:
     pickle.dump(N, f, pickle.HIGHEST_PROTOCOL)
-    pickle.dump(ngrams, f, pickle.HIGHEST_PROTOCOL)
-    pickle.dump(words, f, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(ngramList, f, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(wordsList, f, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(INTERPOLATION, f, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(LAMBDAPERCENT, f, pickle.HIGHEST_PROTOCOL)
 
 

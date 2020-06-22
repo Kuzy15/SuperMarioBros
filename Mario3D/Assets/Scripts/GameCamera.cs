@@ -188,7 +188,7 @@ public class GameCamera : MonoBehaviour
             if (!_looking)
             {
                 //Debug.Log("FOLLOW PLAYER: " + followPlayer + "  CUENTA: " + (target.position - _lastPos).x);
-                if (followPlayer && (target.position - _lastPos).x > 0)
+                if (followPlayer)
                 {
                     Vector3 desiredPosition = target.position + offset;
                     Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);

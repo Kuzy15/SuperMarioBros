@@ -71,13 +71,14 @@ public class InfoManager : MonoBehaviour
         else if (_selectButtonsOn)
         {
             _currentImage.SetActive(false);
+            nextButton.SetActive(false);
             trainButton.SetActive(true);
             trainLoadButton.SetActive(true);
             loadButton.SetActive(true);
             rnnButton.SetActive(false);
             ngramsButton.SetActive(false);
             _usageIndex = 2;
-            _ngramsMode = true;
+            //_ngramsMode = true;
             //_canClosePanel = false;
             _selectButtonsOn = false;
             questionButton.SetActive(false);
@@ -170,7 +171,7 @@ public class InfoManager : MonoBehaviour
                 _currentImage.SetActive(true);
                 Debug.Log(_currentImage);
             }
-            else if (_usageIndex == 5)
+            else if (_usageIndex == 6)
             {
                 Debug.Log("HEY");
                 _currentImage.SetActive(false);

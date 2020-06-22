@@ -49,7 +49,15 @@ public class GameManager : MonoBehaviour
         switch (sFlow)
         {
             case SceneFlow.PREVIOUS:
-                _sceneIndex--;
+               
+                if(_sceneIndex - 1 >= 0)
+                {
+                    _sceneIndex--;
+                }
+                else
+                {
+                    Application.Quit();
+                }
                 break;
             case SceneFlow.CURRENT:
                 break;
@@ -65,10 +73,6 @@ public class GameManager : MonoBehaviour
         }
         if(_sceneIndex >= 0){ 
             SceneManager.LoadScene(_sceneIndex);
-        }
-        else
-        {
-            Application.Quit();
         }
     }
 
