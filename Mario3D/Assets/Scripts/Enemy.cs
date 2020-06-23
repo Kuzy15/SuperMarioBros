@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         // si esta dentro del rango de camara
-        if (!GameCamera.Instance.GetLooking() && _canMove)
+        if (!GameCamera.Instance.GetLooking() && _canMove && !_dead)
         {
             EnemyMove();
         }
@@ -136,6 +136,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void Die()
     {
+        Destroy(this.GetComponent<BoxCollider>());
+        Destroy(this.GetComponent<Rigidbody>());
         _dead = true;
         _renderer.sprite = animDead;
         Destroy(gameObject, 1.0f);
