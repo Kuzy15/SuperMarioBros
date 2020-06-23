@@ -16,6 +16,8 @@ public class MapReader : MonoBehaviour
 
     public GameObject Mario;
     public GameObject goomba;
+    public GameObject blueGoomba;
+    public GameObject koopa;
 
     //List of tile values (string format)
     private List<string> _stringList;
@@ -178,7 +180,7 @@ public class MapReader : MonoBehaviour
                 if (_parsedList[j][i] != "-1" && _parsedList[j][i] != null)
                 {
                     GameObject tile = null;
-                    if (_parsedList[j][i] != "265" && _parsedList[j][i] != "902")
+                    if (_parsedList[j][i] != "265" && _parsedList[j][i] != "902" && _parsedList[j][i] != "903" && _parsedList[j][i] != "904")
                     {
                         tile = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
                        this.gameObject.transform.rotation, this.gameObject.transform);
@@ -236,6 +238,16 @@ public class MapReader : MonoBehaviour
                     else if(_parsedList[j][i] == "902")
                     {
                         Instantiate(goomba, new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                        this.gameObject.transform.rotation, this.gameObject.transform);
+                    }
+                    else if (_parsedList[j][i] == "903") //BLUE GOOMBA
+                    {
+                        Instantiate(blueGoomba, new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j + 0.5f, this.gameObject.transform.position.z),
+                        this.gameObject.transform.rotation, this.gameObject.transform);
+                    }
+                    else if (_parsedList[j][i] == "904") //KOOPA
+                    {
+                        Instantiate(koopa, new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j + 0.5f, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
                     }
 

@@ -1010,6 +1010,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mario: {fileID: 7027009037439751191, guid: 6b49e488b8135034ba40f3c34c3f9afd, type: 3}
   goomba: {fileID: 1912510781644494160, guid: 54019722ee9e78a49bd3a73d0b4a036b, type: 3}
+  blueGoomba: {fileID: 3883969099661800197, guid: 334cde2b284dc1e42afa2067a793ef06,
+    type: 3}
+  koopa: {fileID: 5366599479667004147, guid: bcb1f54704448a1449a741a22be79378, type: 3}
 --- !u!4 &292825516
 Transform:
   m_ObjectHideFlags: 0

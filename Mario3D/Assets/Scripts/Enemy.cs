@@ -136,6 +136,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void Die()
     {
+        Destroy(this.GetComponent<BoxCollider>());
+        Destroy(this.GetComponent<Rigidbody>());
         _dead = true;
         _renderer.sprite = animDead;
         Destroy(gameObject, 1.0f);

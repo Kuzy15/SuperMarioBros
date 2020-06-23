@@ -35,6 +35,15 @@ TextureImporter:
   - first:
       213: -2486362451869397146
     second: redKoopaTroopaDead_1
+  - first:
+      213: -7471030765122717145
+    second: blueGoomba_0
+  - first:
+      213: -7328385050980077086
+    second: blueGoomba_1
+  - first:
+      213: -2670811768672885420
+    second: blueGoomba_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -357,6 +366,69 @@ TextureImporter:
       bones: []
       spriteID: faa64fce1695223499b869695f083bf6
       internalID: -2486362451869397146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blueGoomba_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b5db3b8b5fbfaf4ea23af78d19ab614
+      internalID: -7471030765122717145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blueGoomba_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93881951cd02b9d4fa43c26379123e1f
+      internalID: -7328385050980077086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blueGoomba_3
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 16
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eb73ed39d323b144a6083c4dca84bad
+      internalID: -2670811768672885420
       vertices: []
       indices: 
       edges: []
