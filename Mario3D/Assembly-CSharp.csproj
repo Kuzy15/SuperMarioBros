@@ -96,12 +96,6 @@
     <Compile Include="Assets\Scripts\ResourcesLoader.cs" />
     <Compile Include="Assets\Scripts\Shuttle.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
-    <None Include="Assets\StreamingAssets\Logs\20200617-212011_Generated_Ngrams.txt" />
-    <None Include="Assets\StreamingAssets\Logs\20200617-212303_Training_Ngrams.txt" />
-    <None Include="Assets\StreamingAssets\Logs\20200617-212009_Training_Ngrams.txt" />
-    <None Include="Assets\StreamingAssets\Logs\20200616-201226_Generated_NN.txt" />
-    <None Include="Assets\StreamingAssets\Logs\20200616-201134_RNN.txt" />
-    <None Include="Assets\StreamingAssets\Logs\20200617-211655_Generated_Ngrams.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Curso19-20/TFG/Training_separation/SuperMarioBros/Mario3D/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

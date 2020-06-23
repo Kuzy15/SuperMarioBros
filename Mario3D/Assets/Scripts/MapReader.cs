@@ -15,6 +15,7 @@ public class MapReader : MonoBehaviour
     public static MapReader GM;
 
     public GameObject Mario;
+    public GameObject goomba;
 
     //List of tile values (string format)
     private List<string> _stringList;
@@ -177,7 +178,7 @@ public class MapReader : MonoBehaviour
                 if (_parsedList[j][i] != "-1" && _parsedList[j][i] != null)
                 {
                     GameObject tile = null;
-                    if (_parsedList[j][i] != "265")
+                    if (_parsedList[j][i] != "265" && _parsedList[j][i] != "902")
                     {
                         tile = Instantiate(_tiles[_parsedList[j][i]], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
                        this.gameObject.transform.rotation, this.gameObject.transform);
@@ -231,6 +232,11 @@ public class MapReader : MonoBehaviour
                         GameObject tileBackWater = Instantiate(_tiles["894"], new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
                         this.gameObject.transform.rotation, this.gameObject.transform);
                         tileBackWater.GetComponent<SpriteRenderer>().sortingOrder = -2;
+                    }
+                    else if(_parsedList[j][i] == "902")
+                    {
+                        Instantiate(goomba, new Vector3(this.gameObject.transform.position.x + i, this.gameObject.transform.position.y - j, this.gameObject.transform.position.z),
+                        this.gameObject.transform.rotation, this.gameObject.transform);
                     }
 
                 }

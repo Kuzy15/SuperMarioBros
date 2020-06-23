@@ -27,7 +27,6 @@ def main():
 
     NN.ReadArgsForTrainning()
 
-    print("AAAAAA")
     print(NN.SEQLENGTH)
 
     if NN.DEPURATION:
@@ -79,7 +78,7 @@ def main():
     firstSeq = False
     firstSequenceToUse = ""
     datasets = []
-    examplesPerEpoch = 0
+    examplesPerEpoch = sys.maxint
     for t in textint:
         print(t)
         print()
@@ -93,7 +92,8 @@ def main():
         dataset = sequencesCreated.map(NN.SplitInputTarget)
 
         dataset = dataset.shuffle(NN.BUFFERSIZE, False).batch(NN.GetExamplesPerEpoch(t, NN.SEQLENGTH), drop_remainder=True)
-        examplesPerEpoch = NN.GetExamplesPerEpoch(t, NN.SEQLENGTH)
+        if(examplesPerEpoch > NN.GetExamplesPerEpoch(t, NN.SEQLENGTH)):
+            examplesPerEpoch = NN.GetExamplesPerEpoch(t, NN.SEQLENGTH)
         datasets.append(dataset)
 
 
