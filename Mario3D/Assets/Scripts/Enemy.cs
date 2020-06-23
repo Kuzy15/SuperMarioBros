@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         // si esta dentro del rango de camara
-        if (!GameCamera.Instance.GetLooking() && _canMove)
+        if (!GameCamera.Instance.GetLooking() && _canMove && !_dead)
         {
             EnemyMove();
         }
