@@ -50,12 +50,14 @@ public class GreenKoopaTroopa : Enemy
         {
             anim = reviveAnim;
             _dead = false;
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.5f);
        
-            _canMove = true;
             _collider.size = new Vector3(1.0f, 1.5f, 0.2f);
             _collider.center = new Vector3(0, 0.75f, 0);
             anim = _aux;
+            yield return new WaitForSeconds(0.5f);
+
+            _canMove = true;
         }
         yield return null;
     }

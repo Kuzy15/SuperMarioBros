@@ -119,7 +119,7 @@ public class Enemy : MonoBehaviour
         if (Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.right), out hit, 0.5f) ||
             Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.left), out hit, 0.5f))
         {
-            if (hit.transform.gameObject.tag != "Player")
+            if (hit.transform.gameObject.tag != "Player" && hit.transform.gameObject != Camera.main.gameObject)
                 _dir *= -1;
         }
         if (_dir > 0)
