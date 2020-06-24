@@ -14,6 +14,7 @@ public class GreenKoopaTroopa : Enemy
 
     public override void Die()
     {
+        _dir *= -1;
         if (!_reviving)
         {
             _reviving = true;
@@ -29,35 +30,30 @@ public class GreenKoopaTroopa : Enemy
             positionShell = this.transform.position;
             StartCoroutine(Revive());
         }
-        else
-        {
-            _dead = true;
-            _canMove = true;
-            _renderer.sprite = animDead;
-            _velocity = 3.0f;
-            _stopCoroutine = true;
-            _dir *= -1;
-            _reviving = false;
-            _isShell = true;
-           
-        }
     }
 
     IEnumerator Revive()
     {
+        _canMove = false;
+        /*_aux = anim;
+        anim[0] = animDead;
+        anim[1] = animDead;*/
         yield return new WaitForSeconds(4.0f);
+        _animateOnDie = true;
         if (!_stopCoroutine)
         {
             anim = reviveAnim;
-            _dead = false;
-            yield return new WaitForSeconds(0.5f);
-       
+            yield return new WaitForSeconds(2.5f);
+
             _collider.size = new Vector3(1.0f, 1.5f, 0.2f);
             _collider.center = new Vector3(0, 0.75f, 0);
             anim = _aux;
-            yield return new WaitForSeconds(0.5f);
 
+            _dead = false;
             _canMove = true;
+            _animateOnDie = false;
+            anim = _aux;
+            _reviving = false;
         }
         yield return null;
     }

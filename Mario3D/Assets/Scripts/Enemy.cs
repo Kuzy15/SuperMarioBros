@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour
     protected bool _dead = false;
     //Bool to check if the enemy can move
     protected bool _canMove = true;
+    //Aux bool to animate while die
+    protected bool _animateOnDie = false;
 
     //Animation time
     private float _time;
@@ -63,8 +65,9 @@ public class Enemy : MonoBehaviour
             }
 
 
-            if (!_dead)
+            if (!_dead || _animateOnDie)
             {
+
                 EnemyAnim();
             }
         }
@@ -139,6 +142,7 @@ public class Enemy : MonoBehaviour
         Destroy(this.GetComponent<BoxCollider>());
         Destroy(this.GetComponent<Rigidbody>());
         _dead = true;
+        _canMove = false;
         _renderer.sprite = animDead;
         Destroy(gameObject, 1.0f);
     }
