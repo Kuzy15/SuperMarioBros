@@ -78,7 +78,7 @@ def main():
     firstSeq = False
     firstSequenceToUse = ""
     datasets = []
-    examplesPerEpoch = sys.maxint
+    examplesPerEpoch = 0
     for t in textint:
         print(t)
         print()
@@ -92,8 +92,7 @@ def main():
         dataset = sequencesCreated.map(NN.SplitInputTarget)
 
         dataset = dataset.shuffle(NN.BUFFERSIZE, False).batch(NN.GetExamplesPerEpoch(t, NN.SEQLENGTH), drop_remainder=True)
-        if(examplesPerEpoch > NN.GetExamplesPerEpoch(t, NN.SEQLENGTH)):
-            examplesPerEpoch = NN.GetExamplesPerEpoch(t, NN.SEQLENGTH)
+        examplesPerEpoch = NN.GetExamplesPerEpoch(t, NN.SEQLENGTH)
         datasets.append(dataset)
 
 
