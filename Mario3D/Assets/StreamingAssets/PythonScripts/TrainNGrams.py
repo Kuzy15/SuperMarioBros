@@ -3,13 +3,13 @@
 
 
 # -----------------------------------------------------------
-# 
 #
-# 2020 
+#
+# 2020
 # Víctor Emiliano Fernández Rubio
 # Gonzalo Guzmán del Río
 # Carlos Llames Arribas
-# 
+#
 # -----------------------------------------------------------
 
 #EXAMPLE COMMAND:
@@ -58,7 +58,7 @@ DEPURATION = False
 if(len(sys.argv) > NFILES + len(LAMBDAPERCENT) + 4):
     if str(sys.argv[NFILES + len(LAMBDAPERCENT) + 4]) == "-d" or str(sys.argv[NFILES + len(LAMBDAPERCENT) + 4]) == "--debug":
         DEPURATION = True
-        try: 
+        try:
             path = "../Logs/"
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -71,56 +71,59 @@ if(len(sys.argv) > NFILES + len(LAMBDAPERCENT) + 4):
 
 # Read a file and is delimited by ','
 def ReadFile(file):
-    
+
     text = np.genfromtxt(file, delimiter=',',dtype=None)
     text = text.transpose()
-    
+
     if DEPURATION:
         print("File name: " + str(file))
         print(text)
         print()
-    
+
     return text
 
 # Generate N size sets of words, in our case game slices
 def GenerateNgrams(text, N):
-    
-    
+
+    #N = N - 1
+
     # Store words (slices)
     words = []
     # Store ngrams sets
     ngrams = {}
-    
+
     # Iterate over the text rows
-    for i in range(text.shape[0]): 
+    for i in range(text.shape[0]):
 
         word = ""
-        
-        # Create a word (set of numbers separated by ','), we need to do that 
+
+        # Create a word (set of numbers separated by ','), we need to do that
         # because each line (array) of the matrix is a word not a sentence.
-        # Previously we treated each array of the matrix as a sentence and the results were horrible: 
+        # Previously we treated each array of the matrix as a sentence and the results were horrible:
         # e.g. "1-5.csv" (will be adjunt)
         for j in text[i]:
             word = word + str(j) + ","
-            
-        # Remove the last ',' because it is not needed   
+
+        # Remove the last ',' because it is not needed
         word = word[:-1]
         # Save all the words
         words.append(word)
-    
 
-    # Create all the ngrams sets
-    for i in range(len(words) - N):
-        sequence = ' '.join(words[i: i + N])
 
-        if  sequence not in ngrams.keys():
-            ngrams[sequence] = []
-            
-        ngrams[sequence].append(words[i + N])
-        
-    if DEPURATION: 
+    if N-1 > 0:
+        # Create all the ngrams sets
+        for i in range(len(words) - (N-1)):
+
+            sequence = ' '.join(words[i: i + (N-1)])
+
+            if  sequence not in ngrams.keys():
+                ngrams[sequence] = []
+
+            ngrams[sequence].append(words[i + (N-1)])
+
+    if DEPURATION:
         print("Words: " + str(words) + "\n")
-        print("Ngrmas: " + str(ngrams) + "\n")
+        print("Ngramas: " + str(ngrams) + "\n")
         print()
 
     return ngrams, words
@@ -144,7 +147,7 @@ def Multiple(n = N):
                     new[key] = value
                 else:
                     new[key] = value + ngramsjoin[key]
-        
+
             for key, value in ngramsjoin.items():
                 if key not in auxngrams:
                     new[key] = value
@@ -155,7 +158,7 @@ def Multiple(n = N):
         wordsjoin += auxwords
 
     return ngramsjoin, wordsjoin
-        
+
 
 
 # if DEPURATION:
@@ -195,6 +198,7 @@ if NFILES == 1:
         if DEPURATION:
             print("Generating " + str(N) + "grams: " + str(ngramList))
             print()
+            print("Number of words: " + str(len(words)))
 
 
 
@@ -232,5 +236,3 @@ with open('./NgramsTraining/' + trainFileName + '_Training_Ngrams.pkl', "wb") as
     pickle.dump(wordsList, f, pickle.HIGHEST_PROTOCOL)
     pickle.dump(INTERPOLATION, f, pickle.HIGHEST_PROTOCOL)
     pickle.dump(LAMBDAPERCENT, f, pickle.HIGHEST_PROTOCOL)
-
-

@@ -3,13 +3,13 @@
 
 
 # -----------------------------------------------------------
-# 
 #
-# 2020 
+#
+# 2020
 # Víctor Emiliano Fernández Rubio
 # Gonzalo Guzmán del Río
 # Carlos Llames Arribas
-# 
+#
 # -----------------------------------------------------------
 
 # EXAMPLE COMMANDS:
@@ -41,7 +41,7 @@ DEPURATION = False
 if(len(sys.argv) > 4):
     if str(sys.argv[4]) == "-d" or str(sys.argv[4]) == "--debug":
         DEPURATION = True
-        try: 
+        try:
             path = "../Logs/"
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -51,16 +51,20 @@ if(len(sys.argv) > 4):
             if not os.path.isdir(path):
                 raise
 
-        
+
 # Generate the new text (map)
 # "ngrams": ensemble with all words and posible next words
 # "words": the generated matrix by the input file
 # "N": the size of grams
 # "width": the length of the text (map)
 def GenerateText(ngrams, words, N, width):
-  
-    # The first N words of the text i.e. ngram
-    currentSequence = ' '.join(words[0:N])
+
+    if N > 1:
+        # The first N words of the text i.e. ngram
+        currentSequence = ' '.join(words[0:(N-1)])
+    else:
+        currentSequence = words[0]
+
     # This variable is used for continuing the generation of the text when we aren't able to generate the next word
     firstSequence = currentSequence
     if DEPURATION:
@@ -68,48 +72,58 @@ def GenerateText(ngrams, words, N, width):
 
     # Append the first sequence to the output text
     output = currentSequence
-    
+
     # Iterate to create the new words (vertical slices) that are part of the map
     i = 0
     while(i < width):
-        if currentSequence not in ngrams.keys():
-            currentSequence = firstSequence
-            possibleWords = ngrams[currentSequence]
-            nextWord = possibleWords[random.randrange(len(possibleWords))]
-            output += ' ' + currentSequence + ' ' + nextWord
+        #print("N: ")
+        #print(N-1)
+        if (N-1) > 0:
+            if currentSequence not in ngrams.keys():
+                currentSequence = firstSequence
+                possibleWords = ngrams[currentSequence]
+                nextWord = possibleWords[random.randrange(len(possibleWords))]
+                output += ' ' + currentSequence + ' ' + nextWord
+
+                if DEPURATION:
+                    print("Output reset:" + str(output))
+                    print()
+
+                i += N
+
+            else:
+                print(currentSequence)
+
+                possibleWords = ngrams[currentSequence]
+
+                nextWord = possibleWords[random.randrange(len(possibleWords))]
+
+                if DEPURATION:
+                    print("Possible words: " + str(possibleWords))
+                    print("Next word: " + str(nextWord))
+                    print()
+
+                output += ' ' + nextWord
+
+                #i += 1
+
+            wordsSequence = output
+            auxSequence = list(wordsSequence.split(' '))
+            currentSequence = auxSequence[len(auxSequence) - (N-1):len(auxSequence)]
+            currentSequence = ' '.join(currentSequence)
 
             if DEPURATION:
-                print("Output reset:" + str(output))
+                print("Next step sequence: " + str(currentSequence))
                 print()
-
-            i += N
-            
         else:
-            possibleWords = ngrams[currentSequence]
-
-            nextWord = possibleWords[random.randrange(len(possibleWords))]
-            
-            if DEPURATION:
-                print("Possible words: " + str(possibleWords))
-                print("Next word: " + str(nextWord))
-                print()
-
+            nextWord = words[random.randrange(len(words))]
             output += ' ' + nextWord
 
-            i += 1
-            
-        wordsSequence = output
-        auxSequence = list(wordsSequence.split(' '))
-        currentSequence = auxSequence[len(auxSequence) - N:len(auxSequence)]
-        currentSequence = ' '.join(currentSequence)
 
-        if DEPURATION:
-            print("Next step sequence: " + str(currentSequence))
-            print()
+        i += 1
 
- 
     output = list(output.split(' '))
-    
+
     return output
 
 
@@ -121,10 +135,10 @@ def GenerateText(ngrams, words, N, width):
 # "width": the length of the text (map)
 # "lambdapercent": percentages of lambda values for n-grams interpolation
 def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
-  
+
     # The first N words of the text i.e. ngram
     # In case that interpolation is true we take the greatest Ngrams
-    currentSequence = ' '.join(words[N-1][0:N])
+    currentSequence = ' '.join(words[N-1][0:(N-1)])
     # This variable is used for continuing the generation of the text when we aren't able to generate the next word
     firstSequence = currentSequence
     if DEPURATION:
@@ -142,10 +156,12 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
     # Iterate to create the new words (vertical slices) that are part of the map
     i = 0
     while(i < width):
-        print("currentSequence")
-        print(currentSequence)
+        if DEPURATION:
+            print("Current sequence: ")
+            print(currentSequence)
         if currentSequence not in chosenNgram.keys():
-            print("reset")
+            if DEPURATION:
+                print("Reset!")
             currentSequence = firstSequence
             chosenNgram = ngrams[N-1]
             possibleWords = chosenNgram[currentSequence]
@@ -157,10 +173,11 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
                 print()
 
             i += N
-            
+
         else:
-            print("start")
-            print()
+            if DEPURATION:
+                print("Start!")
+                print()
             interN = N
             interIndx = 0
             probabilities = []
@@ -168,29 +185,33 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
 
             # Get the probabilities of each n-gram key
             while(interN > 0):
-                print("ngrams" + str(interN - 1))
                 chosenNgram = ngrams[interN - 1]
                 auxseq = currentSequence.split(" ")
                 auxseq = ' '.join(auxseq[interIndx:])
-                print("auxseq")
-                print(auxseq)
-        
-                # Get the possible next keys of major gram, count it and then get the probability
-                for s in chosenNgram[auxseq]:
-                    auxdict[str(s)]= str(chosenNgram[auxseq].count(s) / len(chosenNgram[auxseq]))
+
+                # If not unigrams
+                if interN > 1:
+                    # Get the possible next keys of major gram, count it and then get the probability
+                    for s in chosenNgram[auxseq]:
+                        auxdict[str(s)]= str(chosenNgram[auxseq].count(s) / len(chosenNgram[auxseq]))
+                else:
+                    # In unigrams we just check by the list of words
+                    for w in words[0]: # TODO: las palabras son las mismas ¿? las de la lista words
+                        auxdict[str(w)] = words[0].count(w) / len(words[0])
 
                 probabilities.append(auxdict)
 
-                print("probabilities of " + str(interN) + "gram")
-                print(probabilities)
+                if DEPURATION:
+                    print("Probabilities of " + str(interN) + "gram")
+                    print(probabilities)
                 auxdict = {}
                 auxseq = ""
                 interN -= 1
                 interIndx += 1
 
-            print("end - probabilities")
-       
-            print("second round")
+                if DEPURATION:
+                    print("End - probabilities")
+                    print("Second round")
 
             chosenNgram = ngrams[N-1]
             probKeys = probabilities[-1].keys()
@@ -204,17 +225,18 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
                 aux = 0
                 probValues = []
                 for p in probabilities:
-                    print("probabilities")
-                    print(p)
+                    #print("probabilities")
+                    #print(p)
                     if k in p.keys():
                         probValues.append(float(p[k]) * float(lambdapercent[aux]))
                         print(probValues)
                     aux += 1
                 percent.append(sum(probValues))
-                print("key")
-                print(k)
-                print("percent")
-                print(percent)
+                if DEPURATION:
+                    print("key")
+                    print(k)
+                    print("percent")
+                    print(percent)
 
 
             listProbKeys = list(probKeys)
@@ -246,7 +268,7 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
             nextWord = np.random.choice(listProbKeys, 1, p=percent)[0]
             # else:
             #     nextWord = list(probKeys)[0]
-            
+
             if DEPURATION:
                 print("Possible words: " + str(possibleWords))
                 print("Next word: " + str(nextWord))
@@ -254,10 +276,10 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
 
             output += ' ' + nextWord
             i += 1
-            
+
         wordsSequence = output
         auxSequence = list(wordsSequence.split(' '))
-        currentSequence = auxSequence[len(auxSequence) - N:len(auxSequence)]
+        currentSequence = auxSequence[len(auxSequence) - (N-1):len(auxSequence)]
         currentSequence = ' '.join(currentSequence)
 
         if DEPURATION:
@@ -266,7 +288,7 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
         print("vuelta" + str(i))
 
     output = list(output.split(' '))
-    
+
     return output
 
 
@@ -274,18 +296,20 @@ def GenerateInterpolatedText(ngrams, words, N, width, lambdapercent):
 
 
 # Save the generated map into a file (.csv)
-def SaveFile(fileName, text, width, height):   
-    
+def SaveFile(fileName, text, width, height):
+
     matrix = np.zeros((width, height))
     matrix = matrix.astype(int)
 
     i = 0
     for i in range(len(text)):
         line = text[i].split(',')
+        #print("Line: " + str(text))
+        #print()
         matrix[i] = line
 
     matrix = matrix.T
-    
+
     csvoutput = open(fileName, 'w', newline='')
     result = csv.writer(csvoutput)
     result.writerows(matrix)
